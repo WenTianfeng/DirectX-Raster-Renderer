@@ -5,7 +5,7 @@
 #include<typeinfo>
 
 
-#include"Component.h"
+#include"..\Components\Component.h"
 
 
 class Object 

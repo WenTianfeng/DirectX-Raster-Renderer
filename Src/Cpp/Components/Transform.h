@@ -14,8 +14,6 @@ private:
 
 public:
 
-	Transform() = default;
-
 	Transform(DirectX::XMFLOAT3 position, DirectX::XMFLOAT3 rotation, DirectX::XMFLOAT3 scale);
 
 	~Transform() = default;

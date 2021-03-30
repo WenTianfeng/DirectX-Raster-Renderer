@@ -70,6 +70,5 @@ void RenderingEngine::Update(float dt)
 
 void RenderingEngine::Render()
 {
-	m_graphics.RenderFrame();
-
+	this->m_graphics.RenderFrame();
 }

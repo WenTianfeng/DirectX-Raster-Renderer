@@ -19,46 +19,50 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Src\Cpp\Graphics\MaterialManager.cpp" />
+    <ClCompile Include="Src\Cpp\Components\Light.cpp" />
+    <ClCompile Include="Src\Cpp\Components\MaterialManager.cpp" />
     <ClCompile Include="Src\Cpp\Graphics\Graphics.cpp" />
-    <ClCompile Include="Src\Cpp\Graphics\UI\ImGui\imgui.cpp" />
-    <ClCompile Include="Src\Cpp\Graphics\UI\ImGui\imgui_demo.cpp" />
-    <ClCompile Include="Src\Cpp\Graphics\UI\ImGui\imgui_draw.cpp" />
-    <ClCompile Include="Src\Cpp\Graphics\UI\ImGui\imgui_impl_dx11.cpp" />
-    <ClCompile Include="Src\Cpp\Graphics\UI\ImGui\imgui_impl_win32.cpp" />
-    <ClCompile Include="Src\Cpp\Graphics\UI\ImGui\imgui_widgets.cpp" />
-    <ClCompile Include="Src\Cpp\Graphics\MeshRenderer.cpp" />
-    <ClCompile Include="Src\Cpp\Graphics\ShaderProcessor.cpp" />
+    <ClCompile Include="Src\Cpp\Graphics\Structures\ConstantBuffer.cpp" />
+    <ClCompile Include="Src\Cpp\Graphics\Structures\Material.cpp" />
+    <ClCompile Include="Src\Cpp\Graphics\Structures\Mesh.cpp" />
+    <ClCompile Include="Src\Cpp\UI\ImGui\imgui.cpp" />
+    <ClCompile Include="Src\Cpp\UI\ImGui\imgui_demo.cpp" />
+    <ClCompile Include="Src\Cpp\UI\ImGui\imgui_draw.cpp" />
+    <ClCompile Include="Src\Cpp\UI\ImGui\imgui_impl_dx11.cpp" />
+    <ClCompile Include="Src\Cpp\UI\ImGui\imgui_impl_win32.cpp" />
+    <ClCompile Include="Src\Cpp\UI\ImGui\imgui_widgets.cpp" />
+    <ClCompile Include="Src\Cpp\Components\MeshRenderer.cpp" />
+    <ClCompile Include="Src\Cpp\Graphics\Helpers\ShaderProcessor.cpp" />
     <ClCompile Include="Src\Cpp\Graphics\Structures\Shader.cpp" />
-    <ClCompile Include="Src\Cpp\Graphics\UI\UserInterface.cpp" />
+    <ClCompile Include="Src\Cpp\UI\UserInterface.cpp" />
     <ClCompile Include="Src\Cpp\Keyboard\Keyboard.cpp" />
     <ClCompile Include="Src\Cpp\Keyboard\KeyboardEvent.cpp" />
-    <ClCompile Include="Src\Cpp\Logic\Camera.cpp" />
-    <ClCompile Include="Src\Cpp\Logic\Object.cpp" />
-    <ClCompile Include="Src\Cpp\Logic\ObjectManager.cpp" />
-    <ClCompile Include="Src\Cpp\Logic\Transform.cpp" />
+    <ClCompile Include="Src\Cpp\Components\Camera.cpp" />
+    <ClCompile Include="Src\Cpp\Object\Object.cpp" />
+    <ClCompile Include="Src\Cpp\Components\Transform.cpp" />
     <ClCompile Include="src\cpp\Main.cpp" />
     <ClCompile Include="Src\Cpp\Mouse\Mouse.cpp" />
     <ClCompile Include="Src\Cpp\Mouse\MouseEvent.cpp" />
     <ClCompile Include="Src\Cpp\RenderingEngine.cpp" />
-    <ClCompile Include="src\cpp\Timer.cpp" />
+    <ClCompile Include="Src\Cpp\Time\Timer.cpp" />
     <ClCompile Include="Src\Cpp\Tools\DataTypeConverter.cpp" />
     <ClCompile Include="Src\Cpp\Tools\ErrorLogger.cpp" />
     <ClCompile Include="Src\Cpp\Windows\RenderWindow.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Src\Cpp\Graphics\MaterialManager.h" />
-    <ClInclude Include="Src\Cpp\Graphics\UI\ImGui\imconfig.h" />
-    <ClInclude Include="Src\Cpp\Graphics\UI\ImGui\imgui.h" />
-    <ClInclude Include="Src\Cpp\Graphics\UI\ImGui\imgui_impl_dx11.h" />
-    <ClInclude Include="Src\Cpp\Graphics\UI\ImGui\imgui_impl_win32.h" />
-    <ClInclude Include="Src\Cpp\Graphics\UI\ImGui\imgui_internal.h" />
-    <ClInclude Include="Src\Cpp\Graphics\UI\ImGui\imstb_rectpack.h" />
-    <ClInclude Include="Src\Cpp\Graphics\UI\ImGui\imstb_textedit.h" />
-    <ClInclude Include="Src\Cpp\Graphics\UI\ImGui\imstb_truetype.h" />
-    <ClInclude Include="Src\Cpp\Graphics\ShaderProcessor.h" />
+    <ClInclude Include="Src\Cpp\Components\Light.h" />
+    <ClInclude Include="Src\Cpp\Components\MaterialManager.h" />
+    <ClInclude Include="Src\Cpp\UI\ImGui\imconfig.h" />
+    <ClInclude Include="Src\Cpp\UI\ImGui\imgui.h" />
+    <ClInclude Include="Src\Cpp\UI\ImGui\imgui_impl_dx11.h" />
+    <ClInclude Include="Src\Cpp\UI\ImGui\imgui_impl_win32.h" />
+    <ClInclude Include="Src\Cpp\UI\ImGui\imgui_internal.h" />
+    <ClInclude Include="Src\Cpp\UI\ImGui\imstb_rectpack.h" />
+    <ClInclude Include="Src\Cpp\UI\ImGui\imstb_textedit.h" />
+    <ClInclude Include="Src\Cpp\UI\ImGui\imstb_truetype.h" />
+    <ClInclude Include="Src\Cpp\Graphics\Helpers\ShaderProcessor.h" />
     <ClInclude Include="Src\Cpp\Graphics\Structures\Material.h" />
-    <ClInclude Include="Src\Cpp\Graphics\MeshRenderer.h" />
+    <ClInclude Include="Src\Cpp\Components\MeshRenderer.h" />
     <ClInclude Include="Src\Cpp\Graphics\Structures\ConstantBuffer.h" />
     <ClInclude Include="Src\Cpp\Graphics\Structures\ConstantBufferTypes.h" />
     <ClInclude Include="Src\Cpp\Graphics\Graphics.h" />
@@ -67,17 +71,16 @@
     <ClInclude Include="Src\Cpp\Graphics\Structures\Shader.h" />
     <ClInclude Include="Src\Cpp\Graphics\Structures\VertexBuffer.h" />
     <ClInclude Include="Src\Cpp\Graphics\Structures\VertexTypes.h" />
-    <ClInclude Include="Src\Cpp\Graphics\UI\UserInterface.h" />
-    <ClInclude Include="Src\Cpp\Logic\Camera.h" />
-    <ClInclude Include="Src\Cpp\Logic\Component.h" />
-    <ClInclude Include="Src\Cpp\Logic\Object.h" />
-    <ClInclude Include="Src\Cpp\Logic\ObjectManager.h" />
-    <ClInclude Include="Src\Cpp\Logic\Transform.h" />
+    <ClInclude Include="Src\Cpp\UI\UserInterface.h" />
+    <ClInclude Include="Src\Cpp\Components\Camera.h" />
+    <ClInclude Include="Src\Cpp\Components\Component.h" />
+    <ClInclude Include="Src\Cpp\Object\Object.h" />
+    <ClInclude Include="Src\Cpp\Components\Transform.h" />
     <ClInclude Include="Src\Cpp\Keyboard\Keyboard.h" />
     <ClInclude Include="Src\Cpp\Keyboard\KeyboardEvent.h" />
     <ClInclude Include="Src\Cpp\Mouse\Mouse.h" />
     <ClInclude Include="Src\Cpp\Mouse\MouseEvent.h" />
-    <ClInclude Include="src\cpp\Timer.h" />
+    <ClInclude Include="Src\Cpp\Time\Timer.h" />
     <ClInclude Include="Src\Cpp\Tools\COMException.h" />
     <ClInclude Include="Src\Cpp\Tools\DataTypeConverter.h" />
     <ClInclude Include="Src\Cpp\Tools\ErrorLogger.h" />
@@ -85,13 +88,25 @@
     <ClInclude Include="Src\Cpp\RenderingEngine.h" />
   </ItemGroup>
   <ItemGroup>
-    <FxCompile Include="Src\Shaders\PixelShader.hlsl">
+    <FxCompile Include="Src\Shaders\PixelShaders\PixelShader.hlsl">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Pixel</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Pixel</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Pixel</ShaderType>
     </FxCompile>
-    <FxCompile Include="Src\Shaders\VertexShader.hlsl">
+    <FxCompile Include="Src\Shaders\PixelShaders\PixelShader2.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Pixel</ShaderType>
+    </FxCompile>
+    <FxCompile Include="Src\Shaders\PixelShaders\PixelShader_Error.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Pixel</ShaderType>
+    </FxCompile>
+    <FxCompile Include="Src\Shaders\VertexShaders\VertexShader.hlsl">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Vertex</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Vertex</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>
@@ -99,7 +114,8 @@
     </FxCompile>
   </ItemGroup>
   <ItemGroup>
-    <None Include="Src\Shaders\ShaderHeader.hlsli" />
+    <None Include="Src\Shaders\ShaderIncludes\CommonlyUsed.hlsli" />
+    <None Include="Src\Shaders\ShaderIncludes\LightHelper.hlsli" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>
@@ -177,7 +193,7 @@
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;NOMINMAX;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
     </ClCompile>
     <Link>
@@ -191,7 +207,7 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;NOMINMAX;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
     </ClCompile>
     <Link>
@@ -205,7 +221,7 @@
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_DEBUG;_CONSOLE;NOMINMAX;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
     </ClCompile>
     <Link>
@@ -219,7 +235,7 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>NDEBUG;_CONSOLE;NOMINMAX;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
     </ClCompile>
     <Link>

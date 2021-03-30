@@ -5,7 +5,7 @@
 #include <d3d11shader.h>
 #include <d3dcompiler.h>
 
-#include"Structures\Shader.h"
+#include"..\Structures\Shader.h"
 
 class ShaderProcessor
 {

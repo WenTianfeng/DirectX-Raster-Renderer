@@ -135,7 +135,7 @@ void Transform::Translate(const DirectX::XMFLOAT3 & direction, float magnitude)
 }
 
 // 观察某一点
-void Transform::LookAt(const DirectX::XMFLOAT3 & target, const DirectX::XMFLOAT3 & up = { 0.0f, 1.0f, 0.0f })
+void Transform::LookAt(const DirectX::XMFLOAT3 & target, const DirectX::XMFLOAT3 & up)
 {
 	DirectX::XMMATRIX View = DirectX::XMMatrixLookAtLH(XMLoadFloat3(&this->m_position), XMLoadFloat3(&target), XMLoadFloat3(&up));
 	DirectX::XMMATRIX InvView = XMMatrixInverse(nullptr, View);
@@ -144,7 +144,7 @@ void Transform::LookAt(const DirectX::XMFLOAT3 & target, const DirectX::XMFLOAT3
 	this->m_rotation = GetEulerAnglesFromRotationMatrix(rotMatrix);
 }
 // 沿着某一方向观察
-void Transform::LookTo(const DirectX::XMFLOAT3 & direction, const DirectX::XMFLOAT3 & up = { 0.0f, 1.0f, 0.0f })
+void Transform::LookTo(const DirectX::XMFLOAT3 & direction, const DirectX::XMFLOAT3 & up)
 {
 	DirectX::XMMATRIX View = DirectX::XMMatrixLookToLH(XMLoadFloat3(&this->m_position), XMLoadFloat3(&direction), XMLoadFloat3(&up));
 	DirectX::XMMATRIX InvView = XMMatrixInverse(nullptr, View);

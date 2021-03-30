@@ -233,7 +233,7 @@ struct aiMeshMorphKey
 /** Defines how an animation channel behaves outside the defined time
  *  range. This corresponds to aiNodeAnim::mPreState and
  *  aiNodeAnim::mPostState.*/
-enum aiAnimBehaviour
+enum class aiAnimBehaviour
 {
     /** The value from the default node transformation is taken*/
     aiAnimBehaviour_DEFAULT  = 0x0,
@@ -331,8 +331,8 @@ struct aiNodeAnim {
     , mRotationKeys( nullptr )
     , mNumScalingKeys( 0 )
     , mScalingKeys( nullptr )
-    , mPreState( aiAnimBehaviour_DEFAULT )
-    , mPostState( aiAnimBehaviour_DEFAULT ) {
+    , mPreState(aiAnimBehaviour::aiAnimBehaviour_DEFAULT )
+    , mPostState(aiAnimBehaviour::aiAnimBehaviour_DEFAULT ) {
          // empty
     }
 

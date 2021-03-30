@@ -2,14 +2,12 @@
 
 #include<DirectXMath.h>
 
-#include"Object.h"
 #include"Transform.h"
+#include"..\Object\Object.h"
 
-class Camera :public Component {
+class Camera : public Component {
 
 public:
-	Camera() = default;
-
 	Camera(float fovY, float aspect, float nearClip, float farClip);
 
 	DirectX::XMMATRIX GetViewMatrix();

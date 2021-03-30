@@ -2,7 +2,7 @@
 
 //顶点着色器成员定义=======================================================================================
 
-bool VertexShader::Initialize(ID3D11Device* dxDevice , std::wstring shaderFilePath , D3D11_INPUT_ELEMENT_DESC* inputLayoutDescs , UINT numElements)
+bool VertexShader::Initialize(ID3D11Device* dxDevice , std::wstring shaderFilePath)
 {
 	HRESULT hr;
 
@@ -15,13 +15,6 @@ bool VertexShader::Initialize(ID3D11Device* dxDevice , std::wstring shaderFilePa
 	hr = dxDevice->CreateVertexShader(this->m_blobBuffer->GetBufferPointer(), this->m_blobBuffer->GetBufferSize(), nullptr, this->m_vertexShader.GetAddressOf());
 	//错误检查
 	COM_ERROR_IF_FAILED(hr, L"Failed to load Vertex Shader :" + shaderFilePath);
-
-
-	//创建输入布局
-	hr = dxDevice->CreateInputLayout(inputLayoutDescs, numElements, this->m_blobBuffer->GetBufferPointer(), this->m_blobBuffer->GetBufferSize(), this->m_dxInputLayout.GetAddressOf());
-	//错误检查
-	COM_ERROR_IF_FAILED(hr, L"Failed to create DirectX Input Layout.");
-
 
 	return true;
 }
@@ -36,10 +29,6 @@ ID3DBlob* VertexShader::GetBlob()
 	return this->m_blobBuffer.Get();
 }
 
-ID3D11InputLayout* VertexShader::GetInputLayout()
-{
-	return this->m_dxInputLayout.Get();
-}
 
 
 //像素着色器成员定义==========================================================================================

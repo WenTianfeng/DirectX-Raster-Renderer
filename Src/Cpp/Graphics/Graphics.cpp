@@ -1,6 +1,7 @@
 ﻿#include "Graphics.h"
+#include"..\Components\MeshRenderer.h"
 
-#include"ShaderProcessor.h"
+Object* Graphics::mainCamera = nullptr;
 
 bool Graphics::Initialize(HWND hwnd, int width, int height)
 {
@@ -11,10 +12,10 @@ bool Graphics::Initialize(HWND hwnd, int width, int height)
 	}
 
 	
-	if (!InitializeEffect()) 
-	{
-		return false;
-	}
+	//if (!InitializeEffect()) 
+	//{
+	//	return false;
+	//}
 
 	if (!InitializeScene())
 	{
@@ -132,7 +133,7 @@ bool Graphics::InitializeDirectX(HWND hwnd, int width, int height)
 //===================设置光栅化状态=======================
 	D3D11_RASTERIZER_DESC rd;
 	ZeroMemory(&rd, sizeof(rd));
-	rd.FillMode = D3D11_FILL_SOLID;
+	rd.FillMode = D3D11_FILL_WIREFRAME;
 	rd.CullMode = D3D11_CULL_BACK;
 	rd.FrontCounterClockwise = false;
 	rd.DepthClipEnable = true;
@@ -150,95 +151,6 @@ bool Graphics::InitializeDirectX(HWND hwnd, int width, int height)
 
 bool Graphics::InitializeEffect()
 {
-
-#pragma region 判定shader文件路径
-	std::wstring shaderFolderPath;
-	if (IsDebuggerPresent()) 
-	{
-#ifdef _DEBUG
-		shaderFolderPath = L"Debug\\";
-#else //RELEASE（待修改）
-		shaderFolderPath = L"..\\..\\..\\Debug\\";
-#endif // DEBUG
-
-	}
-#pragma endregion
-
-	//创建输入布局===============================================================================
-	D3D11_INPUT_ELEMENT_DESC ieds[] =
-	{
-		{"POSITION", 0 ,DXGI_FORMAT_R32G32_FLOAT, 0 , 0 , D3D11_INPUT_PER_VERTEX_DATA , 0 } ,
-		{"TEXCOORD", 0 ,DXGI_FORMAT_R32G32_FLOAT , 0 , D3D11_APPEND_ALIGNED_ELEMENT , D3D11_INPUT_PER_VERTEX_DATA ,0 }
-	};
-
-//顶点着色器===============================================================================
-	//初始化顶点着色器
-	if (!this->m_vertexShader.Initialize(this->m_dxDevice.Get(), shaderFolderPath + L"VertexShader.cso", ieds, ARRAYSIZE(ieds)))
-	{
-		return false;
-	}
-	//设置顶点着色器
-	this->m_dxDeviceContext->VSSetShader(this->m_vertexShader.GetShader(), 0, 0);
-
-	//设置输入布局
-	this->m_dxDeviceContext->IASetInputLayout(this->m_vertexShader.GetInputLayout());
-
-	ShaderProcessor shaderProcessor;
-
-	shaderProcessor.ShaderPreProcess(this->m_vertexShader.GetBlob());
-
-//像素着色器===============================================================================
-	//初始化像素着色器
-	if (!this->m_pixelShader.Initialize(this->m_dxDevice.Get(), shaderFolderPath + L"PixelShader.cso"))
-	{
-		return false;
-	}
-	//设置像素着色器
-	this->m_dxDeviceContext->PSSetShader(this->m_pixelShader.GetShader(), 0, 0);
-
-
-//设置图元类型===============================================================================
-	this->m_dxDeviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-
-//深度模板===============================================================================
-	//深度模板测试状态
-	D3D11_DEPTH_STENCIL_DESC dsc;
-	ZeroMemory(&dsc, sizeof(dsc));
-	dsc.DepthEnable = true;
-	dsc.DepthWriteMask = D3D11_DEPTH_WRITE_MASK_ALL;
-	dsc.DepthFunc = D3D11_COMPARISON_LESS;
-	dsc.StencilEnable = false;
-	//……………………其余模板缓冲描述待填写……………………
-
-	//创建深度模板缓冲状态
-	this->m_dxDevice->CreateDepthStencilState(&dsc, m_dxDepthStencilState.GetAddressOf());
-
-	//设置深度模板缓冲状态
-	this->m_dxDeviceContext->OMSetDepthStencilState(m_dxDepthStencilState.Get(), 0);
-
-//混合状态===============================================================================
-	D3D11_BLEND_DESC bd;
-	ZeroMemory(&bd, sizeof(bd));
-
-	D3D11_RENDER_TARGET_BLEND_DESC rtbd;
-	ZeroMemory(&rtbd, sizeof(rtbd));
-	
-	rtbd.BlendEnable = true;
-	rtbd.BlendOp = D3D11_BLEND_OP_ADD; //颜色混合运算方法
-	rtbd.SrcBlend = D3D11_BLEND_SRC_ALPHA; //源颜色因子
-	rtbd.DestBlend = D3D11_BLEND_INV_SRC_ALPHA; //缓冲区颜色因子
-	rtbd.SrcBlendAlpha = D3D11_BLEND_ONE; //源透明度因子
-	rtbd.DestBlendAlpha = D3D11_BLEND_ZERO; //缓冲区透明度因子
-	rtbd.BlendOpAlpha = D3D11_BLEND_OP_ADD; //透明度混合运算方法
-	rtbd.RenderTargetWriteMask = D3D11_COLOR_WRITE_ENABLE_ALL; //颜色遮罩
-
-	bd.RenderTarget[0] = rtbd;
-
-	//创建混合状态
-	this->m_dxDevice->CreateBlendState(&bd, this->m_dxBlendState.GetAddressOf());
-
-	//设置混合状态
-	this->m_dxDeviceContext->OMSetBlendState(this->m_dxBlendState.Get(), nullptr, 0xffffffff);
 
 //纹理采样设置===============================================================================
 	HRESULT hr;
@@ -266,8 +178,6 @@ bool Graphics::InitializeEffect()
 	//错误检查
 	COM_ERROR_IF_FAILED(hr, "Failed to Create DirectX Sampler State.");
 
-
-
 	//设置采样器状态
 	this->m_dxDeviceContext->PSSetSamplers(0, 1, this->m_dxSamplerState.GetAddressOf());
 
@@ -277,63 +187,46 @@ bool Graphics::InitializeEffect()
 
 bool Graphics::InitializeScene()
 {
-//顶点缓冲===================================================================================
-// 
-	//顶点列表
-	Vertex_PosTex vertices[] =
+#pragma region 判定shader文件路径
+	std::wstring shaderFolderPath;
+	if (IsDebuggerPresent())
 	{
-		{DirectX::XMFLOAT2(-0.5f , -0.5f) ,DirectX::XMFLOAT2( 0.0f , 0.0f )},
-		{DirectX::XMFLOAT2(0.0f , 0.5f) ,DirectX::XMFLOAT2(0.5f , 1.0f)},
-		{DirectX::XMFLOAT2(0.5f , -0.5f) ,DirectX::XMFLOAT2(1.0f , 0.0f)},
+#ifdef _DEBUG
+		shaderFolderPath = L"Debug\\";
+#else //RELEASE（待修改）
+		shaderFolderPath = L"..\\..\\..\\Debug\\";
+#endif // DEBUG
+
+	}
+#pragma endregion
+
+	//生成相机
+	Object* camera = new Object();
+	camera->AddComponent<Transform>(DirectX::XMFLOAT3(0, 0, -50), DirectX::XMFLOAT3(0, 0, 0), DirectX::XMFLOAT3(1, 1, 1));
+	camera->AddComponent<Camera>(DirectX::XM_PI / 2, 1.5f, 0.5f, 2000.0f);
+
+	mainCamera = camera;
+
+	this->m_objects.push_back(camera);//将对象加入列表中
+
+	//生成立方体
+	Object* cube = new Object();
+	cube->AddComponent<Transform>(DirectX::XMFLOAT3(0, -20, 0), DirectX::XMFLOAT3(DirectX::XM_PI/2, -DirectX::XM_PI / 4, 0), DirectX::XMFLOAT3(2, 2, 2));//添加Transform组件
+	cube->AddComponent<MeshRenderer>(this->m_dxDevice.Get(),this->m_dxDeviceContext.Get(),"Resources\\Models\\BoxBall.FBX");//添加MeshRender组件
+
+	std::wstring vertexShaderFilePaths[] = {
+		shaderFolderPath + L"VertexShader.cso",
+		shaderFolderPath + L"VertexShader.cso"
 	};
 
-	//顶点缓冲初始化
-	if (!this->m_vertexBuffer.Initialize(this->m_dxDevice.Get(), vertices, ARRAYSIZE(vertices)))
-	{
-		return false;
-	}
-
-	UINT offsets = 0;
-	//设置顶点缓冲
-	this->m_dxDeviceContext->IASetVertexBuffers(0, 1, this->m_vertexBuffer.GetAddressOf(), this->m_vertexBuffer.StridePtr(), &offsets);
-
-//索引缓冲===================================================================================
-
-	//索引列表
-	DWORD indices[] =
-	{
-		0,1,2
+	std::wstring pixelShaderFilePaths[] = {
+		shaderFolderPath + L"PixelShader.cso",
+		shaderFolderPath + L"PixelShader2.cso"
 	};
 
-	//初始化索引缓冲
-	if (!this->m_indexBuffer.Initialize(this->m_dxDevice.Get(), indices, ARRAYSIZE(indices)))
-	{
-		return false;
-	}
-	//设置索引缓冲
-	this->m_dxDeviceContext->IASetIndexBuffer(this->m_indexBuffer.Get(), DXGI_FORMAT_R32_UINT, 0);
+	cube->AddComponent<MaterialManager>(this->m_dxDevice.Get(), vertexShaderFilePaths, pixelShaderFilePaths,2);//添加MaterialManager组件
 
-//常量缓冲===================================================================================
-
-	//常量缓冲初始化
-	if (!this->m_constantBuffer.Initialize(this->m_dxDevice.Get())) 
-	{
-		return false;
-	}
-
-	//设置常量缓冲
-	this->m_dxDeviceContext->VSSetConstantBuffers(0, 1, this->m_constantBuffer.GetAddressOf());
-
-	//修改常量缓冲数据
-	this->m_constantBuffer.bufferData.xoffset = 0.0f;
-	this->m_constantBuffer.bufferData.yoffset = 0.0f;
-
-	//更新常量缓冲
-	if (!this->m_constantBuffer.UpdateConstantBuffer(this->m_dxDeviceContext.Get()))
-	{
-		return false;
-	}
-	
+	this->m_objects.push_back(cube);
 
 	return true;
 }
@@ -355,20 +248,23 @@ bool Graphics::InitializeUI(HWND hwnd)
 void Graphics::RenderFrame()
 {
 	//背景颜色
-	float bg_color[] = { 0,0,1,1 };
+	float bg_color[] = { 0.1f,0.1f,0.1f,1 };
 	//刷新渲染目标
 	m_dxDeviceContext->ClearRenderTargetView(m_dxRenderTargetView.Get(), bg_color);
 	//刷新深度模板缓冲
 	m_dxDeviceContext->ClearDepthStencilView(m_dxDepthStencilView.Get(), D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
 
-	//绘制
-	this->m_dxDeviceContext->DrawIndexed(this->m_indexBuffer.IndexCount(), 0, 0);
+	//渲染所有对象
+	for (auto object : this->m_objects)
+	{
+		object->Render();
+	}
 
 	//绘制ImGui========================================================
 	ImGui_ImplDX11_NewFrame();
 	ImGui_ImplWin32_NewFrame();
 	ImGui::NewFrame();
-	ImGui::Begin("Test");
+	ImGui::Begin("Hierarchy");
 	ImGui::End();
 	ImGui::Render();
 	ImGui_ImplDX11_RenderDrawData(ImGui::GetDrawData());

@@ -58,7 +58,7 @@ extern "C" {
 // ---------------------------------------------------------------------------
 /** Enumerates all supported types of light sources.
  */
-enum aiLightSourceType
+enum class aiLightSourceType
 {
     aiLightSource_UNDEFINED     = 0x0,
 
@@ -238,7 +238,7 @@ struct aiLight
 #ifdef __cplusplus
 
     aiLight() AI_NO_EXCEPT
-        :   mType                 (aiLightSource_UNDEFINED)
+        :   mType                 (aiLightSourceType::aiLightSource_UNDEFINED)
         ,   mAttenuationConstant  (0.f)
         ,   mAttenuationLinear    (1.f)
         ,   mAttenuationQuadratic (0.f)

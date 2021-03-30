@@ -1,20 +1,8 @@
-﻿/********************************************************************************
-  * @file    RenderingEngine.h
-  * @author  WenTianfeng
-  * @version v1.0
-  * @date    28-2-2021
-  * @brief   Class RenderingEngine`s definition and members` declaration
-  ******************************************************************************
-  * @attention
-  ******************************************************************************
-  */
+﻿#pragma once
 
-#pragma once
-
+#include"Time\Timer.h"
 #include"Windows\RenderWindow.h"
 #include"Graphics\Graphics.h"
-#include"Logic\ObjectManager.h"
-#include"Timer.h"
 
 class RenderingEngine 
 {
@@ -52,9 +40,10 @@ private:
 	/// </summary>
 	void Render();
 
+private:
+
 	RenderWindow m_renderWindow;//引擎程序使用的窗口实例
 	Graphics m_graphics;//引擎程序使用的渲染实例
-	ObjectManager m_objectManager;//对象管理器实例
 	Timer m_timer;//计时器
 
 	bool m_paused;//程序是否暂停

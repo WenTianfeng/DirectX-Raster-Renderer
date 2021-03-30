@@ -395,7 +395,7 @@ struct aiString
 /** Standard return type for some library functions.
  * Rarely used, and if, mostly in the C API.
  */
-typedef enum aiReturn
+ typedef enum class aiReturn
 {
     /** Indicates that a function was successful */
     aiReturn_SUCCESS = 0x0,

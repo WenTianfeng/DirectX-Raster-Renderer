@@ -12,14 +12,18 @@ public:
 	//缓冲区对应的结构体数据
 	T bufferData;
 
-	ConstantBuffer() {}
+	ConstantBuffer():
+		m_constantBuffer(nullptr)
+	{
+	
+	}
 
-	ID3D11Buffer* Get()const
+	ID3D11Buffer* Get() const
 	{
 		return m_constantBuffer.Get();
 	}
 
-	ID3D11Buffer* const* GetAddressOf()const
+	ID3D11Buffer* const* GetAddressOf() const
 	{
 		return m_constantBuffer.GetAddressOf();
 	}

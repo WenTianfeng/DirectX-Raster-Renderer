@@ -1,15 +1,4 @@
-﻿/********************************************************************************
-  * @file    RenderWindow.h
-  * @author  WenTianfeng
-  * @version v1.0
-  * @date    28-2-2021
-  * @brief   Class RenderWindow`s definition and members` declaration
-  ******************************************************************************
-  * @attention
-  ******************************************************************************
-  */
-
-#pragma once
+﻿#pragma once
 
 #include <wrl/client.h>//ComPtr智能指针相关引用 （https://docs.microsoft.com/en-us/cpp/cppcx/wrl/microsoft-wrl-namespace?view=msvc-160）
 #include<string>

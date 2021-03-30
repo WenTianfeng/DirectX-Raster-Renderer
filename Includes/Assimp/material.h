@@ -76,7 +76,7 @@ extern "C" {
  *  @endcode
  *  where 'diffContrib' is the intensity of the incoming light for that pixel.
  */
-enum aiTextureOp
+enum class aiTextureOp
 {
     /** T = T1 * T2 */
     aiTextureOp_Multiply = 0x0,
@@ -107,7 +107,7 @@ enum aiTextureOp
  *
  *  Commonly referred to as 'wrapping mode'.
  */
-enum aiTextureMapMode
+enum class aiTextureMapMode
 {
     /** A texture coordinate u|v is translated to u%1|v%1
      */
@@ -142,7 +142,7 @@ enum aiTextureMapMode
  *  how the mapping should look like (e.g spherical) is given.
  *  See the #AI_MATKEY_MAPPING property for more details.
  */
-enum aiTextureMapping
+enum class aiTextureMapping
 {
     /** The mapping coordinates are taken from an UV channel.
      *
@@ -188,7 +188,7 @@ enum aiTextureMapping
  *  and the artists working on models have to conform to this specification,
  *  regardless which 3D tool they're using.
  */
-enum aiTextureType
+enum class aiTextureType
 {
     /** Dummy value.
      *
@@ -519,7 +519,7 @@ struct aiUVTransform
 /** @brief A very primitive RTTI system for the contents of material
  *  properties.
  */
-enum aiPropertyTypeInfo
+enum class aiPropertyTypeInfo
 {
     /** Array of single-precision (32 Bit) floats
      *
@@ -629,7 +629,7 @@ struct aiMaterialProperty
     : mSemantic( 0 )
     , mIndex( 0 )
     , mDataLength( 0 )
-    , mType( aiPTI_Float )
+    , mType(aiPropertyTypeInfo::aiPTI_Float )
     , mData(nullptr) {
         // empty
     }

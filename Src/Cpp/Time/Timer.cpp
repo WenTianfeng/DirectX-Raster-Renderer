@@ -10,7 +10,7 @@ Timer::Timer() :
 	pauseTiming(0),
 	pauseTime(0)
 {
-	__int64 counts_per_second;
+	__int64 counts_per_second = 0;
 	QueryPerformanceFrequency((LARGE_INTEGER*)&counts_per_second);
 	secondsPerCount = 1.0 / (double)counts_per_second;
 
@@ -23,7 +23,7 @@ void Timer::Tick()
 		return;
 	}
 	else {
-		__int64 current_timing;
+		__int64 current_timing = 0;
 		QueryPerformanceCounter((LARGE_INTEGER*)&current_timing);
 		currentTiming = current_timing;
 
@@ -62,7 +62,7 @@ void Timer::Pause()
 {
 	if (!pause) {
 		pause = true;
-		__int64 current_timing;
+		__int64 current_timing = 0;
 		QueryPerformanceCounter((LARGE_INTEGER*)&current_timing);
 
 		pauseTiming = current_timing;
@@ -71,7 +71,7 @@ void Timer::Pause()
 
 void Timer::Start()
 {
-	__int64 start_timing;
+	__int64 start_timing = 0;
 	QueryPerformanceCounter((LARGE_INTEGER*)&start_timing);
 
 	if (pause)
@@ -86,7 +86,7 @@ void Timer::Start()
 
 void Timer::Reset()
 {
-	__int64 current_timing;
+	__int64 current_timing = 0;
 	QueryPerformanceCounter((LARGE_INTEGER*)&current_timing);
 
 	startTiming = current_timing;

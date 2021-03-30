@@ -9,22 +9,72 @@
       <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
       <Extensions>h;hh;hpp;hxx;h++;hm;inl;inc;ipp;xsd</Extensions>
     </Filter>
-    <Filter Include="资源文件">
-      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
-      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
-    </Filter>
     <Filter Include="头文件\Input Management">
       <UniqueIdentifier>{c433c139-df78-4519-84de-4935bcaa8bdd}</UniqueIdentifier>
     </Filter>
     <Filter Include="源文件\Input Management">
       <UniqueIdentifier>{53bee8f3-5a9b-4a48-a3db-3b20fb1ccd13}</UniqueIdentifier>
     </Filter>
+    <Filter Include="头文件\Graphics">
+      <UniqueIdentifier>{da836aed-653a-4710-99e7-91771874cb21}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="头文件\Components">
+      <UniqueIdentifier>{c10a4cc8-193a-42c6-9cd7-77a7f4e554fd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="头文件\Tools">
+      <UniqueIdentifier>{df48776b-6e1c-432e-8c7c-d8d02bb178c3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="头文件\Windows">
+      <UniqueIdentifier>{249d305c-b3d8-4a1b-99ce-eacb27bfad4e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="源文件\Graphics">
+      <UniqueIdentifier>{0be55288-716e-4929-b9dc-d98af11088e4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="源文件\Components">
+      <UniqueIdentifier>{c0899949-55cc-4821-9ad7-b85c676ae2bf}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="源文件\Windows">
+      <UniqueIdentifier>{dd5488ee-b36b-44c2-abe7-0a64ee537567}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="源文件\Tools">
+      <UniqueIdentifier>{edc59f10-4f8b-4671-a413-41815a43f798}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="头文件\Object">
+      <UniqueIdentifier>{0e12ba11-95ce-4f2a-89da-d408829c84fc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="源文件\Object">
+      <UniqueIdentifier>{2183f148-e4f2-4a93-a086-1b7f633f2fa2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="源文件\Graphics\Helpers">
+      <UniqueIdentifier>{d524109c-9769-48a7-b163-a6eae3d364b5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="头文件\Time">
+      <UniqueIdentifier>{e2cd06a2-29af-4ceb-a05a-484227f43cd3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="源文件\UI">
+      <UniqueIdentifier>{b3bab84f-55be-4b9b-9c8f-3787557bc441}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="头文件\UI">
+      <UniqueIdentifier>{1da11b43-e25c-4b02-908a-147cbc903572}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="源文件\Graphics\Structures">
+      <UniqueIdentifier>{6ece55e0-283b-43fa-b83d-35013606cb87}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="头文件\Graphics\Stuctures">
+      <UniqueIdentifier>{edb3a8c2-5778-48b3-9c00-8d0f335eadb9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="头文件\Graphics\Helpers">
+      <UniqueIdentifier>{d0cb90e2-3e93-4635-aca4-93f3fcaeb333}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="源文件\Time">
+      <UniqueIdentifier>{431f4bf8-b881-43e4-b94f-f62e80730bc5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Shaders">
+      <UniqueIdentifier>{c786b6a1-49f4-4341-b5c8-6a62bf2fa598}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\cpp\Main.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
-    <ClCompile Include="src\cpp\Timer.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="Src\Cpp\Mouse\Mouse.cpp">
@@ -39,71 +89,80 @@
     <ClCompile Include="Src\Cpp\Keyboard\KeyboardEvent.cpp">
       <Filter>源文件\Input Management</Filter>
     </ClCompile>
-    <ClCompile Include="Src\Cpp\Graphics\Graphics.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
-    <ClCompile Include="Src\Cpp\Tools\DataTypeConverter.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
-    <ClCompile Include="Src\Cpp\Tools\ErrorLogger.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
     <ClCompile Include="Src\Cpp\RenderingEngine.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
+    <ClCompile Include="Src\Cpp\UI\ImGui\imgui.cpp">
+      <Filter>源文件\UI</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Cpp\UI\ImGui\imgui_demo.cpp">
+      <Filter>源文件\UI</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Cpp\UI\ImGui\imgui_draw.cpp">
+      <Filter>源文件\UI</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Cpp\UI\ImGui\imgui_impl_dx11.cpp">
+      <Filter>源文件\UI</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Cpp\UI\ImGui\imgui_impl_win32.cpp">
+      <Filter>源文件\UI</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Cpp\UI\ImGui\imgui_widgets.cpp">
+      <Filter>源文件\UI</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Cpp\Graphics\Structures\Material.cpp">
+      <Filter>源文件\Graphics\Structures</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Cpp\Graphics\Structures\Mesh.cpp">
+      <Filter>源文件\Graphics\Structures</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Cpp\Components\Camera.cpp">
+      <Filter>源文件\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Cpp\Tools\DataTypeConverter.cpp">
+      <Filter>源文件\Tools</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Cpp\Tools\ErrorLogger.cpp">
+      <Filter>源文件\Tools</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Cpp\Graphics\Graphics.cpp">
+      <Filter>源文件\Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Cpp\Components\MaterialManager.cpp">
+      <Filter>源文件\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Cpp\Components\MeshRenderer.cpp">
+      <Filter>源文件\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Cpp\Components\Transform.cpp">
+      <Filter>源文件\Components</Filter>
+    </ClCompile>
     <ClCompile Include="Src\Cpp\Windows\RenderWindow.cpp">
-      <Filter>源文件</Filter>
+      <Filter>源文件\Windows</Filter>
     </ClCompile>
     <ClCompile Include="Src\Cpp\Graphics\Structures\Shader.cpp">
-      <Filter>源文件</Filter>
+      <Filter>源文件\Graphics\Structures</Filter>
     </ClCompile>
-    <ClCompile Include="Src\Cpp\Graphics\MeshRenderer.cpp">
-      <Filter>源文件</Filter>
+    <ClCompile Include="Src\Cpp\Object\Object.cpp">
+      <Filter>源文件\Object</Filter>
     </ClCompile>
-    <ClCompile Include="Src\Cpp\Graphics\UI\ImGui\imgui.cpp">
-      <Filter>源文件</Filter>
+    <ClCompile Include="Src\Cpp\Graphics\Helpers\ShaderProcessor.cpp">
+      <Filter>源文件\Graphics\Helpers</Filter>
     </ClCompile>
-    <ClCompile Include="Src\Cpp\Graphics\UI\ImGui\imgui_demo.cpp">
-      <Filter>源文件</Filter>
+    <ClCompile Include="Src\Cpp\Components\Light.cpp">
+      <Filter>源文件\Components</Filter>
     </ClCompile>
-    <ClCompile Include="Src\Cpp\Graphics\UI\ImGui\imgui_draw.cpp">
-      <Filter>源文件</Filter>
+    <ClCompile Include="Src\Cpp\UI\UserInterface.cpp">
+      <Filter>源文件\UI</Filter>
     </ClCompile>
-    <ClCompile Include="Src\Cpp\Graphics\UI\ImGui\imgui_impl_dx11.cpp">
-      <Filter>源文件</Filter>
+    <ClCompile Include="Src\Cpp\Graphics\Structures\ConstantBuffer.cpp">
+      <Filter>源文件\Graphics\Structures</Filter>
     </ClCompile>
-    <ClCompile Include="Src\Cpp\Graphics\UI\ImGui\imgui_impl_win32.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
-    <ClCompile Include="Src\Cpp\Graphics\UI\ImGui\imgui_widgets.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
-    <ClCompile Include="Src\Cpp\Graphics\ShaderProcessor.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
-    <ClCompile Include="Src\Cpp\Graphics\UI\UserInterface.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
-    <ClCompile Include="Src\Cpp\Logic\Object.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
-    <ClCompile Include="Src\Cpp\Graphics\MaterialManager.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
-    <ClCompile Include="Src\Cpp\Logic\Transform.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
-    <ClCompile Include="Src\Cpp\Logic\Camera.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
-    <ClCompile Include="Src\Cpp\Logic\ObjectManager.cpp">
-      <Filter>源文件</Filter>
+    <ClCompile Include="Src\Cpp\Time\Timer.cpp">
+      <Filter>源文件\Time</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="src\cpp\Timer.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
     <ClInclude Include="Src\Cpp\Mouse\Mouse.h">
       <Filter>头文件\Input Management</Filter>
     </ClInclude>
@@ -116,105 +175,119 @@
     <ClInclude Include="Src\Cpp\Keyboard\KeyboardEvent.h">
       <Filter>头文件\Input Management</Filter>
     </ClInclude>
-    <ClInclude Include="Src\Cpp\Graphics\Graphics.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="Src\Cpp\Tools\DataTypeConverter.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="Src\Cpp\Tools\ErrorLogger.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="Src\Cpp\Windows\RenderWindow.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
     <ClInclude Include="Src\Cpp\RenderingEngine.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="Src\Cpp\Graphics\Structures\VertexBuffer.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="Src\Cpp\Graphics\Structures\IndexBuffer.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="Src\Cpp\Graphics\Structures\VertexTypes.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="Src\Cpp\Graphics\Structures\Shader.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="Src\Cpp\Graphics\Structures\ConstantBuffer.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="Src\Cpp\Graphics\Structures\ConstantBufferTypes.h">
-      <Filter>头文件</Filter>
+    <ClInclude Include="Src\Cpp\Components\Camera.h">
+      <Filter>头文件\Components</Filter>
     </ClInclude>
     <ClInclude Include="Src\Cpp\Tools\COMException.h">
-      <Filter>头文件</Filter>
+      <Filter>头文件\Tools</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Cpp\Components\Component.h">
+      <Filter>头文件\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Cpp\Graphics\Structures\ConstantBuffer.h">
+      <Filter>头文件\Graphics\Stuctures</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Cpp\Graphics\Structures\ConstantBufferTypes.h">
+      <Filter>头文件\Graphics\Stuctures</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Cpp\Tools\DataTypeConverter.h">
+      <Filter>头文件\Tools</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Cpp\Tools\ErrorLogger.h">
+      <Filter>头文件\Tools</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Cpp\Graphics\Graphics.h">
+      <Filter>头文件\Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Cpp\UI\ImGui\imconfig.h">
+      <Filter>头文件\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Cpp\UI\ImGui\imgui.h">
+      <Filter>头文件\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Cpp\UI\ImGui\imgui_impl_dx11.h">
+      <Filter>头文件\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Cpp\UI\ImGui\imgui_impl_win32.h">
+      <Filter>头文件\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Cpp\UI\ImGui\imgui_internal.h">
+      <Filter>头文件\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Cpp\UI\ImGui\imstb_rectpack.h">
+      <Filter>头文件\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Cpp\UI\ImGui\imstb_textedit.h">
+      <Filter>头文件\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Cpp\UI\ImGui\imstb_truetype.h">
+      <Filter>头文件\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Cpp\Graphics\Structures\IndexBuffer.h">
+      <Filter>头文件\Graphics\Stuctures</Filter>
     </ClInclude>
     <ClInclude Include="Src\Cpp\Graphics\Structures\Material.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="Src\Cpp\Graphics\MeshRenderer.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="Src\Cpp\Logic\Transform.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="Src\Cpp\Logic\Object.h">
-      <Filter>头文件</Filter>
+      <Filter>头文件\Graphics\Stuctures</Filter>
     </ClInclude>
     <ClInclude Include="Src\Cpp\Graphics\Structures\Mesh.h">
-      <Filter>头文件</Filter>
+      <Filter>头文件\Graphics\Stuctures</Filter>
     </ClInclude>
-    <ClInclude Include="Src\Cpp\Graphics\UI\ImGui\imconfig.h">
-      <Filter>头文件</Filter>
+    <ClInclude Include="Src\Cpp\Graphics\Structures\Shader.h">
+      <Filter>头文件\Graphics\Stuctures</Filter>
     </ClInclude>
-    <ClInclude Include="Src\Cpp\Graphics\UI\ImGui\imgui.h">
-      <Filter>头文件</Filter>
+    <ClInclude Include="Src\Cpp\Graphics\Structures\VertexTypes.h">
+      <Filter>头文件\Graphics\Stuctures</Filter>
     </ClInclude>
-    <ClInclude Include="Src\Cpp\Graphics\UI\ImGui\imgui_impl_dx11.h">
-      <Filter>头文件</Filter>
+    <ClInclude Include="Src\Cpp\Graphics\Structures\VertexBuffer.h">
+      <Filter>头文件\Graphics\Stuctures</Filter>
     </ClInclude>
-    <ClInclude Include="Src\Cpp\Graphics\UI\ImGui\imgui_impl_win32.h">
-      <Filter>头文件</Filter>
+    <ClInclude Include="Src\Cpp\Components\MaterialManager.h">
+      <Filter>头文件\Components</Filter>
     </ClInclude>
-    <ClInclude Include="Src\Cpp\Graphics\UI\ImGui\imgui_internal.h">
-      <Filter>头文件</Filter>
+    <ClInclude Include="Src\Cpp\Components\MeshRenderer.h">
+      <Filter>头文件\Components</Filter>
     </ClInclude>
-    <ClInclude Include="Src\Cpp\Graphics\UI\ImGui\imstb_rectpack.h">
-      <Filter>头文件</Filter>
+    <ClInclude Include="Src\Cpp\Windows\RenderWindow.h">
+      <Filter>头文件\Windows</Filter>
     </ClInclude>
-    <ClInclude Include="Src\Cpp\Graphics\UI\ImGui\imstb_textedit.h">
-      <Filter>头文件</Filter>
+    <ClInclude Include="Src\Cpp\Components\Transform.h">
+      <Filter>头文件\Components</Filter>
     </ClInclude>
-    <ClInclude Include="Src\Cpp\Graphics\UI\ImGui\imstb_truetype.h">
-      <Filter>头文件</Filter>
+    <ClInclude Include="Src\Cpp\Object\Object.h">
+      <Filter>头文件\Object</Filter>
     </ClInclude>
-    <ClInclude Include="Src\Cpp\Graphics\ShaderProcessor.h">
-      <Filter>头文件</Filter>
+    <ClInclude Include="Src\Cpp\Time\Timer.h">
+      <Filter>头文件\Time</Filter>
     </ClInclude>
-    <ClInclude Include="Src\Cpp\Logic\Component.h">
-      <Filter>头文件</Filter>
+    <ClInclude Include="Src\Cpp\Components\Light.h">
+      <Filter>头文件\Components</Filter>
     </ClInclude>
-    <ClInclude Include="Src\Cpp\Logic\Camera.h">
-      <Filter>头文件</Filter>
+    <ClInclude Include="Src\Cpp\UI\UserInterface.h">
+      <Filter>头文件\UI</Filter>
     </ClInclude>
-    <ClInclude Include="Src\Cpp\Graphics\UI\UserInterface.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="Src\Cpp\Logic\ObjectManager.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="Src\Cpp\Graphics\MaterialManager.h">
-      <Filter>头文件</Filter>
+    <ClInclude Include="Src\Cpp\Graphics\Helpers\ShaderProcessor.h">
+      <Filter>头文件\Graphics\Helpers</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <FxCompile Include="Src\Shaders\PixelShader.hlsl" />
-    <FxCompile Include="Src\Shaders\VertexShader.hlsl" />
+    <FxCompile Include="Src\Shaders\PixelShaders\PixelShader.hlsl">
+      <Filter>Shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="Src\Shaders\PixelShaders\PixelShader_Error.hlsl">
+      <Filter>Shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="Src\Shaders\PixelShaders\PixelShader2.hlsl">
+      <Filter>Shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="Src\Shaders\VertexShaders\VertexShader.hlsl">
+      <Filter>Shaders</Filter>
+    </FxCompile>
   </ItemGroup>
   <ItemGroup>
-    <None Include="Src\Shaders\ShaderHeader.hlsli" />
+    <None Include="Src\Shaders\ShaderIncludes\LightHelper.hlsli" />
+    <None Include="Src\Shaders\ShaderIncludes\CommonlyUsed.hlsli" />
   </ItemGroup>
 </Project>

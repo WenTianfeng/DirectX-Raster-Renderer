@@ -52,12 +52,12 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 // ---------------------------------------------------------------------------
 inline aiPropertyTypeInfo ai_real_to_property_type_info(float)
 {
-	return aiPTI_Float;
+	return aiPropertyTypeInfo::aiPTI_Float;
 }
 
 inline aiPropertyTypeInfo ai_real_to_property_type_info(double)
 {
-	return aiPTI_Double;
+	return aiPropertyTypeInfo::aiPTI_Double;
 }
 // ---------------------------------------------------------------------------
 
@@ -93,14 +93,14 @@ inline aiReturn aiMaterial::Get(const char* pKey,unsigned int type,
     const aiMaterialProperty* prop;
     const aiReturn ret = ::aiGetMaterialProperty(this,pKey,type,idx,
         (const aiMaterialProperty**)&prop);
-    if ( AI_SUCCESS == ret )    {
+    if (aiReturn::AI_SUCCESS == ret )    {
 
         if (prop->mDataLength < sizeof(Type)*iNum) {
-            return AI_FAILURE;
+            return aiReturn::AI_FAILURE;
         }
 
-        if (prop->mType != aiPTI_Buffer) {
-            return AI_FAILURE;
+        if (prop->mType != aiPropertyTypeInfo::aiPTI_Buffer) {
+            return aiReturn::AI_FAILURE;
         }
 
         iNum = std::min((size_t)iNum,prop->mDataLength / sizeof(Type));
@@ -120,14 +120,14 @@ inline aiReturn aiMaterial::Get(const char* pKey,unsigned int type,
     const aiMaterialProperty* prop;
     const aiReturn ret = ::aiGetMaterialProperty(this,pKey,type,idx,
         (const aiMaterialProperty**)&prop);
-    if ( AI_SUCCESS == ret ) {
+    if (aiReturn::AI_SUCCESS == ret ) {
 
         if (prop->mDataLength < sizeof(Type)) {
-            return AI_FAILURE;
+            return aiReturn::AI_FAILURE;
         }
 
-        if (prop->mType != aiPTI_Buffer) {
-            return AI_FAILURE;
+        if (prop->mType != aiPropertyTypeInfo::aiPTI_Buffer) {
+            return aiReturn::AI_FAILURE;
         }
 
         ::memcpy( &pOut, prop->mData, sizeof( Type ) );
@@ -200,7 +200,7 @@ aiReturn aiMaterial::AddProperty (const TYPE* pInput,
 {
     return AddBinaryProperty((const void*)pInput,
         pNumValues * sizeof(TYPE),
-        pKey,type,index,aiPTI_Buffer);
+        pKey,type,index, aiPropertyTypeInfo::aiPTI_Buffer);
 }
 
 // ---------------------------------------------------------------------------
@@ -212,7 +212,7 @@ inline aiReturn aiMaterial::AddProperty(const float* pInput,
 {
     return AddBinaryProperty((const void*)pInput,
         pNumValues * sizeof(float),
-        pKey,type,index,aiPTI_Float);
+        pKey,type,index, aiPropertyTypeInfo::aiPTI_Float);
 }
 
 // ---------------------------------------------------------------------------
@@ -224,7 +224,7 @@ inline aiReturn aiMaterial::AddProperty(const double* pInput,
 {
     return AddBinaryProperty((const void*)pInput,
         pNumValues * sizeof(double),
-        pKey,type,index,aiPTI_Double);
+        pKey,type,index, aiPropertyTypeInfo::aiPTI_Double);
 }
 
 // ---------------------------------------------------------------------------
@@ -284,7 +284,7 @@ inline aiReturn aiMaterial::AddProperty(const int* pInput,
 {
     return AddBinaryProperty((const void*)pInput,
         pNumValues * sizeof(int),
-        pKey,type,index,aiPTI_Integer);
+        pKey,type,index, aiPropertyTypeInfo::aiPTI_Integer);
 }
 
 
@@ -304,7 +304,7 @@ inline aiReturn aiMaterial::AddProperty<float>(const float* pInput,
 {
     return AddBinaryProperty((const void*)pInput,
         pNumValues * sizeof(float),
-        pKey,type,index,aiPTI_Float);
+        pKey,type,index, aiPropertyTypeInfo::aiPTI_Float);
 }
 
 // ---------------------------------------------------------------------------
@@ -317,7 +317,7 @@ inline aiReturn aiMaterial::AddProperty<double>(const double* pInput,
 {
     return AddBinaryProperty((const void*)pInput,
         pNumValues * sizeof(double),
-        pKey,type,index,aiPTI_Double);
+        pKey,type,index, aiPropertyTypeInfo::aiPTI_Double);
 }
 
 // ---------------------------------------------------------------------------
@@ -330,7 +330,7 @@ inline aiReturn aiMaterial::AddProperty<aiUVTransform>(const aiUVTransform* pInp
 {
     return AddBinaryProperty((const void*)pInput,
         pNumValues * sizeof(aiUVTransform),
-        pKey,type,index,aiPTI_Float);
+        pKey,type,index, aiPropertyTypeInfo::aiPTI_Float);
 }
 
 // ---------------------------------------------------------------------------
@@ -343,7 +343,7 @@ inline aiReturn aiMaterial::AddProperty<aiColor4D>(const aiColor4D* pInput,
 {
     return AddBinaryProperty((const void*)pInput,
         pNumValues * sizeof(aiColor4D),
-        pKey,type,index,aiPTI_Float);
+        pKey,type,index, aiPropertyTypeInfo::aiPTI_Float);
 }
 
 // ---------------------------------------------------------------------------
@@ -356,7 +356,7 @@ inline aiReturn aiMaterial::AddProperty<aiColor3D>(const aiColor3D* pInput,
 {
     return AddBinaryProperty((const void*)pInput,
         pNumValues * sizeof(aiColor3D),
-        pKey,type,index,aiPTI_Float);
+        pKey,type,index, aiPropertyTypeInfo::aiPTI_Float);
 }
 
 // ---------------------------------------------------------------------------
@@ -369,7 +369,7 @@ inline aiReturn aiMaterial::AddProperty<aiVector3D>(const aiVector3D* pInput,
 {
     return AddBinaryProperty((const void*)pInput,
         pNumValues * sizeof(aiVector3D),
-        pKey,type,index,aiPTI_Float);
+        pKey,type,index, aiPropertyTypeInfo::aiPTI_Float);
 }
 
 // ---------------------------------------------------------------------------
@@ -382,7 +382,7 @@ inline aiReturn aiMaterial::AddProperty<int>(const int* pInput,
 {
     return AddBinaryProperty((const void*)pInput,
         pNumValues * sizeof(int),
-        pKey,type,index,aiPTI_Integer);
+        pKey,type,index, aiPropertyTypeInfo::aiPTI_Integer);
 }
 
 //! @endcond

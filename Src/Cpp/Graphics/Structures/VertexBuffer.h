@@ -1,19 +1,7 @@
-﻿ /********************************************************************************
-  * @file    VertexBuffer.h
-  * @author  WenTianfeng
-  * @version v1.0
-  * @date    9-3-2021
-  * @brief   Class VertexBuffer`s definition and members` declaration
-  ******************************************************************************
-  * @attention
-  ******************************************************************************
-  */
-
-#pragma once
+﻿#pragma once
 
 #include <wrl/client.h>
 #include <d3d11_1.h>
-#include<memory>
 
 #include"..\..\Tools\ErrorLogger.h"
 

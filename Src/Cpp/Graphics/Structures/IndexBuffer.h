@@ -1,19 +1,7 @@
-﻿/********************************************************************************
-  * @file    IndexBuffer.h
-  * @author  WenTianfeng
-  * @version v1.0
-  * @date    9-3-2021
-  * @brief   Class IndexBuffer`s definition and members` declaration
-  ******************************************************************************
-  * @attention
-  ******************************************************************************
-  */
-
-#pragma once
+﻿#pragma once
 
 #include <wrl/client.h>
 #include <d3d11_1.h>
-#include<memory>
 
 #include"..\..\Tools\ErrorLogger.h"
 
@@ -37,7 +25,7 @@ public:
 	/// 返回索引缓冲对象的指针的指针
 	/// </summary>
 	/// <returns></returns>
-	ID3D11Buffer* const* GetAddressOf()const
+	ID3D11Buffer* const* GetAddressOf() const
 	{
 		return m_indexBuffer.GetAddressOf();
 	}
