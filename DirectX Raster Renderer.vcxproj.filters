@@ -155,9 +155,6 @@
     <ClCompile Include="Src\Cpp\UI\UserInterface.cpp">
       <Filter>源文件\UI</Filter>
     </ClCompile>
-    <ClCompile Include="Src\Cpp\Graphics\Structures\ConstantBuffer.cpp">
-      <Filter>源文件\Graphics\Structures</Filter>
-    </ClCompile>
     <ClCompile Include="Src\Cpp\Time\Timer.cpp">
       <Filter>源文件\Time</Filter>
     </ClCompile>
@@ -271,6 +268,12 @@
     <ClInclude Include="Src\Cpp\Graphics\Helpers\ShaderProcessor.h">
       <Filter>头文件\Graphics\Helpers</Filter>
     </ClInclude>
+    <ClInclude Include="Src\Cpp\Graphics\Structures\StructuredBuffer.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Cpp\Graphics\Structures\StructuredBufferTypes.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Src\Shaders\PixelShaders\PixelShader.hlsl">
@@ -285,9 +288,13 @@
     <FxCompile Include="Src\Shaders\VertexShaders\VertexShader.hlsl">
       <Filter>Shaders</Filter>
     </FxCompile>
+    <FxCompile Include="Src\Shaders\VertexShaders\VertexShader_PBR.hlsl" />
+    <FxCompile Include="Src\Shaders\PixelShaders\PixelShader_PBR.hlsl" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Src\Shaders\ShaderIncludes\LightHelper.hlsli" />
-    <None Include="Src\Shaders\ShaderIncludes\CommonlyUsed.hlsli" />
+    <None Include="Src\Shaders\ShaderIncludes\CommonIncludes.hlsli" />
+    <None Include="Src\Shaders\ShaderIncludes\PBR.hlsli" />
+    <None Include="Src\Shaders\ShaderIncludes\IlluminationModels.hlsli" />
   </ItemGroup>
 </Project>

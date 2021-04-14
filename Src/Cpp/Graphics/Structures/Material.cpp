@@ -63,6 +63,7 @@ Material::Material(ID3D11Device* device, std::wstring vertexShaderFilePath, std:
 //===========创建常量缓冲============
 
 	this->m_transformMatrixCB.Initialize(device);
+	this->m_lightSB.Initialize(device, 2);
 
 }
 
@@ -94,4 +95,9 @@ ID3D11BlendState* Material::GetBlendState()
 ConstantBuffer<CB_VS_TransformMatrix>& Material::GetConstantBuffer_TransformMatrix()
 {
 	return this->m_transformMatrixCB;
+}
+
+StructuredBuffer<SB_PS_Light>& Material::GetStructuredBuffer_Light()
+{
+	return this->m_lightSB;
 }

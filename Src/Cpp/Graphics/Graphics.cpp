@@ -133,7 +133,7 @@ bool Graphics::InitializeDirectX(HWND hwnd, int width, int height)
 //===================设置光栅化状态=======================
 	D3D11_RASTERIZER_DESC rd;
 	ZeroMemory(&rd, sizeof(rd));
-	rd.FillMode = D3D11_FILL_WIREFRAME;
+	rd.FillMode = D3D11_FILL_SOLID;
 	rd.CullMode = D3D11_CULL_BACK;
 	rd.FrontCounterClockwise = false;
 	rd.DepthClipEnable = true;
@@ -202,7 +202,7 @@ bool Graphics::InitializeScene()
 
 	//生成相机
 	Object* camera = new Object();
-	camera->AddComponent<Transform>(DirectX::XMFLOAT3(0, 0, -50), DirectX::XMFLOAT3(0, 0, 0), DirectX::XMFLOAT3(1, 1, 1));
+	camera->AddComponent<Transform>(DirectX::XMFLOAT3(0, 30, -50), DirectX::XMFLOAT3(0, 0, 0), DirectX::XMFLOAT3(1, 1, 1));
 	camera->AddComponent<Camera>(DirectX::XM_PI / 2, 1.5f, 0.5f, 2000.0f);
 
 	mainCamera = camera;
@@ -211,7 +211,7 @@ bool Graphics::InitializeScene()
 
 	//生成立方体
 	Object* cube = new Object();
-	cube->AddComponent<Transform>(DirectX::XMFLOAT3(0, -20, 0), DirectX::XMFLOAT3(DirectX::XM_PI/2, -DirectX::XM_PI / 4, 0), DirectX::XMFLOAT3(2, 2, 2));//添加Transform组件
+	cube->AddComponent<Transform>(DirectX::XMFLOAT3(0, 0, 0), DirectX::XMFLOAT3(DirectX::XM_PI/2 , DirectX::XM_PI / 4, 0), DirectX::XMFLOAT3(1, 1, 1));//添加Transform组件
 	cube->AddComponent<MeshRenderer>(this->m_dxDevice.Get(),this->m_dxDeviceContext.Get(),"Resources\\Models\\BoxBall.FBX");//添加MeshRender组件
 
 	std::wstring vertexShaderFilePaths[] = {
@@ -220,8 +220,8 @@ bool Graphics::InitializeScene()
 	};
 
 	std::wstring pixelShaderFilePaths[] = {
-		shaderFolderPath + L"PixelShader.cso",
-		shaderFolderPath + L"PixelShader2.cso"
+		shaderFolderPath + L"PixelShader_PBR.cso",
+		shaderFolderPath + L"PixelShader_PBR.cso"
 	};
 
 	cube->AddComponent<MaterialManager>(this->m_dxDevice.Get(), vertexShaderFilePaths, pixelShaderFilePaths,2);//添加MaterialManager组件
@@ -248,7 +248,7 @@ bool Graphics::InitializeUI(HWND hwnd)
 void Graphics::RenderFrame()
 {
 	//背景颜色
-	float bg_color[] = { 0.1f,0.1f,0.1f,1 };
+	float bg_color[] = { 0.2f, 0.2f, 0.2f, 1 };
 	//刷新渲染目标
 	m_dxDeviceContext->ClearRenderTargetView(m_dxRenderTargetView.Get(), bg_color);
 	//刷新深度模板缓冲
@@ -264,8 +264,8 @@ void Graphics::RenderFrame()
 	ImGui_ImplDX11_NewFrame();
 	ImGui_ImplWin32_NewFrame();
 	ImGui::NewFrame();
-	ImGui::Begin("Hierarchy");
-	ImGui::End();
+
+	//ImGui::ShowDemoWindow(&show_demo_window);
 	ImGui::Render();
 	ImGui_ImplDX11_RenderDrawData(ImGui::GetDrawData());
 

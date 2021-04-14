@@ -11,10 +11,12 @@ MeshRenderer::MeshRenderer(ID3D11Device* device, ID3D11DeviceContext* deviceCont
 	}
 }
 
+
 void MeshRenderer::Initialize()
 {
 
 }
+
 
 void MeshRenderer::Update(float dt)
 {
@@ -64,8 +66,10 @@ void MeshRenderer::Render()
 		UINT offsets = 0;
 		this->m_dxDeviceContext->IASetVertexBuffers(0, 1, m_meshes[i].GetVertexBuffer().GetAddressOf(), m_meshes[i].GetVertexBuffer().StridePtr(), &offsets);
 
+
 	//设置索引缓冲
 		this->m_dxDeviceContext->IASetIndexBuffer(m_meshes[i].GetIndexBuffer().Get(), DXGI_FORMAT_R32_UINT, 0);
+
 
 	//设置常量缓冲
 		this->m_dxDeviceContext->VSSetConstantBuffers(0, 1, materialManager->materials[i].GetConstantBuffer_TransformMatrix().GetAddressOf());
@@ -88,11 +92,46 @@ void MeshRenderer::Render()
 		materialManager->materials[i].GetConstantBuffer_TransformMatrix().bufferData.projection = DirectX::XMMatrixTranspose(P);
 
 		materialManager->materials[i].GetConstantBuffer_TransformMatrix().UpdateConstantBuffer(this->m_dxDeviceContext);
+
+	//设置结构化缓冲
+		this->m_dxDeviceContext->PSSetShaderResources(0, 1, materialManager->materials[i].GetStructuredBuffer_Light().GetSRVAddressOf());
+
+		SB_PS_Light light1 = {
+
+			DirectX::XMFLOAT4(1,0,0,1),
+			DirectX::XMFLOAT3(40,40,-40),
+			100,
+			DirectX::XMFLOAT3(1,1,-1),
+			1,
+			0,
+			DirectX::XMFLOAT3(0,0,0)
+		};
+
+		SB_PS_Light light2 = {
+
+			DirectX::XMFLOAT4(0,0,1,1),
+			DirectX::XMFLOAT3(-40,40,-40),
+			100,
+			DirectX::XMFLOAT3(-1,-1,-1),
+			1,
+			0,
+			DirectX::XMFLOAT3(0,0,0)
+		};
+
+		std::vector<SB_PS_Light> lightVec;
+		lightVec.push_back(light1);
+		lightVec.push_back(light2);
+
+		//更新结构缓冲
+		materialManager->materials[i].GetStructuredBuffer_Light().SetData(lightVec.data(), sizeof(SB_PS_Light), 2);
+		materialManager->materials[i].GetStructuredBuffer_Light().UpdateStructuredBuffer(this->m_dxDeviceContext);
+
 	//=======绘制========
 		this->m_dxDeviceContext->DrawIndexed(this->m_meshes[i].GetIndexBuffer().IndexCount(), 0, 0);
 
 	}
 }
+
 
 bool MeshRenderer::LoadModel(std::string modelFilePath)
 {

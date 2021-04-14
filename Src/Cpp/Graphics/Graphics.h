@@ -15,7 +15,6 @@
 #include<vector>
 
 #include"..\Tools\ErrorLogger.h"
-
 #include"..\Object\Object.h"
 
 
@@ -90,6 +89,7 @@ private:
 	Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> m_mainTexResourceView;//着色器纹理资源
 	Microsoft::WRL::ComPtr<ID3D11SamplerState> m_dxSamplerState;//纹理采样器
 	
+	bool show_demo_window = true;
 
 private:
 	std::vector<Object*> m_objects;

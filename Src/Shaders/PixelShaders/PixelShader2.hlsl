@@ -1,4 +1,4 @@
-#include"..\ShaderIncludes\CommonlyUsed.hlsli"
+#include"..\ShaderIncludes\CommonIncludes.hlsli"
 
 float4 main(VertexOutput input) : SV_TARGET
 {
