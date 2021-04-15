@@ -12,18 +12,6 @@ MeshRenderer::MeshRenderer(ID3D11Device* device, ID3D11DeviceContext* deviceCont
 }
 
 
-void MeshRenderer::Initialize()
-{
-
-}
-
-
-void MeshRenderer::Update(float dt)
-{
-	
-}
-
-
 void MeshRenderer::Render()
 {
 	MaterialManager* materialManager = this->owner->GetComponent<MaterialManager>();
@@ -93,37 +81,21 @@ void MeshRenderer::Render()
 
 		materialManager->materials[i].GetConstantBuffer_TransformMatrix().UpdateConstantBuffer(this->m_dxDeviceContext);
 
-	//设置结构化缓冲
+	//设置结构缓冲
 		this->m_dxDeviceContext->PSSetShaderResources(0, 1, materialManager->materials[i].GetStructuredBuffer_Light().GetSRVAddressOf());
 
-		SB_PS_Light light1 = {
-
-			DirectX::XMFLOAT4(1,0,0,1),
-			DirectX::XMFLOAT3(40,40,-40),
-			100,
-			DirectX::XMFLOAT3(1,1,-1),
-			1,
-			0,
-			DirectX::XMFLOAT3(0,0,0)
-		};
-
-		SB_PS_Light light2 = {
-
-			DirectX::XMFLOAT4(0,0,1,1),
-			DirectX::XMFLOAT3(-40,40,-40),
-			100,
-			DirectX::XMFLOAT3(-1,-1,-1),
-			1,
-			0,
-			DirectX::XMFLOAT3(0,0,0)
-		};
-
-		std::vector<SB_PS_Light> lightVec;
-		lightVec.push_back(light1);
-		lightVec.push_back(light2);
+		//更改结构缓冲成员数据
+		for (UINT j = 0; j < Graphics::lights.size(); j++)
+		{
+			materialManager->materials[i].GetStructuredBuffer_Light().bufferData[j].Type = (UINT)Graphics::lights[j]->GetComponent<Light>()->GetType();
+			materialManager->materials[i].GetStructuredBuffer_Light().bufferData[j].Color = Graphics::lights[j]->GetComponent<Light>()->GetColor();
+			materialManager->materials[i].GetStructuredBuffer_Light().bufferData[j].Direction = Graphics::lights[j]->GetComponent<Light>()->GetDirection();
+			materialManager->materials[i].GetStructuredBuffer_Light().bufferData[j].Position = Graphics::lights[j]->GetComponent<Light>()->GetPosition();
+			materialManager->materials[i].GetStructuredBuffer_Light().bufferData[j].Intensity = Graphics::lights[j]->GetComponent<Light>()->GetIntensity();
+			materialManager->materials[i].GetStructuredBuffer_Light().bufferData[j].Range = Graphics::lights[j]->GetComponent<Light>()->GetRange();
+		}
 
 		//更新结构缓冲
-		materialManager->materials[i].GetStructuredBuffer_Light().SetData(lightVec.data(), sizeof(SB_PS_Light), 2);
 		materialManager->materials[i].GetStructuredBuffer_Light().UpdateStructuredBuffer(this->m_dxDeviceContext);
 
 	//=======绘制========

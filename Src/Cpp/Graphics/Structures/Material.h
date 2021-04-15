@@ -1,5 +1,7 @@
 #pragma once
 
+#include<DirectXTK\WICTextureLoader.h> //Œ∆¿Ìº”‘ÿø‚
+
 #include"Shader.h"
 #include"ConstantBuffer.h"
 #include"ConstantBufferTypes.h"
@@ -31,5 +33,4 @@ private:
 
 	ConstantBuffer<CB_VS_TransformMatrix> m_transformMatrixCB;
 	StructuredBuffer<SB_PS_Light> m_lightSB;
-
 };

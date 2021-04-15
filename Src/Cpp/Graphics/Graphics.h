@@ -75,6 +75,7 @@ private:
 
 public:
 	static Object* mainCamera;
+	static std::vector<Object*> lights;
 
 private:
 

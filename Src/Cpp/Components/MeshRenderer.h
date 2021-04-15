@@ -18,16 +18,15 @@
 #include"Transform.h"
 #include"Camera.h"
 #include"MaterialManager.h"
+#include"Light.h"
 
 class MeshRenderer : public Component
 {
 public:
 	MeshRenderer(ID3D11Device* device, ID3D11DeviceContext* deviceContext, std::string modelFilePath);
-	void Initialize();
-	void Update(float dt);
 	void Render();
 
-private:
+protected:
 	/// <summary>
 	/// 使用assimp加载模型
 	/// </summary>
@@ -51,7 +50,7 @@ private:
 	/// <returns>自定义Mesh结构对象</returns>
 	Mesh ProcessMesh(aiMesh* mesh, const aiScene* scene);
 
-private:
+protected:
 	//Mesh 列表
 	std::vector<Mesh> m_meshes;
 

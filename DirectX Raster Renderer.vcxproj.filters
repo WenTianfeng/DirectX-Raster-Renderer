@@ -158,6 +158,9 @@
     <ClCompile Include="Src\Cpp\Time\Timer.cpp">
       <Filter>源文件\Time</Filter>
     </ClCompile>
+    <ClCompile Include="Src\Cpp\Components\Skybox.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Src\Cpp\Mouse\Mouse.h">
@@ -274,15 +277,12 @@
     <ClInclude Include="Src\Cpp\Graphics\Structures\StructuredBufferTypes.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="Src\Cpp\Components\Skybox.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <FxCompile Include="Src\Shaders\PixelShaders\PixelShader.hlsl">
-      <Filter>Shaders</Filter>
-    </FxCompile>
     <FxCompile Include="Src\Shaders\PixelShaders\PixelShader_Error.hlsl">
-      <Filter>Shaders</Filter>
-    </FxCompile>
-    <FxCompile Include="Src\Shaders\PixelShaders\PixelShader2.hlsl">
       <Filter>Shaders</Filter>
     </FxCompile>
     <FxCompile Include="Src\Shaders\VertexShaders\VertexShader.hlsl">
@@ -290,6 +290,8 @@
     </FxCompile>
     <FxCompile Include="Src\Shaders\VertexShaders\VertexShader_PBR.hlsl" />
     <FxCompile Include="Src\Shaders\PixelShaders\PixelShader_PBR.hlsl" />
+    <FxCompile Include="Src\Shaders\VertexShaders\VertexShader_Skybox.hlsl" />
+    <FxCompile Include="Src\Shaders\PixelShaders\PixelShader_Skybox.hlsl" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Src\Shaders\ShaderIncludes\LightHelper.hlsli" />

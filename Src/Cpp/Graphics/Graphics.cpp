@@ -1,7 +1,9 @@
 ﻿#include "Graphics.h"
-#include"..\Components\MeshRenderer.h"
+
+#include"..\Components\Skybox.h"
 
 Object* Graphics::mainCamera = nullptr;
+std::vector<Object*> Graphics::lights = {};
 
 bool Graphics::Initialize(HWND hwnd, int width, int height)
 {
@@ -134,7 +136,7 @@ bool Graphics::InitializeDirectX(HWND hwnd, int width, int height)
 	D3D11_RASTERIZER_DESC rd;
 	ZeroMemory(&rd, sizeof(rd));
 	rd.FillMode = D3D11_FILL_SOLID;
-	rd.CullMode = D3D11_CULL_BACK;
+	rd.CullMode = D3D11_CULL_NONE;
 	rd.FrontCounterClockwise = false;
 	rd.DepthClipEnable = true;
 	
@@ -188,6 +190,7 @@ bool Graphics::InitializeEffect()
 bool Graphics::InitializeScene()
 {
 #pragma region 判定shader文件路径
+
 	std::wstring shaderFolderPath;
 	if (IsDebuggerPresent())
 	{
@@ -200,14 +203,61 @@ bool Graphics::InitializeScene()
 	}
 #pragma endregion
 
-	//生成相机
+#pragma region 生成相机
+
 	Object* camera = new Object();
-	camera->AddComponent<Transform>(DirectX::XMFLOAT3(0, 30, -50), DirectX::XMFLOAT3(0, 0, 0), DirectX::XMFLOAT3(1, 1, 1));
-	camera->AddComponent<Camera>(DirectX::XM_PI / 2, 1.5f, 0.5f, 2000.0f);
+	camera->AddComponent<Transform>(DirectX::XMFLOAT3(0, 30, -80), DirectX::XMFLOAT3(0, 0, 0), DirectX::XMFLOAT3(1, 1, 1));
+	camera->AddComponent<Camera>(DirectX::XM_PI / 3, 1.5f, 0.5f, 2000.0f);
 
 	mainCamera = camera;
 
 	this->m_objects.push_back(camera);//将对象加入列表中
+
+#pragma endregion
+
+#pragma region 生成光源
+
+	Object* directional_light1 = new Object();
+	directional_light1->AddComponent<Transform>(DirectX::XMFLOAT3(80, 80, -80), DirectX::XMFLOAT3(DirectX::XM_PI / 4, DirectX::XM_PI/4, 0), DirectX::XMFLOAT3(1, 1, 1));
+	directional_light1->AddComponent<Light>(Light::LightType::Directional, DirectX::XMFLOAT4(1.0f, 0, 0, 0), 1.0f, 2000.0f);
+	this->m_objects.push_back(directional_light1);
+	lights.push_back(directional_light1);
+
+	Object* directional_light2 = new Object();
+	directional_light2->AddComponent<Transform>(DirectX::XMFLOAT3(-80, 80, -80), DirectX::XMFLOAT3(DirectX::XM_PI / 4, -DirectX::XM_PI / 4, 0), DirectX::XMFLOAT3(1, 1, 1));
+	directional_light2->AddComponent<Light>(Light::LightType::Directional, DirectX::XMFLOAT4(0, 0, 1.0f, 0), 1.0f, 2000.0f);
+	this->m_objects.push_back(directional_light2);
+	lights.push_back(directional_light2);
+
+#pragma endregion
+
+
+#pragma region 生成天空盒
+
+	Object* skybox = new Object();
+	skybox->AddComponent<Transform>(DirectX::XMFLOAT3(0, 0, 0), DirectX::XMFLOAT3(0, 0, 0), DirectX::XMFLOAT3(500, 500, 500));
+
+	std::vector<std::wstring> skyboxTextureList = {
+		L"Resources\\Textures\\SkyboxTexturesCloudy\\CloudyCrown_Sunset_Left.png", L"Resources\\Textures\\SkyboxTexturesCloudy\\CloudyCrown_Sunset_Right.png",
+			L"Resources\\Textures\\SkyboxTexturesCloudy\\CloudyCrown_Sunset_Up.png", L"Resources\\Textures\\SkyboxTexturesCloudy\\CloudyCrown_Sunset_Down.png",
+			L"Resources\\Textures\\SkyboxTexturesCloudy\\CloudyCrown_Sunset_Front.png", L"Resources\\Textures\\SkyboxTexturesCloudy\\CloudyCrown_Sunset_Back.png"};
+
+	skybox->AddComponent<Skybox>(this->m_dxDevice.Get(), this->m_dxDeviceContext.Get(), skyboxTextureList);
+
+	std::wstring skyboxVertexShaderFilePaths[] = {
+		shaderFolderPath + L"VertexShader_Skybox.cso"
+	};
+
+	std::wstring skyboxPixelShaderFilePaths[] = {
+		shaderFolderPath + L"PixelShader_Skybox.cso"
+	};
+	skybox->AddComponent<MaterialManager>(this->m_dxDevice.Get(), skyboxVertexShaderFilePaths, skyboxPixelShaderFilePaths, 1);
+
+	this->m_objects.push_back(skybox);
+
+#pragma endregion
+
+#pragma region 生成场景对象
 
 	//生成立方体
 	Object* cube = new Object();
@@ -227,6 +277,8 @@ bool Graphics::InitializeScene()
 	cube->AddComponent<MaterialManager>(this->m_dxDevice.Get(), vertexShaderFilePaths, pixelShaderFilePaths,2);//添加MaterialManager组件
 
 	this->m_objects.push_back(cube);
+
+#pragma endregion
 
 	return true;
 }

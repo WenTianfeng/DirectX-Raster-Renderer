@@ -30,7 +30,7 @@ Material::Material(ID3D11Device* device, std::wstring vertexShaderFilePath, std:
 	ZeroMemory(&dsc, sizeof(dsc));
 	dsc.DepthEnable = true;
 	dsc.DepthWriteMask = D3D11_DEPTH_WRITE_MASK_ALL;
-	dsc.DepthFunc = D3D11_COMPARISON_LESS;
+	dsc.DepthFunc = D3D11_COMPARISON_LESS_EQUAL;
 	dsc.StencilEnable = false;
 	//……………………其余模板缓冲描述待填写……………………
 
@@ -63,6 +63,8 @@ Material::Material(ID3D11Device* device, std::wstring vertexShaderFilePath, std:
 //===========创建常量缓冲============
 
 	this->m_transformMatrixCB.Initialize(device);
+
+//===========创建结构缓冲============
 	this->m_lightSB.Initialize(device, 2);
 
 }

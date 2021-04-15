@@ -23,6 +23,29 @@ DirectX::XMFLOAT3 Transform::GetPosition() const
 	return this->m_position;
 }
 
+DirectX::XMFLOAT3 Transform::GetRightAxis() const
+{
+	DirectX::XMMATRIX R = DirectX::XMMatrixRotationRollPitchYawFromVector(DirectX::XMLoadFloat3(&m_rotation));
+	DirectX::XMFLOAT3 right;
+	DirectX::XMStoreFloat3(&right, R.r[0]);
+	return right;
+}
+
+DirectX::XMFLOAT3 Transform::GetUpAxis() const
+{
+	DirectX::XMMATRIX R = DirectX::XMMatrixRotationRollPitchYawFromVector(DirectX::XMLoadFloat3(&m_rotation));
+	DirectX::XMFLOAT3 up;
+	DirectX::XMStoreFloat3(&up, R.r[1]);
+	return up;
+}
+
+DirectX::XMFLOAT3 Transform::GetForwardAxis() const
+{
+	DirectX::XMMATRIX R = DirectX::XMMatrixRotationRollPitchYawFromVector(DirectX::XMLoadFloat3(&m_rotation));
+	DirectX::XMFLOAT3 forward;
+	DirectX::XMStoreFloat3(&forward, R.r[2]);
+	return forward;
+}
 
 DirectX::XMFLOAT4X4 Transform::GetLocalToWorldMatrix() const
 {

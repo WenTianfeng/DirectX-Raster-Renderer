@@ -25,6 +25,14 @@ public:
 
 	DirectX::XMFLOAT3 GetPosition() const;
 
+	//返回局部坐标系x轴向量
+	DirectX::XMFLOAT3 GetRightAxis() const;
+
+	//返回局部坐标系y轴向量
+	DirectX::XMFLOAT3 GetUpAxis() const;
+
+	//返回局部坐标系z轴向量
+	DirectX::XMFLOAT3 GetForwardAxis() const;
 
 	DirectX::XMFLOAT4X4 GetLocalToWorldMatrix() const;
 

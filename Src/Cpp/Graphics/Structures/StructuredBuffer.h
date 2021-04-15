@@ -54,6 +54,11 @@ public:
 	/// <returns>初始化是否成功</returns>
 	bool Initialize(ID3D11Device* dxDevice, UINT numElements)
 	{
+		for (UINT i = 0; i < numElements; i++)
+		{
+			bufferData.push_back(*(new T()));
+		}
+
 		//创建缓冲描述
 		D3D11_BUFFER_DESC cbd = {};
 		cbd.Usage = D3D11_USAGE_DYNAMIC;
@@ -96,8 +101,8 @@ public:
 		//错误检查
 		COM_ERROR_IF_FAILED(hr, "Failed to map DirectX Constant Buffer.");
 
-		size_t numElements = bufferData.size();
-		memcpy_s(mapped_data.pData, numElements, bufferData.data(), numElements);
+		size_t sizeInBytes = bufferData.size()*sizeof(T);
+		memcpy_s(mapped_data.pData, sizeInBytes, bufferData.data(), sizeInBytes);
 		dxDeviceContext->Unmap(this->m_structuredBuffer.Get(), 0);
 
 		return true;

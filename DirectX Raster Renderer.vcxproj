@@ -21,6 +21,7 @@
   <ItemGroup>
     <ClCompile Include="Src\Cpp\Components\Light.cpp" />
     <ClCompile Include="Src\Cpp\Components\MaterialManager.cpp" />
+    <ClCompile Include="Src\Cpp\Components\Skybox.cpp" />
     <ClCompile Include="Src\Cpp\Graphics\Graphics.cpp" />
     <ClCompile Include="Src\Cpp\Graphics\Structures\Material.cpp" />
     <ClCompile Include="Src\Cpp\Graphics\Structures\Mesh.cpp" />
@@ -51,6 +52,7 @@
   <ItemGroup>
     <ClInclude Include="Src\Cpp\Components\Light.h" />
     <ClInclude Include="Src\Cpp\Components\MaterialManager.h" />
+    <ClInclude Include="Src\Cpp\Components\Skybox.h" />
     <ClInclude Include="Src\Cpp\Graphics\Structures\StructuredBuffer.h" />
     <ClInclude Include="Src\Cpp\Graphics\Structures\StructuredBufferTypes.h" />
     <ClInclude Include="Src\Cpp\UI\ImGui\imconfig.h" />
@@ -89,18 +91,6 @@
     <ClInclude Include="Src\Cpp\RenderingEngine.h" />
   </ItemGroup>
   <ItemGroup>
-    <FxCompile Include="Src\Shaders\PixelShaders\PixelShader.hlsl">
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Pixel</ShaderType>
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Pixel</ShaderType>
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Pixel</ShaderType>
-    </FxCompile>
-    <FxCompile Include="Src\Shaders\PixelShaders\PixelShader2.hlsl">
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Pixel</ShaderType>
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Pixel</ShaderType>
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Pixel</ShaderType>
-    </FxCompile>
     <FxCompile Include="Src\Shaders\PixelShaders\PixelShader_Error.hlsl">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Pixel</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
@@ -117,6 +107,12 @@
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.0</ShaderModel>
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">5.0</ShaderModel>
     </FxCompile>
+    <FxCompile Include="Src\Shaders\PixelShaders\PixelShader_Skybox.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Pixel</ShaderType>
+    </FxCompile>
     <FxCompile Include="Src\Shaders\VertexShaders\VertexShader.hlsl">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Vertex</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Vertex</ShaderType>
@@ -124,6 +120,12 @@
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Vertex</ShaderType>
     </FxCompile>
     <FxCompile Include="Src\Shaders\VertexShaders\VertexShader_PBR.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Vertex</ShaderType>
+    </FxCompile>
+    <FxCompile Include="Src\Shaders\VertexShaders\VertexShader_Skybox.hlsl">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Vertex</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Vertex</ShaderType>
