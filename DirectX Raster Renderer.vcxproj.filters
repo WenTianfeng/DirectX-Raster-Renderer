@@ -292,6 +292,7 @@
     <FxCompile Include="Src\Shaders\PixelShaders\PixelShader_PBR.hlsl" />
     <FxCompile Include="Src\Shaders\VertexShaders\VertexShader_Skybox.hlsl" />
     <FxCompile Include="Src\Shaders\PixelShaders\PixelShader_Skybox.hlsl" />
+    <FxCompile Include="Src\Shaders\PixelShaders\PixelShader_Texture.hlsl" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Src\Shaders\ShaderIncludes\LightHelper.hlsli" />

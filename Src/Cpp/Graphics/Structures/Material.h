@@ -33,4 +33,5 @@ private:
 
 	ConstantBuffer<CB_VS_TransformMatrix> m_transformMatrixCB;
 	StructuredBuffer<SB_PS_Light> m_lightSB;
+
 };

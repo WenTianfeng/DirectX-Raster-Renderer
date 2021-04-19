@@ -46,6 +46,8 @@ void MeshRenderer::Render()
 
 		//设置采样器状态
 
+		//设置纹理资源
+		this->m_dxDeviceContext->PSSetShaderResources(2, 1, this->m_pTexSRV.GetAddressOf());
 
 
 	//=======缓冲设置========
@@ -181,3 +183,4 @@ Mesh MeshRenderer::ProcessMesh(aiMesh* mesh, const aiScene* scene)
 
 	return Mesh(this->m_dxDevice,vertices,indices);
 }
+

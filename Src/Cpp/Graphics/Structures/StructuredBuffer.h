@@ -79,6 +79,7 @@ public:
 		srvd.Buffer.FirstElement = 0;			// 起始元素的索引
 		srvd.Buffer.NumElements = numElements;	// 元素数目
 
+
 		hr = dxDevice->CreateShaderResourceView(m_structuredBuffer.Get(), &srvd, m_structuredBufferSRV.GetAddressOf());
 
 		//错误检查

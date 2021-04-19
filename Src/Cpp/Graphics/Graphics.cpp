@@ -104,7 +104,7 @@ bool Graphics::InitializeDirectX(HWND hwnd, int width, int height)
 	depthStencilDesc.CPUAccessFlags = 0;
 	depthStencilDesc.MiscFlags = 0;
 
-	//创建2D缓冲
+	//创建2D纹理缓冲
 	hr = m_dxDevice->CreateTexture2D(&depthStencilDesc, nullptr, m_dxDepthStencilBuffer.GetAddressOf());
 	//错误检查
 	COM_ERROR_IF_FAILED(hr, "Failed to create DirectX Depth/Stencil Buffer.");
@@ -153,37 +153,6 @@ bool Graphics::InitializeDirectX(HWND hwnd, int width, int height)
 
 bool Graphics::InitializeEffect()
 {
-
-//纹理采样设置===============================================================================
-	HRESULT hr;
-
-	D3D11_SAMPLER_DESC sampDesc;
-	ZeroMemory(&sampDesc, sizeof(sampDesc));
-	sampDesc.Filter = D3D11_FILTER_MIN_MAG_MIP_LINEAR;
-	sampDesc.AddressU = D3D11_TEXTURE_ADDRESS_WRAP;
-	sampDesc.AddressV = D3D11_TEXTURE_ADDRESS_WRAP;
-	sampDesc.AddressW = D3D11_TEXTURE_ADDRESS_WRAP;
-	sampDesc.ComparisonFunc = D3D11_COMPARISON_NEVER;
-	sampDesc.MinLOD = 0;
-	sampDesc.MaxLOD = D3D11_FLOAT32_MAX;
-
-	//创建纹理
-	hr = DirectX::CreateWICTextureFromFile(this->m_dxDevice.Get(), L"Resources\\Textures\\transparency.png", nullptr, this->m_mainTexResourceView.GetAddressOf());
-	//错误检查
-	COM_ERROR_IF_FAILED(hr, "Failed to Create WIC Texture from File.");
-
-	//设置着色器纹理资源
-	this->m_dxDeviceContext->PSSetShaderResources(0, 1, this->m_mainTexResourceView.GetAddressOf());
-
-	//创建采样器状态
-	hr = this->m_dxDevice->CreateSamplerState(&sampDesc, this->m_dxSamplerState.GetAddressOf());
-	//错误检查
-	COM_ERROR_IF_FAILED(hr, "Failed to Create DirectX Sampler State.");
-
-	//设置采样器状态
-	this->m_dxDeviceContext->PSSetSamplers(0, 1, this->m_dxSamplerState.GetAddressOf());
-
-
 	return true;
 }
 
@@ -207,7 +176,7 @@ bool Graphics::InitializeScene()
 
 	Object* camera = new Object();
 	camera->AddComponent<Transform>(DirectX::XMFLOAT3(0, 30, -80), DirectX::XMFLOAT3(0, 0, 0), DirectX::XMFLOAT3(1, 1, 1));
-	camera->AddComponent<Camera>(DirectX::XM_PI / 3, 1.5f, 0.5f, 2000.0f);
+	camera->AddComponent<Camera>(DirectX::XM_PI / 3, 2.0f, 0.5f, 2000.0f);
 
 	mainCamera = camera;
 
@@ -231,7 +200,6 @@ bool Graphics::InitializeScene()
 
 #pragma endregion
 
-
 #pragma region 生成天空盒
 
 	Object* skybox = new Object();
@@ -251,9 +219,10 @@ bool Graphics::InitializeScene()
 	std::wstring skyboxPixelShaderFilePaths[] = {
 		shaderFolderPath + L"PixelShader_Skybox.cso"
 	};
+
 	skybox->AddComponent<MaterialManager>(this->m_dxDevice.Get(), skyboxVertexShaderFilePaths, skyboxPixelShaderFilePaths, 1);
 
-	this->m_objects.push_back(skybox);
+	//this->m_objects.push_back(skybox);
 
 #pragma endregion
 
@@ -276,7 +245,24 @@ bool Graphics::InitializeScene()
 
 	cube->AddComponent<MaterialManager>(this->m_dxDevice.Get(), vertexShaderFilePaths, pixelShaderFilePaths,2);//添加MaterialManager组件
 
-	this->m_objects.push_back(cube);
+	//this->m_objects.push_back(cube);
+
+	//生成四边形
+	Object* quad = new Object();
+	quad->AddComponent<Transform>(DirectX::XMFLOAT3(0, 0, 0), DirectX::XMFLOAT3(0, 0, 0), DirectX::XMFLOAT3(3, 3, 3));//添加Transform组件
+	quad->AddComponent<MeshRenderer>(this->m_dxDevice.Get(), this->m_dxDeviceContext.Get(), "Resources\\Models\\Quad.FBX");//添加MeshRender组件
+
+	std::wstring quadVertexShaderFilePaths[] = {
+		shaderFolderPath + L"VertexShader.cso",
+	};
+
+	std::wstring quadPixelShaderFilePaths[] = {
+		shaderFolderPath + L"PixelShader_Texture.cso",
+	};
+
+	quad->AddComponent<MaterialManager>(this->m_dxDevice.Get(), quadVertexShaderFilePaths, quadPixelShaderFilePaths, 1);//添加MaterialManager组件
+
+	this->m_objects.push_back(quad);
 
 #pragma endregion
 
@@ -285,42 +271,29 @@ bool Graphics::InitializeScene()
 
 bool Graphics::InitializeUI(HWND hwnd)
 {
-
-	IMGUI_CHECKVERSION();
-	ImGui::CreateContext();
-	ImGuiIO& io = ImGui::GetIO();
-	ImGui_ImplWin32_Init(hwnd);
-	ImGui_ImplDX11_Init(this->m_dxDevice.Get(), this->m_dxDeviceContext.Get());
-	ImGui::StyleColorsDark();
-
-	return true;
+	return this->m_userInterface->Initialize(hwnd, this->m_dxDevice.Get(), this->m_dxDeviceContext.Get());
 }
 
 
 void Graphics::RenderFrame()
 {
-	//背景颜色
-	float bg_color[] = { 0.2f, 0.2f, 0.2f, 1 };
 	//刷新渲染目标
-	m_dxDeviceContext->ClearRenderTargetView(m_dxRenderTargetView.Get(), bg_color);
+	m_dxDeviceContext->ClearRenderTargetView(m_dxRenderTargetView.Get(), this->m_renderTargetBackgroundColor);
 	//刷新深度模板缓冲
 	m_dxDeviceContext->ClearDepthStencilView(m_dxDepthStencilView.Get(), D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
 
-	//渲染所有对象
+	//=======场景对象渲染=======
 	for (auto object : this->m_objects)
 	{
 		object->Render();
 	}
 
-	//绘制ImGui========================================================
-	ImGui_ImplDX11_NewFrame();
-	ImGui_ImplWin32_NewFrame();
-	ImGui::NewFrame();
+	//========UI渲染=========
+	this->m_userInterface->Render();
 
-	//ImGui::ShowDemoWindow(&show_demo_window);
-	ImGui::Render();
-	ImGui_ImplDX11_RenderDrawData(ImGui::GetDrawData());
-
-	m_dxSwapChain->Present(0u, 0u);
+	
+	//显示渲染后的交换链缓冲
+	HRESULT hr = m_dxSwapChain->Present(0u, 0u);
+	COM_ERROR_IF_FAILED(hr, "Failed to present swap chain.");
 
 }

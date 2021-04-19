@@ -16,7 +16,7 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE prevInstance, _I
 	try
 	{
 		//引擎初始化
-		render_engine.Initialize(hInstance, "Wind Rendering Engine v1.0", "WndClassName", 1200, 800);
+		render_engine.Initialize(hInstance, "Wind Rendering Engine v1.0", "WndClassName", 1600, 800);
 	}
 	catch (COMException& exception)
 	{

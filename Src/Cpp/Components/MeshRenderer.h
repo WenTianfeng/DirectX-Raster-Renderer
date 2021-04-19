@@ -59,6 +59,7 @@ protected:
 	//DirectX иообнд
 	ID3D11DeviceContext* m_dxDeviceContext = nullptr;
 
+	Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> m_pTexSRV;
 };
 
 

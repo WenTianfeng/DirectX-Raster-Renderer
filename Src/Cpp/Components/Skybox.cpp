@@ -4,6 +4,7 @@ Skybox::Skybox(ID3D11Device* device, ID3D11DeviceContext* deviceContext, const s
 	MeshRenderer(device,deviceContext, "Resources\\Models\\SkyboxSphere.FBX"),
 	m_cubeMapFileNames(cubeMapFileNames)
 {
+
 }
 
 void Skybox::Initialize()

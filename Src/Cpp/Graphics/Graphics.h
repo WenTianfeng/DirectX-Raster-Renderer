@@ -18,10 +18,11 @@
 #include"..\Object\Object.h"
 
 
+//UI相关
 #include"..\UI\ImGui\imgui.h"
 #include"..\UI\ImGui\imgui_impl_dx11.h"
 #include"..\UI\ImGui\imgui_impl_win32.h"
-
+#include"..\UI\UserInterface.h"
 
 
 class Graphics 
@@ -77,8 +78,8 @@ public:
 	static Object* mainCamera;
 	static std::vector<Object*> lights;
 
+	//DirectX 相关
 private:
-
 	Microsoft::WRL::ComPtr<ID3D11Device> m_dxDevice;//Dx设备
 	Microsoft::WRL::ComPtr<IDXGISwapChain> m_dxSwapChain;//Dx交换链
 	Microsoft::WRL::ComPtr<ID3D11DeviceContext> m_dxDeviceContext;//Dx上下文
@@ -86,11 +87,14 @@ private:
 	Microsoft::WRL::ComPtr<ID3D11DepthStencilView> m_dxDepthStencilView;//深度模板视图
 	Microsoft::WRL::ComPtr<ID3D11Texture2D> m_dxDepthStencilBuffer;//深度模板缓冲
 	Microsoft::WRL::ComPtr<ID3D11RasterizerState> m_dxRasterizerState;//光栅化状态
+	float m_renderTargetBackgroundColor[4] = { 0.2f, 0.2f, 0.2f, 1 };//帧缓冲默认刷新颜色
 
 	Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> m_mainTexResourceView;//着色器纹理资源
 	Microsoft::WRL::ComPtr<ID3D11SamplerState> m_dxSamplerState;//纹理采样器
 	
-	bool show_demo_window = true;
+	//UI相关
+private:
+	UserInterface* m_userInterface;//UI对象
 
 private:
 	std::vector<Object*> m_objects;

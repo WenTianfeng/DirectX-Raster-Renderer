@@ -103,3 +103,6 @@ StructuredBuffer<SB_PS_Light>& Material::GetStructuredBuffer_Light()
 {
 	return this->m_lightSB;
 }
+
+
+
