@@ -21,7 +21,11 @@ bool RenderingEngine::Initialize(HINSTANCE hInstance,std::string windowCaption,s
 		return false;
 	}
 
-
+	//初始化场景管理器
+	if (!m_sceneManager.Initialize(m_graphics.GetDirectXDevice(), m_graphics.GetDirectXDeviceContext()))
+	{
+		return false;
+	}
 
 	return true;
 }
@@ -48,8 +52,10 @@ int RenderingEngine::Run()
 				//显示FPS和单帧时间
 				m_renderWindow.DisplayFrameStats(m_timer.TotalTime());
 
+				//更新
 				Update(m_timer.DeltaTime());
 
+				//渲染
 				Render();
 
 			}
@@ -64,11 +70,11 @@ int RenderingEngine::Run()
 
 void RenderingEngine::Update(float dt)
 {
-
+	this->m_sceneManager.Update(dt);
 
 }
 
 void RenderingEngine::Render()
 {
-	this->m_graphics.RenderFrame();
+	this->m_graphics.RenderFrame(this->m_sceneManager.GetObjects());
 }

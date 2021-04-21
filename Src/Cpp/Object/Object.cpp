@@ -31,6 +31,9 @@ void Object::Render()
 
 void Object::Destroy()
 {
-
+	for (auto& component : this->m_components)
+	{
+		component->Destroy();
+	}
 
 }

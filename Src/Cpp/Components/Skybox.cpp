@@ -134,11 +134,11 @@ void Skybox::Render()
 		materialManager->materials[i].GetConstantBuffer_TransformMatrix().bufferData.worldInverseTranspose = XMMatrixTranspose(XMMatrixTranspose(XMMatrixInverse(nullptr, A)));
 
 		//更新视矩阵
-		DirectX::XMMATRIX V = Graphics::mainCamera->GetComponent<Camera>()->GetViewMatrix();
+		DirectX::XMMATRIX V = SceneManager::mainCamera->GetComponent<Camera>()->GetViewMatrix();
 		materialManager->materials[i].GetConstantBuffer_TransformMatrix().bufferData.view = DirectX::XMMatrixTranspose(V);
 
 		//更新投影矩阵
-		DirectX::XMMATRIX P = Graphics::mainCamera->GetComponent<Camera>()->GetProjectionMatrix();
+		DirectX::XMMATRIX P = SceneManager::mainCamera->GetComponent<Camera>()->GetProjectionMatrix();
 		materialManager->materials[i].GetConstantBuffer_TransformMatrix().bufferData.projection = DirectX::XMMatrixTranspose(P);
 
 		materialManager->materials[i].GetConstantBuffer_TransformMatrix().UpdateConstantBuffer(this->m_dxDeviceContext);

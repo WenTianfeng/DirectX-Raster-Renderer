@@ -12,8 +12,7 @@
 #include<Assimp/postprocess.h>
 #include<Assimp/scene.h>
 
-
-#include"..\Graphics\Graphics.h"
+#include"..\Logic\SceneManager.h"
 #include"..\Graphics\Structures\Mesh.h"
 #include"Transform.h"
 #include"Camera.h"

@@ -74,11 +74,11 @@ void MeshRenderer::Render()
 		materialManager->materials[i].GetConstantBuffer_TransformMatrix().bufferData.worldInverseTranspose = XMMatrixTranspose(XMMatrixTranspose(XMMatrixInverse(nullptr, A)));
 
 		//更新视矩阵
-		DirectX::XMMATRIX V = Graphics::mainCamera->GetComponent<Camera>()->GetViewMatrix();
+		DirectX::XMMATRIX V = SceneManager::mainCamera->GetComponent<Camera>()->GetViewMatrix();
 		materialManager->materials[i].GetConstantBuffer_TransformMatrix().bufferData.view = DirectX::XMMatrixTranspose(V);
 
 		//更新投影矩阵
-		DirectX::XMMATRIX P = Graphics::mainCamera->GetComponent<Camera>()->GetProjectionMatrix();
+		DirectX::XMMATRIX P = SceneManager::mainCamera->GetComponent<Camera>()->GetProjectionMatrix();
 		materialManager->materials[i].GetConstantBuffer_TransformMatrix().bufferData.projection = DirectX::XMMatrixTranspose(P);
 
 		materialManager->materials[i].GetConstantBuffer_TransformMatrix().UpdateConstantBuffer(this->m_dxDeviceContext);
@@ -87,14 +87,14 @@ void MeshRenderer::Render()
 		this->m_dxDeviceContext->PSSetShaderResources(0, 1, materialManager->materials[i].GetStructuredBuffer_Light().GetSRVAddressOf());
 
 		//更改结构缓冲成员数据
-		for (UINT j = 0; j < Graphics::lights.size(); j++)
+		for (UINT j = 0; j < SceneManager::lights.size(); j++)
 		{
-			materialManager->materials[i].GetStructuredBuffer_Light().bufferData[j].Type = (UINT)Graphics::lights[j]->GetComponent<Light>()->GetType();
-			materialManager->materials[i].GetStructuredBuffer_Light().bufferData[j].Color = Graphics::lights[j]->GetComponent<Light>()->GetColor();
-			materialManager->materials[i].GetStructuredBuffer_Light().bufferData[j].Direction = Graphics::lights[j]->GetComponent<Light>()->GetDirection();
-			materialManager->materials[i].GetStructuredBuffer_Light().bufferData[j].Position = Graphics::lights[j]->GetComponent<Light>()->GetPosition();
-			materialManager->materials[i].GetStructuredBuffer_Light().bufferData[j].Intensity = Graphics::lights[j]->GetComponent<Light>()->GetIntensity();
-			materialManager->materials[i].GetStructuredBuffer_Light().bufferData[j].Range = Graphics::lights[j]->GetComponent<Light>()->GetRange();
+			materialManager->materials[i].GetStructuredBuffer_Light().bufferData[j].Type = (UINT)SceneManager::lights[j]->GetComponent<Light>()->GetType();
+			materialManager->materials[i].GetStructuredBuffer_Light().bufferData[j].Color = SceneManager::lights[j]->GetComponent<Light>()->GetColor();
+			materialManager->materials[i].GetStructuredBuffer_Light().bufferData[j].Direction = SceneManager::lights[j]->GetComponent<Light>()->GetDirection();
+			materialManager->materials[i].GetStructuredBuffer_Light().bufferData[j].Position = SceneManager::lights[j]->GetComponent<Light>()->GetPosition();
+			materialManager->materials[i].GetStructuredBuffer_Light().bufferData[j].Intensity = SceneManager::lights[j]->GetComponent<Light>()->GetIntensity();
+			materialManager->materials[i].GetStructuredBuffer_Light().bufferData[j].Range = SceneManager::lights[j]->GetComponent<Light>()->GetRange();
 		}
 
 		//更新结构缓冲

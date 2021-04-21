@@ -21,23 +21,48 @@ public:
 
     //模板函数：添加指定类型的component
     template <typename T, typename...TArgs>
-    T& AddComponent(TArgs&&...args) {
+    bool AddComponent(TArgs&&...args) 
+    {
+        //如果对象已经拥有该类型组件，则返回
+        if (this->HasComponent<T>())
+        {
+            return false;
+        }
+
+        //实例化组件
         T* newComponent(new T(std::forward<TArgs>(args)...));
+
+        //设定组件的owner
         newComponent->owner = this;
-        m_components.emplace_back(newComponent);
-        m_componentsMap[&typeid(*newComponent)] = newComponent;
+
+        //组件初始化
         newComponent->Initialize();
-        return *newComponent;
+
+        //将组件加入到组件列表
+        m_components.emplace_back(newComponent);
+
+        //将组件加入到组件map
+        m_componentsMap[&typeid(*newComponent)] = newComponent;
+        
+        return true;
     }
 
     //模板函数：返回指定类型的组件
     template <typename T>
-    T* GetComponent() {
+    T* GetComponent() 
+    {
         return static_cast<T*>(m_componentsMap[&typeid(T)]);
     }
 
+    //模板函数：判定对象是否拥有该类型组件
+    template <typename T>
+    bool HasComponent()
+    {
+        return m_componentsMap.count(&typeid(T)) == 1;
+    }
 
 private:
-	std::vector<Component*> m_components;
-	std::map<const std::type_info*, Component*> m_componentsMap;
+	std::vector<Component*> m_components;//组件列表
+
+	std::map<const std::type_info*, Component*> m_componentsMap;//组件map（组件类型：组件对象指针）
 };

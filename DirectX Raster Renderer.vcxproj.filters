@@ -152,13 +152,49 @@
     <ClCompile Include="Src\Cpp\Components\Light.cpp">
       <Filter>源文件\Components</Filter>
     </ClCompile>
-    <ClCompile Include="Src\Cpp\UI\UserInterface.cpp">
+    <ClCompile Include="Src\Cpp\UI\Frames\UserInterface.cpp">
       <Filter>源文件\UI</Filter>
     </ClCompile>
     <ClCompile Include="Src\Cpp\Time\Timer.cpp">
       <Filter>源文件\Time</Filter>
     </ClCompile>
     <ClCompile Include="Src\Cpp\Components\Skybox.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Cpp\Logic\ObjectScripts\CameraControl.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Cpp\UI\Frames\Inspector.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Cpp\UI\Frames\Hierarchy.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Cpp\UI\Frames\TopToolbar.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Cpp\UI\Frames\Console.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Cpp\UI\Frames\Project.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Cpp\UI\Built-in Components\UI_Transform.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Cpp\UI\Built-in Components\UI_MeshRenderer.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Cpp\UI\Built-in Components\UI_Light.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Cpp\UI\Built-in Components\UI_Camera.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Cpp\UI\Built-in Components\UI_MaterialManager.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Cpp\Logic\SceneManager.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>
@@ -265,7 +301,7 @@
     <ClInclude Include="Src\Cpp\Components\Light.h">
       <Filter>头文件\Components</Filter>
     </ClInclude>
-    <ClInclude Include="Src\Cpp\UI\UserInterface.h">
+    <ClInclude Include="Src\Cpp\UI\Frames\UserInterface.h">
       <Filter>头文件\UI</Filter>
     </ClInclude>
     <ClInclude Include="Src\Cpp\Graphics\Helpers\ShaderProcessor.h">
@@ -278,6 +314,45 @@
       <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="Src\Cpp\Components\Skybox.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Cpp\Logic\ObjectScripts\CameraControl.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Cpp\UI\Frames\Inspector.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Cpp\UI\Frames\Hierarchy.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Cpp\UI\Frames\TopToolbar.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Cpp\UI\Frames\Console.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Cpp\UI\Frames\Project.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Cpp\UI\Built-in Components\UI_Transform.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Cpp\UI\Built-in Components\UI_MeshRenderer.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Cpp\UI\Built-in Components\UI_Light.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Cpp\UI\Built-in Components\UI_Camera.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Cpp\UI\Built-in Components\UI_MaterialManager.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Cpp\UI\Built-in Components\UI_Component.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Cpp\Logic\SceneManager.h">
       <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>
