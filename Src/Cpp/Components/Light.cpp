@@ -6,8 +6,7 @@ Light::Light(LightType lightType, DirectX::XMFLOAT4 lightColor, float intensity,
 	m_intensity(intensity),
 	m_range(range)
 {
-
-
+	this->m_componentName = "Light";
 }
 
 Light::LightType Light::GetType()

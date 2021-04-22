@@ -1,9 +1,16 @@
 ﻿#include "Graphics.h"
+#include"..\Components\Light.h"
 
 bool Graphics::Initialize(HWND hwnd, int width, int height)
 {
 	//初始化DirectX
 	if (!InitializeDirectX(hwnd, width, height)) 
+	{
+		return false;
+	}
+
+	//初始化渲染所需成员
+	if (!InitializeEffect())
 	{
 		return false;
 	}
@@ -137,6 +144,34 @@ bool Graphics::InitializeDirectX(HWND hwnd, int width, int height)
 	return true;
 }
 
+bool Graphics::InitializeEffect()
+{
+	this->m_lightSB.Initialize(this->m_dxDevice.Get(), 2);
+	this->m_dxDeviceContext->PSSetShaderResources(0, 1, this->m_lightSB.GetSRVAddressOf());
+
+	return true;
+}
+
+void Graphics::UpdateEffect(std::vector<Object*> lights)
+{
+	//======更新光源信息=====
+	//修改结构缓冲成员数据
+	for (UINT i = 0; i < lights.size(); i++)
+	{
+		this->m_lightSB.bufferData[i].Type = (UINT)lights[i]->GetComponent<Light>()->GetType();
+		this->m_lightSB.bufferData[i].Color = lights[i]->GetComponent<Light>()->GetColor();
+		this->m_lightSB.bufferData[i].Direction = lights[i]->GetComponent<Light>()->GetDirection();
+		this->m_lightSB.bufferData[i].Position = lights[i]->GetComponent<Light>()->GetPosition();
+		this->m_lightSB.bufferData[i].Intensity = lights[i]->GetComponent<Light>()->GetIntensity();
+		this->m_lightSB.bufferData[i].Range = lights[i]->GetComponent<Light>()->GetRange();
+	}
+	//更新结构缓冲
+	this->m_lightSB.UpdateStructuredBuffer(this->m_dxDeviceContext.Get());
+
+
+
+}
+
 
 bool Graphics::InitializeUI(HWND hwnd)
 {
@@ -144,12 +179,15 @@ bool Graphics::InitializeUI(HWND hwnd)
 }
 
 
-void Graphics::RenderFrame(std::vector<Object*> objects)
+void Graphics::RenderFrame(std::vector<Object*> objects, std::vector<Object*> lights)
 {
 	//刷新渲染目标
 	m_dxDeviceContext->ClearRenderTargetView(m_dxRenderTargetView.Get(), this->m_renderTargetBackgroundColor);
 	//刷新深度模板缓冲
 	m_dxDeviceContext->ClearDepthStencilView(m_dxDepthStencilView.Get(), D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
+
+	//更新渲染所需成员状态
+	UpdateEffect(lights);
 
 	//=======场景对象渲染=======
 	for (auto object : objects)
@@ -159,7 +197,6 @@ void Graphics::RenderFrame(std::vector<Object*> objects)
 
 	//========UI渲染=========
 	this->m_userInterface->Render();
-
 
 	//显示渲染后的交换链缓冲
 	HRESULT hr = m_dxSwapChain->Present(0u, 0u);

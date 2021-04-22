@@ -16,6 +16,9 @@
 #include"..\Tools\ErrorLogger.h"
 #include"..\Object\Object.h"
 
+#include"Structures\StructuredBuffer.h"
+#include"Structures\StructuredBufferTypes.h"
+
 #include"..\UI\Frames\UserInterface.h"
 
 
@@ -36,7 +39,7 @@ public:
 	/// 帧渲染
 	/// </summary>
 	/// <param name="objects">对象列表（从SceneManager获取）</param>
-	void RenderFrame(std::vector<Object*> objects);
+	void RenderFrame(std::vector<Object*> objects, std::vector<Object*> lights);
 
 	//获取DirectX设备
 	ID3D11Device* GetDirectXDevice();
@@ -55,6 +58,17 @@ private:
 	/// <returns>DirectX各项是否初始化成功</returns>
 	bool InitializeDirectX(HWND hwnd,int width,int height);
 
+	/// <summary>
+	/// 初始化渲染所需的相关成员
+	/// </summary>
+	/// <returns></returns>
+	bool InitializeEffect();
+
+	/// <summary>
+	/// 更新渲染所需成员状态
+	/// </summary>
+	/// <param name="lights">光源列表</param>
+	void UpdateEffect(std::vector<Object*> lights);
 
 	/// <summary>
 	/// ImGui初始化
@@ -66,7 +80,7 @@ private:
 
 
 private:
-	//DirectX 相关
+	//DirectX 相关成员
 	Microsoft::WRL::ComPtr<ID3D11Device> m_dxDevice;//Dx设备
 	Microsoft::WRL::ComPtr<IDXGISwapChain> m_dxSwapChain;//Dx交换链
 	Microsoft::WRL::ComPtr<ID3D11DeviceContext> m_dxDeviceContext;//Dx上下文
@@ -75,6 +89,9 @@ private:
 	Microsoft::WRL::ComPtr<ID3D11Texture2D> m_dxDepthStencilBuffer;//深度模板缓冲
 	Microsoft::WRL::ComPtr<ID3D11RasterizerState> m_dxRasterizerState;//光栅化状态
 	float m_renderTargetBackgroundColor[4] = { 0.2f, 0.2f, 0.2f, 1 };//帧缓冲默认刷新颜色
+
+	//渲染相关通用成员
+	StructuredBuffer<SB_PS_Light> m_lightSB;
 	
 	//UI相关
 	UserInterface* m_userInterface = new UserInterface();//UI对象

@@ -6,6 +6,7 @@ Camera::Camera(float fovY, float aspect, float nearClip, float farClip) :
 	m_nearClip(nearClip),
 	m_farClip(farClip)
 {
+	this->m_componentName = "Camera";
 }
 
 

@@ -197,6 +197,12 @@
     <ClCompile Include="Src\Cpp\Logic\SceneManager.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
+    <ClCompile Include="Src\Cpp\Components\Attributes.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Cpp\UI\Built-in Components\UI_Attributes.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Src\Cpp\Mouse\Mouse.h">
@@ -328,9 +334,6 @@
     <ClInclude Include="Src\Cpp\UI\Frames\TopToolbar.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="Src\Cpp\UI\Frames\Console.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
     <ClInclude Include="Src\Cpp\UI\Frames\Project.h">
       <Filter>头文件</Filter>
     </ClInclude>
@@ -353,6 +356,15 @@
       <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="Src\Cpp\Logic\SceneManager.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Cpp\Components\Attributes.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Cpp\UI\Built-in Components\UI_Attributes.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Cpp\UI\Frames\Console.h">
       <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>

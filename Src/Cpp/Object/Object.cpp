@@ -1,12 +1,31 @@
 #include "Object.h"
 
-Object::Object()
+Object::Object(int UID, bool active):
+	m_UID(UID),
+	m_active(active)
 {
+	
 }
 
 Object::~Object()
 {
 }
+
+bool Object::IsActive() const
+{
+	return this->m_active;
+}
+
+void Object::SetActivation(bool active)
+{
+	this->m_active = active;
+}
+
+int Object::GetUID() const
+{
+	return this->m_UID;
+}
+
 
 bool Object::Initialize()
 {
@@ -15,17 +34,23 @@ bool Object::Initialize()
 
 void Object::Update(float dt)
 {
-	for (auto& component : this->m_components)
+	if (m_active)
 	{
-		component->Update(dt);
+		for (auto& component : this->m_components)
+		{
+			component->Update(dt);
+		}
 	}
 }
 
 void Object::Render()
 {
-	for (auto& component : this->m_components)
+	if (m_active)
 	{
-		component->Render();
+		for (auto& component : this->m_components)
+		{
+			component->Render();
+		}
 	}
 }
 

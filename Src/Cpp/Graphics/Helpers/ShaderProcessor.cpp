@@ -11,7 +11,6 @@ bool ShaderProcessor::ShaderPreProcess(ID3DBlob* blob)
 	D3D11_SIGNATURE_PARAMETER_DESC spd;
 
 	shaderReflection->GetInputParameterDesc(0, &spd);
-
 	D3D11_SHADER_DESC sd;
 
 	shaderReflection->GetDesc(&sd);
@@ -25,7 +24,7 @@ bool ShaderProcessor::ShaderPreProcess(ID3DBlob* blob)
 			break;
 
 		// 根据sibDesc继续分析...
-
+		OutputDebugString(DataTypeConverter::StringToWideString(sibDesc.Name).c_str());
 	}
 
 	return true;

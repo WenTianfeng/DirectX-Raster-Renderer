@@ -6,6 +6,7 @@
 #include <d3dcompiler.h>
 
 #include"..\Structures\Shader.h"
+#include"..\..\Tools\DataTypeConverter.h"
 
 class ShaderProcessor
 {

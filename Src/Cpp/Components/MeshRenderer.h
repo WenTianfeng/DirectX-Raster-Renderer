@@ -17,7 +17,6 @@
 #include"Transform.h"
 #include"Camera.h"
 #include"MaterialManager.h"
-#include"Light.h"
 
 class MeshRenderer : public Component
 {

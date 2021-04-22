@@ -1,33 +1,33 @@
 #include"Hierarchy.h"
-#include <stdio.h>
+#include"..\..\Logic\SceneManager.h"
+#include"..\..\Components\Attributes.h"
 
-
-
-int Hierarchy::selected = 0;
+int Hierarchy::selected = -1;
 
 void Hierarchy::Render()
 {
 
-
-
 	if (ImGui::Begin("HIERARCHY"))
 	{
-
-        //ImGui::BeginChild("left pane", ImVec2(150, 0), true);
-
-        for (int i = 0; i < 10; i++)
+        if (ImGui::BeginChild("left pane", ImVec2(150, 0), true))
         {
-            char label[128];
-            sprintf(label, "MyObject %d", i);
-
-            if (ImGui::Selectable(label, selected == i))
+            for (UINT i = 0; i < SceneManager::objects.size(); i++)
             {
-                selected = i;
+                char label[128];
+                std::string objectName(SceneManager::objects[i]->GetComponent<Attributes>()->ObjectName());
+
+                objectName.copy(label, objectName.size(), 0);
+                *(label + objectName.size()) = '\0';
+
+                if (ImGui::Selectable(label, selected == i))
+                {
+                    selected = i;
+                }
             }
         }
+        ImGui::EndChild();
 
-        //ImGui::EndChild();
 	}
 
-	ImGui::End();
+    ImGui::End();
 }

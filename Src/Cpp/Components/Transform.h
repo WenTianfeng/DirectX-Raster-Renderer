@@ -18,6 +18,8 @@ public:
 
 	~Transform() = default;
 
+	void UpdateProperties(DirectX::XMFLOAT3 position, DirectX::XMFLOAT3 rotation, DirectX::XMFLOAT3 scale);
+
 
 	DirectX::XMFLOAT3 GetScale() const;
 

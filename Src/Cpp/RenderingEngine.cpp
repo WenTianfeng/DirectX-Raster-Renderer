@@ -1,5 +1,10 @@
 ﻿#include "RenderingEngine.h"
 
+RenderWindow* RenderingEngine::renderWindow = new RenderWindow();
+SceneManager* RenderingEngine::sceneManager = new SceneManager();
+Graphics* RenderingEngine::graphics = new Graphics();
+Timer* RenderingEngine::timer = new Timer();
+
 RenderingEngine::RenderingEngine():
 	m_paused(false)
 {
@@ -10,19 +15,19 @@ RenderingEngine::RenderingEngine():
 bool RenderingEngine::Initialize(HINSTANCE hInstance,std::string windowCaption,std::string windowClassName,int width,int height)
 {
 	//初始化窗口
-	if (!m_renderWindow.Initialize(hInstance, windowCaption, windowClassName, width, height))
+	if (!renderWindow->Initialize(hInstance, windowCaption, windowClassName, width, height))
 	{
 		return false;
 	}
 
 	//初始化图形
-	if (!m_graphics.Initialize(m_renderWindow.GetWindowHandle(), width, height)) 
+	if (!graphics->Initialize(renderWindow->GetWindowHandle(), width, height)) 
 	{
 		return false;
 	}
 
 	//初始化场景管理器
-	if (!m_sceneManager.Initialize(m_graphics.GetDirectXDevice(), m_graphics.GetDirectXDeviceContext()))
+	if (!sceneManager->Initialize(graphics->GetDirectXDevice(), graphics->GetDirectXDeviceContext()))
 	{
 		return false;
 	}
@@ -35,7 +40,7 @@ int RenderingEngine::Run()
 	//消息处理
 	MSG msg = { 0 };
 
-	m_timer.Reset();
+	timer->Reset();
 
 	while (msg.message != WM_QUIT) {
 
@@ -45,15 +50,15 @@ int RenderingEngine::Run()
 			DispatchMessage(&msg);
 		}
 		else {//否则执行应用逻辑
-			m_timer.Tick();
+			timer->Tick();
 
 			if (!m_paused) {
 
 				//显示FPS和单帧时间
-				m_renderWindow.DisplayFrameStats(m_timer.TotalTime());
+				renderWindow->DisplayFrameStats(timer->TotalTime());
 
 				//更新
-				Update(m_timer.DeltaTime());
+				Update(timer->DeltaTime());
 
 				//渲染
 				Render();
@@ -70,11 +75,12 @@ int RenderingEngine::Run()
 
 void RenderingEngine::Update(float dt)
 {
-	this->m_sceneManager.Update(dt);
+	this->sceneManager->Update(dt);
 
 }
 
 void RenderingEngine::Render()
 {
-	this->m_graphics.RenderFrame(this->m_sceneManager.GetObjects());
+	this->graphics->RenderFrame(SceneManager::objects,SceneManager::lights);
 }
+

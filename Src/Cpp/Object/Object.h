@@ -10,8 +10,19 @@
 
 class Object 
 {
+
+private:
+    int m_UID;
+    bool m_active;
+
 public:
-	Object();
+    bool IsActive() const;
+    void SetActivation(bool active);
+
+    int GetUID() const;
+
+public:
+	Object(int UID,bool active = true);
 	~Object();
 
 	bool Initialize();

@@ -5,7 +5,14 @@ Transform::Transform(DirectX::XMFLOAT3 position, DirectX::XMFLOAT3 rotation, Dir
 	m_rotation(rotation),
 	m_scale(scale)
 {
+	this->m_componentName = "Transform";
+}
 
+void Transform::UpdateProperties(DirectX::XMFLOAT3 position, DirectX::XMFLOAT3 rotation, DirectX::XMFLOAT3 scale)
+{
+	SetPosition(position);
+	SetRotation(rotation);
+	SetScale(scale);
 }
 
 DirectX::XMFLOAT3 Transform::GetScale() const

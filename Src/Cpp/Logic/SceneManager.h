@@ -26,9 +26,6 @@ public:
 	/// <param name="dt">单帧时间</param>
 	void Update(float dt);
 
-	//获取对象列表
-	std::vector<Object*> GetObjects();
-
 private:
 	/// <summary>
 	/// 场景内容初始化
@@ -39,8 +36,6 @@ private:
 public:
 	static Object* mainCamera;//场景主相机
 	static std::vector<Object*> lights;//场景光源列表
-
-private:
-	std::vector<Object*> m_objects;//场景对象列表
+	static std::vector<Object*> objects;//场景对象列表
 
 };

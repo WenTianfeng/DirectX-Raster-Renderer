@@ -10,10 +10,9 @@ bool UserInterface::Initialize(HWND hwnd,ID3D11Device* device,ID3D11DeviceContex
 	ImGui::StyleColorsDark();
 
 	//加载字体
-	ImFont* defaultFont = io.Fonts->AddFontFromFileTTF("Resources\\Fonts\\Roboto-Medium.ttf", 16.0f, NULL, io.Fonts->GetGlyphRangesChineseFull());
+	ImFont* defaultFont = io.Fonts->AddFontFromFileTTF("Resources\\Fonts\\Roboto-Medium.ttf", 15.0f, NULL, io.Fonts->GetGlyphRangesChineseFull());
 
 	this->m_inspector->Initialize();
-
 
 	return true;
 }
@@ -27,8 +26,8 @@ void UserInterface::Render()
 	//=======内容绘制=======
 
 	this->m_topToolbar->Render();
-	this->m_inspector->Render();
 	this->m_hierarchy->Render();
+	this->m_inspector->Render();
 
 	//======内容绘制结束=====
 	ImGui::Render();

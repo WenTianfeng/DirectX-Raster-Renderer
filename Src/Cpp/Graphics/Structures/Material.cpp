@@ -1,4 +1,6 @@
 #include "Material.h"
+#include"..\Helpers\ShaderProcessor.h"
+
 
 Material::Material(ID3D11Device* device, std::wstring vertexShaderFilePath, std::wstring pixelShaderFilePath)
 {
@@ -22,6 +24,9 @@ Material::Material(ID3D11Device* device, std::wstring vertexShaderFilePath, std:
 
 //===========创建像素着色器===========
 	this->m_pixelShader.Initialize(device, pixelShaderFilePath);
+
+	//ShaderProcessor* shaderProcesser = new ShaderProcessor();
+	//shaderProcesser->ShaderPreProcess(this->m_vertexShader.GetBlob());
 
 //=========创建深度-模板缓冲状态========
 
@@ -60,12 +65,10 @@ Material::Material(ID3D11Device* device, std::wstring vertexShaderFilePath, std:
 	//错误检查
 	COM_ERROR_IF_FAILED(hr, L"Failed to create DirectX Blend State.");
 
+
 //===========创建常量缓冲============
 
 	this->m_transformMatrixCB.Initialize(device);
-
-//===========创建结构缓冲============
-	this->m_lightSB.Initialize(device, 2);
 
 }
 
@@ -99,10 +102,10 @@ ConstantBuffer<CB_VS_TransformMatrix>& Material::GetConstantBuffer_TransformMatr
 	return this->m_transformMatrixCB;
 }
 
-StructuredBuffer<SB_PS_Light>& Material::GetStructuredBuffer_Light()
-{
-	return this->m_lightSB;
-}
+//StructuredBuffer<SB_PS_Light>& Material::GetStructuredBuffer_Light()
+//{
+//	return this->m_lightSB;
+//}
 
 
 

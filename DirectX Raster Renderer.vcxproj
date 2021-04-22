@@ -19,6 +19,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Src\Cpp\Components\Attributes.cpp" />
     <ClCompile Include="Src\Cpp\Components\Light.cpp" />
     <ClCompile Include="Src\Cpp\Components\MaterialManager.cpp" />
     <ClCompile Include="Src\Cpp\Components\Skybox.cpp" />
@@ -27,6 +28,7 @@
     <ClCompile Include="Src\Cpp\Graphics\Structures\Mesh.cpp" />
     <ClCompile Include="Src\Cpp\Logic\ObjectScripts\CameraControl.cpp" />
     <ClCompile Include="Src\Cpp\Logic\SceneManager.cpp" />
+    <ClCompile Include="Src\Cpp\UI\Built-in Components\UI_Attributes.cpp" />
     <ClCompile Include="Src\Cpp\UI\Built-in Components\UI_Camera.cpp" />
     <ClCompile Include="Src\Cpp\UI\Built-in Components\UI_Light.cpp" />
     <ClCompile Include="Src\Cpp\UI\Built-in Components\UI_MaterialManager.cpp" />
@@ -62,6 +64,7 @@
     <ClCompile Include="Src\Cpp\Windows\RenderWindow.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Src\Cpp\Components\Attributes.h" />
     <ClInclude Include="Src\Cpp\Components\Light.h" />
     <ClInclude Include="Src\Cpp\Components\MaterialManager.h" />
     <ClInclude Include="Src\Cpp\Components\Skybox.h" />
@@ -69,6 +72,7 @@
     <ClInclude Include="Src\Cpp\Graphics\Structures\StructuredBufferTypes.h" />
     <ClInclude Include="Src\Cpp\Logic\ObjectScripts\CameraControl.h" />
     <ClInclude Include="Src\Cpp\Logic\SceneManager.h" />
+    <ClInclude Include="Src\Cpp\UI\Built-in Components\UI_Attributes.h" />
     <ClInclude Include="Src\Cpp\UI\Built-in Components\UI_Camera.h" />
     <ClInclude Include="Src\Cpp\UI\Built-in Components\UI_Component.h" />
     <ClInclude Include="Src\Cpp\UI\Built-in Components\UI_Light.h" />

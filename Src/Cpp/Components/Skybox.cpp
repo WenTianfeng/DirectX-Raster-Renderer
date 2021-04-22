@@ -4,7 +4,7 @@ Skybox::Skybox(ID3D11Device* device, ID3D11DeviceContext* deviceContext, const s
 	MeshRenderer(device,deviceContext, "Resources\\Models\\SkyboxSphere.FBX"),
 	m_cubeMapFileNames(cubeMapFileNames)
 {
-
+	this->m_componentName = "Skybox";
 }
 
 void Skybox::Initialize()
@@ -143,8 +143,6 @@ void Skybox::Render()
 
 		materialManager->materials[i].GetConstantBuffer_TransformMatrix().UpdateConstantBuffer(this->m_dxDeviceContext);
 
-		//设置结构缓冲
-		this->m_dxDeviceContext->PSSetShaderResources(0, 1, materialManager->materials[i].GetStructuredBuffer_Light().GetSRVAddressOf());
 
 		//=======绘制========
 		this->m_dxDeviceContext->DrawIndexed(this->m_meshes[i].GetIndexBuffer().IndexCount(), 0, 0);

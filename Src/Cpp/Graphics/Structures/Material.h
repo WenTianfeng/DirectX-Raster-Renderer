@@ -21,7 +21,6 @@ public:
 	ID3D11BlendState* GetBlendState();
 
 	ConstantBuffer<CB_VS_TransformMatrix>& GetConstantBuffer_TransformMatrix();
-	StructuredBuffer<SB_PS_Light>& GetStructuredBuffer_Light();
 
 private:
 	VertexShader m_vertexShader; //顶点着色器	
@@ -32,6 +31,5 @@ private:
 	Microsoft::WRL::ComPtr<ID3D11BlendState> m_dxBlendState;//混合状态
 
 	ConstantBuffer<CB_VS_TransformMatrix> m_transformMatrixCB;
-	StructuredBuffer<SB_PS_Light> m_lightSB;
 
 };

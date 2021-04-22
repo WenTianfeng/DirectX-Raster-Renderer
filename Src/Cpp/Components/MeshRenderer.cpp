@@ -5,6 +5,8 @@ MeshRenderer::MeshRenderer(ID3D11Device* device, ID3D11DeviceContext* deviceCont
 	m_dxDevice(device),
 	m_dxDeviceContext(deviceContext)
 {
+	this->m_componentName = "Mesh Renderer";
+
 	if (!this->LoadModel(modelFilePath))
 	{
 		ErrorLogger::Log("Failed to load model.");
@@ -82,23 +84,6 @@ void MeshRenderer::Render()
 		materialManager->materials[i].GetConstantBuffer_TransformMatrix().bufferData.projection = DirectX::XMMatrixTranspose(P);
 
 		materialManager->materials[i].GetConstantBuffer_TransformMatrix().UpdateConstantBuffer(this->m_dxDeviceContext);
-
-	//设置结构缓冲
-		this->m_dxDeviceContext->PSSetShaderResources(0, 1, materialManager->materials[i].GetStructuredBuffer_Light().GetSRVAddressOf());
-
-		//更改结构缓冲成员数据
-		for (UINT j = 0; j < SceneManager::lights.size(); j++)
-		{
-			materialManager->materials[i].GetStructuredBuffer_Light().bufferData[j].Type = (UINT)SceneManager::lights[j]->GetComponent<Light>()->GetType();
-			materialManager->materials[i].GetStructuredBuffer_Light().bufferData[j].Color = SceneManager::lights[j]->GetComponent<Light>()->GetColor();
-			materialManager->materials[i].GetStructuredBuffer_Light().bufferData[j].Direction = SceneManager::lights[j]->GetComponent<Light>()->GetDirection();
-			materialManager->materials[i].GetStructuredBuffer_Light().bufferData[j].Position = SceneManager::lights[j]->GetComponent<Light>()->GetPosition();
-			materialManager->materials[i].GetStructuredBuffer_Light().bufferData[j].Intensity = SceneManager::lights[j]->GetComponent<Light>()->GetIntensity();
-			materialManager->materials[i].GetStructuredBuffer_Light().bufferData[j].Range = SceneManager::lights[j]->GetComponent<Light>()->GetRange();
-		}
-
-		//更新结构缓冲
-		materialManager->materials[i].GetStructuredBuffer_Light().UpdateStructuredBuffer(this->m_dxDeviceContext);
 
 	//=======绘制========
 		this->m_dxDeviceContext->DrawIndexed(this->m_meshes[i].GetIndexBuffer().IndexCount(), 0, 0);

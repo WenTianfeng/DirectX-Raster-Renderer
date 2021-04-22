@@ -41,12 +41,15 @@ private:
 	/// </summary>
 	void Render();
 
+public:
+
+	static RenderWindow* renderWindow;//引擎程序使用的窗口实例
+	static SceneManager* sceneManager;//场景管理使用到实例
+	static Graphics* graphics;//引擎程序使用的渲染实例
+	static Timer* timer;//计时器
+
 private:
 
-	RenderWindow m_renderWindow;//引擎程序使用的窗口实例
-	SceneManager m_sceneManager;//场景管理使用到实例
-	Graphics m_graphics;//引擎程序使用的渲染实例
-	Timer m_timer;//计时器
-
 	bool m_paused;//程序是否暂停
+
 };

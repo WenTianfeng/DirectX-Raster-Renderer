@@ -3,6 +3,7 @@
 MaterialManager::MaterialManager(ID3D11Device* device, std::wstring* vertexShaderFiles, std::wstring* pixelShaderFiles, UINT shaderCount):
 	m_dxDevice(device)
 {
+	this->m_componentName = "Material";
 
 	for (UINT i = 0; i < shaderCount; i++)
 	{
