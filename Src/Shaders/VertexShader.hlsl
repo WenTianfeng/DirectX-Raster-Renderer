@@ -1,4 +1,4 @@
-#include"..\ShaderIncludes\CommonIncludes.hlsli"
+#include"CommonIncludes.hlsli"
 
 VertexOutput main(VertexInput input)
 {

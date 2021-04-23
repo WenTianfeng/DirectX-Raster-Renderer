@@ -33,7 +33,7 @@ public:
 	/// </summary>
 	/// <param name="dxDevice">DirectX设备</param>
 	/// <returns>初始化是否成功</returns>
-	bool Initialize(ID3D11Device* dxDevice)
+	bool Instantiate(ID3D11Device* dxDevice)
 	{
 		//创建缓冲描述
 		D3D11_BUFFER_DESC cbd = {};

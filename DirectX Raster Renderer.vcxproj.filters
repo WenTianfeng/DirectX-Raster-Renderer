@@ -140,9 +140,6 @@
     <ClCompile Include="Src\Cpp\Windows\RenderWindow.cpp">
       <Filter>源文件\Windows</Filter>
     </ClCompile>
-    <ClCompile Include="Src\Cpp\Graphics\Structures\Shader.cpp">
-      <Filter>源文件\Graphics\Structures</Filter>
-    </ClCompile>
     <ClCompile Include="Src\Cpp\Object\Object.cpp">
       <Filter>源文件\Object</Filter>
     </ClCompile>
@@ -201,6 +198,9 @@
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="Src\Cpp\UI\Built-in Components\UI_Attributes.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Cpp\Graphics\Structures\Shader.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>
@@ -275,9 +275,6 @@
       <Filter>头文件\Graphics\Stuctures</Filter>
     </ClInclude>
     <ClInclude Include="Src\Cpp\Graphics\Structures\Mesh.h">
-      <Filter>头文件\Graphics\Stuctures</Filter>
-    </ClInclude>
-    <ClInclude Include="Src\Cpp\Graphics\Structures\Shader.h">
       <Filter>头文件\Graphics\Stuctures</Filter>
     </ClInclude>
     <ClInclude Include="Src\Cpp\Graphics\Structures\VertexTypes.h">
@@ -367,24 +364,26 @@
     <ClInclude Include="Src\Cpp\UI\Frames\Console.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="Src\Cpp\Graphics\Structures\Shader.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <FxCompile Include="Src\Shaders\PixelShaders\PixelShader_Error.hlsl">
+    <FxCompile Include="Src\Shaders\PixelShader_Error.hlsl">
       <Filter>Shaders</Filter>
     </FxCompile>
-    <FxCompile Include="Src\Shaders\VertexShaders\VertexShader.hlsl">
+    <FxCompile Include="Src\Shaders\VertexShader.hlsl">
       <Filter>Shaders</Filter>
     </FxCompile>
-    <FxCompile Include="Src\Shaders\VertexShaders\VertexShader_PBR.hlsl" />
-    <FxCompile Include="Src\Shaders\PixelShaders\PixelShader_PBR.hlsl" />
-    <FxCompile Include="Src\Shaders\VertexShaders\VertexShader_Skybox.hlsl" />
-    <FxCompile Include="Src\Shaders\PixelShaders\PixelShader_Skybox.hlsl" />
-    <FxCompile Include="Src\Shaders\PixelShaders\PixelShader_Texture.hlsl" />
+    <FxCompile Include="Src\Shaders\PixelShader_PBR.hlsl" />
+    <FxCompile Include="Src\Shaders\VertexShader_Skybox.hlsl" />
+    <FxCompile Include="Src\Shaders\PixelShader_Skybox.hlsl" />
+    <FxCompile Include="Src\Shaders\Multi_Light.hlsl" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Src\Shaders\ShaderIncludes\LightHelper.hlsli" />
-    <None Include="Src\Shaders\ShaderIncludes\CommonIncludes.hlsli" />
-    <None Include="Src\Shaders\ShaderIncludes\PBR.hlsli" />
-    <None Include="Src\Shaders\ShaderIncludes\IlluminationModels.hlsli" />
+    <None Include="Src\Shaders\LightHelper.hlsli" />
+    <None Include="Src\Shaders\CommonIncludes.hlsli" />
+    <None Include="Src\Shaders\PBR.hlsli" />
+    <None Include="Src\Shaders\IlluminationModels.hlsli" />
   </ItemGroup>
 </Project>

@@ -1,34 +1,67 @@
 #include "Material.h"
-#include"..\Helpers\ShaderProcessor.h"
-
 
 Material::Material(ID3D11Device* device, std::wstring vertexShaderFilePath, std::wstring pixelShaderFilePath)
 {
 
 	HRESULT hr;
-//===========创建顶点着色器===========
-	this->m_vertexShader.Initialize(device, vertexShaderFilePath);
 
-//===========创建输入布局============
-	D3D11_INPUT_ELEMENT_DESC ieds[] =
+//=========================创建顶点着色器==========================
+	this->m_vertexShader.Instantiate(device, Shader::ShaderType::VertexShader,vertexShaderFilePath,"VS_Main","vs_5_0");
+
+//==========================创建输入布局===========================
+#pragma region 创建输入布局
+	//获取shader反射对象
+	Microsoft::WRL::ComPtr<ID3D11ShaderReflection> shaderReflection;
+	hr = D3DReflect(m_vertexShader.GetBlob()->GetBufferPointer(), m_vertexShader.GetBlob()->GetBufferSize(), __uuidof(ID3D11ShaderReflection), reinterpret_cast<void**>(shaderReflection.GetAddressOf()));
+	COM_ERROR_IF_FAILED(hr, "Failed to reflect vertex shader.");
+
+	//获取着色器描述信息
+	D3D11_SHADER_DESC shaderDescription;
+	hr = shaderReflection->GetDesc(&shaderDescription);
+	COM_ERROR_IF_FAILED(hr, "Failed to get description of vertex shader.");
+
+	//顶点输入结构变量数量
+	UINT numInputParameters = shaderDescription.InputParameters;
+
+	//输入布局列表
+	std::vector<D3D11_INPUT_ELEMENT_DESC> inputElements;
+
+	//根据着色器定义的顶点输入结构创建输入布局
+	for (UINT i = 0; i < numInputParameters; ++i)
 	{
-		{"POSITION", 0 ,DXGI_FORMAT_R32G32B32_FLOAT, 0 , 0 , D3D11_INPUT_PER_VERTEX_DATA , 0 } ,
-		{"TEXCOORD", 0 ,DXGI_FORMAT_R32G32_FLOAT , 0 , D3D11_APPEND_ALIGNED_ELEMENT , D3D11_INPUT_PER_VERTEX_DATA ,0 } ,
-		{ "NORMAL", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 }
-	};
+		D3D11_INPUT_ELEMENT_DESC inputElement = {};//输入布局列表元素
+		D3D11_SIGNATURE_PARAMETER_DESC parameterSignature;//顶点输入结构每个元素的签名
 
-	hr= device->CreateInputLayout(ieds, ARRAYSIZE(ieds),
-		this->m_vertexShader.GetBlob()->GetBufferPointer(), this->m_vertexShader.GetBlob()->GetBufferSize(), this->m_dxInputLayout.GetAddressOf());
-	//错误检查
-	COM_ERROR_IF_FAILED(hr, L"Failed to create DirectX Input Layout.");
+		shaderReflection->GetInputParameterDesc(i, &parameterSignature);
 
-//===========创建像素着色器===========
-	this->m_pixelShader.Initialize(device, pixelShaderFilePath);
+		inputElement.SemanticName = parameterSignature.SemanticName;
+		inputElement.SemanticIndex = parameterSignature.SemanticIndex;
+		inputElement.InputSlot = 0;
+		inputElement.AlignedByteOffset = D3D11_APPEND_ALIGNED_ELEMENT;
+		inputElement.InputSlotClass = D3D11_INPUT_PER_VERTEX_DATA; 
+		inputElement.InstanceDataStepRate = 0;
+		inputElement.Format = ShaderProcessor::GetDXGIFormat(parameterSignature);
 
-	//ShaderProcessor* shaderProcesser = new ShaderProcessor();
-	//shaderProcesser->ShaderPreProcess(this->m_vertexShader.GetBlob());
+		//如果格式无效，则停止运行
+		assert(inputElement.Format != DXGI_FORMAT_UNKNOWN);
 
-//=========创建深度-模板缓冲状态========
+		//将输入布局元素加入列表
+		inputElements.push_back(inputElement);
+	}
+
+	if (inputElements.size() > 0)
+	{
+		//使用输入布局列表创建输入布局
+		hr = device->CreateInputLayout(inputElements.data(), (UINT)inputElements.size(), m_vertexShader.GetBlob()->GetBufferPointer(), m_vertexShader.GetBlob()->GetBufferSize(), this->m_dxInputLayout.GetAddressOf());
+		COM_ERROR_IF_FAILED(hr, L"Failed to create DirectX Input Layout.");
+	}
+#pragma endregion
+
+//==========================创建像素着色器==========================
+
+	this->m_pixelShader.Instantiate(device, Shader::ShaderType::PixelShader, pixelShaderFilePath, "PS_Main", "ps_5_0");
+
+//========================创建深度-模板缓冲状态=======================
 
 	//深度模板测试状态描述
 	D3D11_DEPTH_STENCIL_DESC dsc;
@@ -43,7 +76,9 @@ Material::Material(ID3D11Device* device, std::wstring vertexShaderFilePath, std:
 	//错误检查
 	COM_ERROR_IF_FAILED(hr, L"Failed to create DirectX DepthStencil State.");
 
-//===========创建混合状态============
+
+//==========================创建混合状态===========================
+#pragma region 创建混合状态
 	D3D11_BLEND_DESC bd;
 	ZeroMemory(&bd, sizeof(bd));
 
@@ -65,19 +100,20 @@ Material::Material(ID3D11Device* device, std::wstring vertexShaderFilePath, std:
 	//错误检查
 	COM_ERROR_IF_FAILED(hr, L"Failed to create DirectX Blend State.");
 
+#pragma endregion 
 
-//===========创建常量缓冲============
+//==========================创建常量缓冲===========================
 
-	this->m_transformMatrixCB.Initialize(device);
+	this->m_transformMatrixCB.Instantiate(device);
 
 }
 
-VertexShader Material::GetVertexShader()
+Shader Material::GetVertexShader()
 {
 	return this->m_vertexShader;
 }
 
-PixelShader Material::GetPixelShader()
+Shader Material::GetPixelShader()
 {
 	return this->m_pixelShader;
 }
@@ -101,11 +137,6 @@ ConstantBuffer<CB_VS_TransformMatrix>& Material::GetConstantBuffer_TransformMatr
 {
 	return this->m_transformMatrixCB;
 }
-
-//StructuredBuffer<SB_PS_Light>& Material::GetStructuredBuffer_Light()
-//{
-//	return this->m_lightSB;
-//}
 
 
 

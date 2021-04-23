@@ -13,6 +13,45 @@ public:
 	VertexBuffer() {}
 
 	/// <summary>
+	/// 顶点缓冲实例化
+	/// </summary>
+	/// <param name="device">DirectX设备</param>
+	/// <param name="data">顶点列表</param>
+	/// <param name="numVertices">顶点列表顶点数</param>
+	/// <returns>顶点缓冲创建是否成功</returns>
+	bool Instantiate(ID3D11Device* dxDevice, T* data, UINT numVertices)
+	{
+		if (this->m_vertexBuffer != nullptr)
+		{
+			this->m_vertexBuffer.Reset();
+		}
+
+		this->m_vertexCount = numVertices;
+		this->m_vertexStride = sizeof(T);
+
+		//创建顶点缓冲
+		D3D11_BUFFER_DESC vbd = {};
+		vbd.Usage = D3D11_USAGE_IMMUTABLE;
+		vbd.ByteWidth = (m_vertexStride * m_vertexCount);
+		vbd.BindFlags = D3D11_BIND_VERTEX_BUFFER;
+		vbd.CPUAccessFlags = 0;
+		vbd.MiscFlags = 0;
+
+		D3D11_SUBRESOURCE_DATA srd = {};
+		srd.pSysMem = data;
+		srd.SysMemPitch = 0;
+		srd.SysMemSlicePitch = 0;
+
+		HRESULT hr = dxDevice->CreateBuffer(&vbd, &srd, m_vertexBuffer.GetAddressOf());
+
+		//错误检查
+		COM_ERROR_IF_FAILED(hr, "Failed to create Vertex Buffer.");
+
+		return true;
+
+	}
+
+	/// <summary>
 	/// 返回顶点缓冲对象的指针
 	/// </summary>
 	/// <returns></returns>
@@ -57,42 +96,7 @@ public:
 		return &this->m_vertexStride;
 	}
 
-	/// <summary>
-	/// 顶点缓冲初始化
-	/// </summary>
-	/// <param name="device">DirectX设备</param>
-	/// <param name="data">顶点列表</param>
-	/// <param name="numVertices">顶点列表顶点数</param>
-	/// <returns>顶点缓冲创建是否成功</returns>
-	bool Initialize(ID3D11Device* dxDevice,T* data,UINT numVertices)
-	{
-		if (this->m_vertexBuffer != nullptr)
-		{
-			this->m_vertexBuffer.Reset();
-		}
 
-		this->m_vertexCount = numVertices;
-		this->m_vertexStride = sizeof(T);
-
-		//创建顶点缓冲
-		D3D11_BUFFER_DESC vbd = {};
-		vbd.Usage = D3D11_USAGE_IMMUTABLE;
-		vbd.ByteWidth = (UINT)(sizeof(T) * this->m_vertexCount);
-		vbd.BindFlags = D3D11_BIND_VERTEX_BUFFER;
-		vbd.CPUAccessFlags = 0;
-		vbd.MiscFlags = 0;
-
-		D3D11_SUBRESOURCE_DATA srd = {};
-		srd.pSysMem = data;
-
-		HRESULT hr  = dxDevice->CreateBuffer(&vbd, &srd, m_vertexBuffer.GetAddressOf());
-
-		//错误检查
-		COM_ERROR_IF_FAILED(hr, "Failed to create Vertex Buffer.");
-
-		return true;
-	
-	}
 
 private:
 	Microsoft::WRL::ComPtr<ID3D11Buffer> m_vertexBuffer;

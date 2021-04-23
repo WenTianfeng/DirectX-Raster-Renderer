@@ -36,7 +36,7 @@ bool SceneManager::InitializeScene(ID3D11Device* device, ID3D11DeviceContext* de
 	if (IsDebuggerPresent())
 	{
 #ifdef _DEBUG
-		shaderFolderPath = L"Debug\\";
+		shaderFolderPath = L"Src\\Shaders\\";
 #else //RELEASE（待修改）
 		shaderFolderPath = L"..\\..\\..\\Debug\\";
 #endif // DEBUG
@@ -110,13 +110,13 @@ bool SceneManager::InitializeScene(ID3D11Device* device, ID3D11DeviceContext* de
 	cube->AddComponent<MeshRenderer>(device, deviceContext, "Resources\\Models\\BoxBall.FBX");//添加MeshRender组件
 	
 	std::wstring vertexShaderFilePaths[] = {
-		shaderFolderPath + L"VertexShader.cso",
-		shaderFolderPath + L"VertexShader.cso"
+		shaderFolderPath + L"Multi_Light.hlsl",
+		shaderFolderPath + L"Multi_Light.hlsl"
 	};
 
 	std::wstring pixelShaderFilePaths[] = {
-		shaderFolderPath + L"PixelShader_PBR.cso",
-		shaderFolderPath + L"PixelShader_PBR.cso"
+		shaderFolderPath + L"Multi_Light.hlsl",
+		shaderFolderPath + L"Multi_Light.hlsl"
 	};
 
 	cube->AddComponent<MaterialManager>(device, vertexShaderFilePaths, pixelShaderFilePaths, 2);//添加MaterialManager组件
@@ -124,22 +124,22 @@ bool SceneManager::InitializeScene(ID3D11Device* device, ID3D11DeviceContext* de
 	this->objects.push_back(cube);
 
 	//生成四边形
-	Object* quad = new Object(5);
-	quad->AddComponent<Attributes>("Quad");
-	quad->AddComponent<Transform>(DirectX::XMFLOAT3(0, 0, 0), DirectX::XMFLOAT3(0, 0, 0), DirectX::XMFLOAT3(3, 3, 3));//添加Transform组件
-	quad->AddComponent<MeshRenderer>(device, deviceContext, "Resources\\Models\\Quad.FBX");//添加MeshRender组件
+	//Object* quad = new Object(5);
+	//quad->AddComponent<Attributes>("Quad");
+	//quad->AddComponent<Transform>(DirectX::XMFLOAT3(0, 40, 0), DirectX::XMFLOAT3(0, 0, 0), DirectX::XMFLOAT3(3, 3, 3));//添加Transform组件
+	//quad->AddComponent<MeshRenderer>(device, deviceContext, "Resources\\Models\\Quad.FBX");//添加MeshRender组件
 
-	std::wstring quadVertexShaderFilePaths[] = {
-		shaderFolderPath + L"VertexShader.cso",
-	};
+	//std::wstring quadVertexShaderFilePaths[] = {
+	//	shaderFolderPath + L"VertexShader.cso",
+	//};
 
-	std::wstring quadPixelShaderFilePaths[] = {
-		shaderFolderPath + L"PixelShader_Texture.cso",
-	};
+	//std::wstring quadPixelShaderFilePaths[] = {
+	//	shaderFolderPath + L"PixelShader_Texture.cso",
+	//};
 
-	quad->AddComponent<MaterialManager>(device, quadVertexShaderFilePaths, quadPixelShaderFilePaths, 1);//添加MaterialManager组件
+	//quad->AddComponent<MaterialManager>(device, quadVertexShaderFilePaths, quadPixelShaderFilePaths, 1);//添加MaterialManager组件
 
-	//this->m_objects.push_back(quad);
+	//this->objects.push_back(quad);
 
 #pragma endregion
 

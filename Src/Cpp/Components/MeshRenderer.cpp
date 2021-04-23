@@ -27,11 +27,11 @@ void MeshRenderer::Render()
 	{
 
 		//设置顶点着色器
-		this->m_dxDeviceContext->VSSetShader(materialManager->materials[i].GetVertexShader().GetShader(), 0, 0);
-
+		//this->m_dxDeviceContext->VSSetShader(materialManager->materials[i].GetVertexShader().GetShader(), 0, 0);
+		materialManager->materials[i].GetVertexShader().Bind(m_dxDeviceContext);
 		//设置像素着色器
-		this->m_dxDeviceContext->PSSetShader(materialManager->materials[i].GetPixelShader().GetShader(), 0, 0);
-
+		//this->m_dxDeviceContext->PSSetShader(materialManager->materials[i].GetPixelShader().GetShader(), 0, 0);
+		materialManager->materials[i].GetPixelShader().Bind(m_dxDeviceContext);
 	//=======状态设置========
 
 		//设置输入布局
@@ -48,20 +48,14 @@ void MeshRenderer::Render()
 
 		//设置采样器状态
 
-		//设置纹理资源
-		this->m_dxDeviceContext->PSSetShaderResources(2, 1, this->m_pTexSRV.GetAddressOf());
-
-
 	//=======缓冲设置========
 
 	//设置顶点缓冲
 		UINT offsets = 0;
 		this->m_dxDeviceContext->IASetVertexBuffers(0, 1, m_meshes[i].GetVertexBuffer().GetAddressOf(), m_meshes[i].GetVertexBuffer().StridePtr(), &offsets);
 
-
 	//设置索引缓冲
 		this->m_dxDeviceContext->IASetIndexBuffer(m_meshes[i].GetIndexBuffer().Get(), DXGI_FORMAT_R32_UINT, 0);
-
 
 	//设置常量缓冲
 		this->m_dxDeviceContext->VSSetConstantBuffers(0, 1, materialManager->materials[i].GetConstantBuffer_TransformMatrix().GetAddressOf());

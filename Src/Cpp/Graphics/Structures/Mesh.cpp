@@ -2,9 +2,9 @@
 
 Mesh::Mesh(ID3D11Device* device, std::vector<Vertex3D> vertices, std::vector<DWORD> indices)
 {
-	this->m_vertexBuffer.Initialize(device, vertices.data(), vertices.size());
+	this->m_vertexBuffer.Instantiate(device, vertices.data(), vertices.size());
 
-	this->m_indexBuffer.Initialize(device, indices.data(), indices.size());
+	this->m_indexBuffer.Instantiate(device, indices.data(), indices.size());
 }
 
 VertexBuffer<Vertex3D> Mesh::GetVertexBuffer()

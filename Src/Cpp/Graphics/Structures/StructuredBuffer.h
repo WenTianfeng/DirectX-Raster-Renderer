@@ -52,7 +52,7 @@ public:
 	/// </summary>
 	/// <param name="dxDevice">DirectX设备</param>
 	/// <returns>初始化是否成功</returns>
-	bool Initialize(ID3D11Device* dxDevice, UINT numElements)
+	bool Instantiate(ID3D11Device* dxDevice, UINT numElements)
 	{
 		for (UINT i = 0; i < numElements; i++)
 		{

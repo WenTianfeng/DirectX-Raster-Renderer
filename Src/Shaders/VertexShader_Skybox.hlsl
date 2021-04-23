@@ -1,4 +1,4 @@
-#include"..\ShaderIncludes\CommonIncludes.hlsli"
+#include"CommonIncludes.hlsli"
 
  VertexOutput_Skybox main(VertexInput input)
 {

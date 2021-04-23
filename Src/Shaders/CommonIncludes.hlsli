@@ -1,4 +1,3 @@
-
 TextureCube SkyboxMap : register(t1);
 Texture2D MainTex : register(t2);
 Texture2D NormalMap : register(t3);

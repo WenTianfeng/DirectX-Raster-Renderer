@@ -129,7 +129,7 @@ bool Graphics::InitializeDirectX(HWND hwnd, int width, int height)
 	D3D11_RASTERIZER_DESC rd;
 	ZeroMemory(&rd, sizeof(rd));
 	rd.FillMode = D3D11_FILL_SOLID;
-	rd.CullMode = D3D11_CULL_NONE;
+	rd.CullMode = D3D11_CULL_BACK;
 	rd.FrontCounterClockwise = false;
 	rd.DepthClipEnable = true;
 	
@@ -146,7 +146,7 @@ bool Graphics::InitializeDirectX(HWND hwnd, int width, int height)
 
 bool Graphics::InitializeEffect()
 {
-	this->m_lightSB.Initialize(this->m_dxDevice.Get(), 2);
+	this->m_lightSB.Instantiate(this->m_dxDevice.Get(), 2);
 	this->m_dxDeviceContext->PSSetShaderResources(0, 1, this->m_lightSB.GetSRVAddressOf());
 
 	return true;

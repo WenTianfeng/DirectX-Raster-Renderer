@@ -1,4 +1,4 @@
-#include"..\ShaderIncludes\CommonIncludes.hlsli"
+#include"CommonIncludes.hlsli"
 
 float4 main(VertexOutput_Skybox input) : SV_TARGET
 {

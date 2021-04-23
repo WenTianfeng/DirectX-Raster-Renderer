@@ -84,10 +84,11 @@ void Skybox::Render()
 	{
 
 		//设置顶点着色器
-		this->m_dxDeviceContext->VSSetShader(materialManager->materials[i].GetVertexShader().GetShader(), 0, 0);
-
+		//this->m_dxDeviceContext->VSSetShader(materialManager->materials[i].GetVertexShader().GetShader(), 0, 0);
+		materialManager->materials[i].GetVertexShader().Bind(m_dxDeviceContext);
 		//设置像素着色器
-		this->m_dxDeviceContext->PSSetShader(materialManager->materials[i].GetPixelShader().GetShader(), 0, 0);
+		//this->m_dxDeviceContext->PSSetShader(materialManager->materials[i].GetPixelShader().GetShader(), 0, 0);
+		materialManager->materials[i].GetPixelShader().Bind(m_dxDeviceContext);
 
 		//=======状态设置========
 

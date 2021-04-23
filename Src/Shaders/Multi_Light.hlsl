@@ -1,9 +1,21 @@
-#include"..\ShaderIncludes\CommonIncludes.hlsli"
-#include"..\ShaderIncludes\PBR.hlsli"
+#include"PBR.hlsli"
+#include"CommonIncludes.hlsli"
 
+VertexOutput VS_Main(VertexInput input)
+{
+    VertexOutput output;
+    
+    matrix mvp = mul(mul(ObjectToWorld, WorldToView), Projection);
+    
+    output.pos = mul(float4(input.vertex, 1.0), mvp);
+    output.uv = input.texcoord;
+    output.world_normal = mul(input.normal, (float3x3) ObjectToWorld_InverseTranspose);
+    output.world_pos = mul(float4(input.vertex, 1.0), ObjectToWorld).xyz;
 
+    return output;
+}
 
-float4 main(VertexOutput input) : SV_TARGET
+float4 PS_Main(VertexOutput input) : SV_TARGET
 {
     float4 albedo = float4(0.5f, 0.5f, 0.5f, 1);
     float4 color = float4(0, 0, 0, 1);
@@ -22,23 +34,23 @@ float4 main(VertexOutput input) : SV_TARGET
             case DIRECTIONAL_LIGHT:
             {
                 //根据对应光照类型处理得到所需的直接光照信息
-                DirectIlluminationData directionalLightData = ProcessDirectionalLight(Lights[i], input.world_pos);
+                    DirectIlluminationData directionalLightData = ProcessDirectionalLight(Lights[i], input.world_pos);
              
                 //将经过光照模型计算的颜色叠加到最终颜色
-                color += albedo * directionalLightData.color * max(0, dot(-directionalLightData.direction, input.world_normal));
+                    color += albedo * directionalLightData.color * max(0, dot(-directionalLightData.direction, input.world_normal));
 
                 }
-            break;
+                break;
          
             case POINT_LIGHT:
             {
                 //根据对应光照类型处理得到所需的直接光照信息
-                DirectIlluminationData pointLightData = ProcessPointlLight(Lights[i], input.world_pos);
+                    DirectIlluminationData pointLightData = ProcessPointlLight(Lights[i], input.world_pos);
              
                 //将经过光照模型计算的颜色叠加到最终颜色
-                color += albedo * pointLightData.color * max(0, dot(pointLightData.direction, input.world_normal));
-            }
-            break;
+                    color += albedo * pointLightData.color * max(0, dot(pointLightData.direction, input.world_normal));
+                }
+                break;
          
             case SPOT_LIGHT:
             {
