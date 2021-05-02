@@ -203,6 +203,15 @@
     <ClCompile Include="Src\Cpp\Graphics\Structures\Shader.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
+    <ClCompile Include="Src\Cpp\Graphics\Structures\ShaderParameter.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Cpp\Graphics\Structures\ConstantBufferVariable.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Cpp\Graphics\Structures\ConstantBuffer.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Src\Cpp\Mouse\Mouse.h">
@@ -228,9 +237,6 @@
     </ClInclude>
     <ClInclude Include="Src\Cpp\Components\Component.h">
       <Filter>头文件\Components</Filter>
-    </ClInclude>
-    <ClInclude Include="Src\Cpp\Graphics\Structures\ConstantBuffer.h">
-      <Filter>头文件\Graphics\Stuctures</Filter>
     </ClInclude>
     <ClInclude Include="Src\Cpp\Graphics\Structures\ConstantBufferTypes.h">
       <Filter>头文件\Graphics\Stuctures</Filter>
@@ -367,18 +373,21 @@
     <ClInclude Include="Src\Cpp\Graphics\Structures\Shader.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="Src\Cpp\Graphics\Structures\ShaderParameter.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Cpp\Graphics\Structures\ConstantBufferVariable.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Cpp\Graphics\Structures\ConstantBuffer.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <FxCompile Include="Src\Shaders\PixelShader_Error.hlsl">
-      <Filter>Shaders</Filter>
-    </FxCompile>
-    <FxCompile Include="Src\Shaders\VertexShader.hlsl">
-      <Filter>Shaders</Filter>
-    </FxCompile>
-    <FxCompile Include="Src\Shaders\PixelShader_PBR.hlsl" />
     <FxCompile Include="Src\Shaders\VertexShader_Skybox.hlsl" />
     <FxCompile Include="Src\Shaders\PixelShader_Skybox.hlsl" />
-    <FxCompile Include="Src\Shaders\Multi_Light.hlsl" />
+    <FxCompile Include="Src\Shaders\PBRTest.hlsl" />
+    <FxCompile Include="Src\Shaders\Error.hlsl" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Src\Shaders\LightHelper.hlsli" />

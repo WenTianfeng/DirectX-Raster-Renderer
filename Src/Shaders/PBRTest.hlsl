@@ -1,6 +1,20 @@
 #include"PBR.hlsli"
 #include"CommonIncludes.hlsli"
 
+cbuffer CB_VS_UVScaleOffset : register(b1)
+{
+    float2 Scale;
+    float2 Offset;
+};
+
+cbuffer CB_PS_PBR : register(b2)
+{
+    int4 MM;
+    float4 Albedo;
+};
+
+
+
 VertexOutput VS_Main(VertexInput input)
 {
     VertexOutput output;
@@ -17,7 +31,6 @@ VertexOutput VS_Main(VertexInput input)
 
 float4 PS_Main(VertexOutput input) : SV_TARGET
 {
-    float4 albedo = float4(0.5f, 0.5f, 0.5f, 1);
     float4 color = float4(0, 0, 0, 1);
     
 
@@ -37,7 +50,7 @@ float4 PS_Main(VertexOutput input) : SV_TARGET
                     DirectIlluminationData directionalLightData = ProcessDirectionalLight(Lights[i], input.world_pos);
              
                 //将经过光照模型计算的颜色叠加到最终颜色
-                    color += albedo * directionalLightData.color * max(0, dot(-directionalLightData.direction, input.world_normal));
+                    color += MM*Albedo * directionalLightData.color * max(0, dot(-directionalLightData.direction, input.world_normal));
 
                 }
                 break;
@@ -48,7 +61,7 @@ float4 PS_Main(VertexOutput input) : SV_TARGET
                     DirectIlluminationData pointLightData = ProcessPointlLight(Lights[i], input.world_pos);
              
                 //将经过光照模型计算的颜色叠加到最终颜色
-                    color += albedo * pointLightData.color * max(0, dot(pointLightData.direction, input.world_normal));
+                    color += Albedo * pointLightData.color * max(0, dot(pointLightData.direction, input.world_normal));
                 }
                 break;
          
@@ -58,7 +71,7 @@ float4 PS_Main(VertexOutput input) : SV_TARGET
                     DirectIlluminationData spotLightData = ProcessSpotLight(Lights[i], input.world_pos);
              
                 //将经过光照模型计算的颜色叠加到最终颜色
-                    color += albedo * spotLightData.color * max(0, dot(spotLightData.direction, input.world_normal));
+                    color += Albedo * spotLightData.color * max(0, dot(spotLightData.direction, input.world_normal));
                 }
                 break;
          

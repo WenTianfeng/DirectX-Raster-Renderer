@@ -65,7 +65,7 @@ private:
 	bool InitializeEffect();
 
 	/// <summary>
-	/// 更新渲染所需成员状态
+	/// 更新渲染通用成员状态
 	/// </summary>
 	/// <param name="lights">光源列表</param>
 	void UpdateEffect(std::vector<Object*> lights);

@@ -1,6 +1,7 @@
 #pragma once
 
 #include"MeshRenderer.h"
+#include<DirectXTK\WICTextureLoader.h>
 
 class Skybox : public MeshRenderer
 {

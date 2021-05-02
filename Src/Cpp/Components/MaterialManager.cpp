@@ -1,18 +1,23 @@
 #include "MaterialManager.h"
 
-MaterialManager::MaterialManager(ID3D11Device* device, std::wstring* vertexShaderFiles, std::wstring* pixelShaderFiles, UINT shaderCount):
+MaterialManager::MaterialManager(ID3D11Device* device, std::wstring* shaderFiles, UINT shaderFileCount):
 	m_dxDevice(device)
 {
+	//设置组件名称
 	this->m_componentName = "Material";
 
-	for (UINT i = 0; i < shaderCount; i++)
+	//根据着色器文件数量遍历
+	for (UINT i = 0; i < shaderFileCount; i++)
 	{
-		Material material(this->m_dxDevice, *vertexShaderFiles, *pixelShaderFiles);
+		//实例化材质
+		Material material(this->m_dxDevice, *shaderFiles);
 
+		//将材质加入到材质列表
 		this->materials.push_back(material);
 
-		vertexShaderFiles++;
-		pixelShaderFiles++;
+		//指针后移
+		shaderFiles++;
 	}
 
 }
+

@@ -168,8 +168,6 @@ void Graphics::UpdateEffect(std::vector<Object*> lights)
 	//更新结构缓冲
 	this->m_lightSB.UpdateStructuredBuffer(this->m_dxDeviceContext.Get());
 
-
-
 }
 
 

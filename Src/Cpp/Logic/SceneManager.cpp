@@ -107,19 +107,14 @@ bool SceneManager::InitializeScene(ID3D11Device* device, ID3D11DeviceContext* de
 	Object* cube = new Object(4);
 	cube->AddComponent<Attributes>("BoxBall", "Object");
 	cube->AddComponent<Transform>(DirectX::XMFLOAT3(0, 0, 0), DirectX::XMFLOAT3(DirectX::XM_PI / 2, DirectX::XM_PI / 4, 0), DirectX::XMFLOAT3(1, 1, 1));//添加Transform组件
-	cube->AddComponent<MeshRenderer>(device, deviceContext, "Resources\\Models\\BoxBall.FBX");//添加MeshRender组件
+	cube->AddComponent<MeshRenderer>(device, deviceContext, "Assets\\Models\\BoxBall.FBX");//添加MeshRender组件
 	
-	std::wstring vertexShaderFilePaths[] = {
-		shaderFolderPath + L"Multi_Light.hlsl",
-		shaderFolderPath + L"Multi_Light.hlsl"
+	std::wstring shaderFilePaths[] = {
+		shaderFolderPath + L"PBRTest.hlsl",
+		shaderFolderPath + L"PBRTest.hlsl"
 	};
 
-	std::wstring pixelShaderFilePaths[] = {
-		shaderFolderPath + L"Multi_Light.hlsl",
-		shaderFolderPath + L"Multi_Light.hlsl"
-	};
-
-	cube->AddComponent<MaterialManager>(device, vertexShaderFilePaths, pixelShaderFilePaths, 2);//添加MaterialManager组件
+	cube->AddComponent<MaterialManager>(device, shaderFilePaths, 2);//添加MaterialManager组件
 
 	this->objects.push_back(cube);
 
@@ -127,14 +122,14 @@ bool SceneManager::InitializeScene(ID3D11Device* device, ID3D11DeviceContext* de
 	//Object* quad = new Object(5);
 	//quad->AddComponent<Attributes>("Quad");
 	//quad->AddComponent<Transform>(DirectX::XMFLOAT3(0, 40, 0), DirectX::XMFLOAT3(0, 0, 0), DirectX::XMFLOAT3(3, 3, 3));//添加Transform组件
-	//quad->AddComponent<MeshRenderer>(device, deviceContext, "Resources\\Models\\Quad.FBX");//添加MeshRender组件
+	//quad->AddComponent<MeshRenderer>(device, deviceContext, "Assets\\Models\\Quad.FBX");//添加MeshRender组件
 
 	//std::wstring quadVertexShaderFilePaths[] = {
-	//	shaderFolderPath + L"VertexShader.cso",
+	//	shaderFolderPath + L"PBRTest.hlsl",
 	//};
 
 	//std::wstring quadPixelShaderFilePaths[] = {
-	//	shaderFolderPath + L"PixelShader_Texture.cso",
+	//	shaderFolderPath + L"PBRTest.hlsl",
 	//};
 
 	//quad->AddComponent<MaterialManager>(device, quadVertexShaderFilePaths, quadPixelShaderFilePaths, 1);//添加MaterialManager组件

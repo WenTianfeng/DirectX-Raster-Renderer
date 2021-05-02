@@ -1,15 +1,21 @@
 #include"CommonIncludes.hlsli"
 
-VertexOutput main(VertexInput input)
+
+VertexOutput VS_Main(VertexInput input)
 {
     VertexOutput output;
     
     matrix mvp = mul(mul(ObjectToWorld, WorldToView), Projection);
     
-    output.pos = mul(float4(input.vertex,1.0), mvp);
+    output.pos = mul(float4(input.vertex, 1.0), mvp);
     output.uv = input.texcoord;
     output.world_normal = mul(input.normal, (float3x3) ObjectToWorld_InverseTranspose);
     output.world_pos = mul(float4(input.vertex, 1.0), ObjectToWorld).xyz;
 
     return output;
+}
+
+float4 PS_Main(VertexOutput input) : SV_TARGET
+{
+    return float4(1.0f, 0.0f, 1.0f, 1.0f);
 }

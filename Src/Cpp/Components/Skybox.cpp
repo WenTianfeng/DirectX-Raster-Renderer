@@ -1,7 +1,7 @@
 #include "Skybox.h"
 
 Skybox::Skybox(ID3D11Device* device, ID3D11DeviceContext* deviceContext, const std::vector<std::wstring>& cubeMapFileNames):
-	MeshRenderer(device,deviceContext, "Resources\\Models\\SkyboxSphere.FBX"),
+	MeshRenderer(device,deviceContext, "Assets\\Models\\SkyboxSphere.FBX"),
 	m_cubeMapFileNames(cubeMapFileNames)
 {
 	this->m_componentName = "Skybox";
@@ -32,8 +32,9 @@ void Skybox::Initialize()
 	texArrayDesc.CPUAccessFlags = 0;
 	texArrayDesc.MiscFlags = D3D11_RESOURCE_MISC_TEXTURECUBE;
 
-	ID3D11Texture2D* texArray = nullptr;
-	this->m_dxDevice->CreateTexture2D(&texArrayDesc, nullptr, &texArray);
+	Microsoft::WRL::ComPtr<ID3D11Texture2D> texArray;
+	//ID3D11Texture2D* texArray;
+	this->m_dxDevice->CreateTexture2D(&texArrayDesc, nullptr, texArray.GetAddressOf());
 
 	texArray->GetDesc(&texArrayDesc);
 
@@ -41,7 +42,7 @@ void Skybox::Initialize()
 	{
 		for (UINT j = 0; j < texArrayDesc.MipLevels; ++j)
 		{
-			this->m_dxDeviceContext->CopySubresourceRegion(texArray, D3D11CalcSubresource(j, i, texArrayDesc.MipLevels), 0, 0, 0, srcTexVec[i], j, nullptr);
+			this->m_dxDeviceContext->CopySubresourceRegion(texArray.Get(), D3D11CalcSubresource(j, i, texArrayDesc.MipLevels), 0, 0, 0, srcTexVec[i], j, nullptr);
 		}
 	}
 
@@ -52,7 +53,7 @@ void Skybox::Initialize()
 	viewDesc.TextureCube.MostDetailedMip = 0;
 	viewDesc.TextureCube.MipLevels = texArrayDesc.MipLevels;
 
-	this->m_dxDevice->CreateShaderResourceView(texArray, &viewDesc, this->m_skyboxTextureCubeSRV.GetAddressOf());
+	this->m_dxDevice->CreateShaderResourceView(texArray.Get(), &viewDesc, this->m_skyboxTextureCubeSRV.GetAddressOf());
 
 
 	// 初始化采样器状态
@@ -82,13 +83,8 @@ void Skybox::Render()
 
 	for (UINT i = 0; i < this->m_meshes.size(); i++)
 	{
-
-		//设置顶点着色器
-		//this->m_dxDeviceContext->VSSetShader(materialManager->materials[i].GetVertexShader().GetShader(), 0, 0);
-		materialManager->materials[i].GetVertexShader().Bind(m_dxDeviceContext);
-		//设置像素着色器
-		//this->m_dxDeviceContext->PSSetShader(materialManager->materials[i].GetPixelShader().GetShader(), 0, 0);
-		materialManager->materials[i].GetPixelShader().Bind(m_dxDeviceContext);
+		//绑定着色器至上下文
+		materialManager->materials[i].BindShaders(m_dxDeviceContext);
 
 		//=======状态设置========
 
@@ -122,27 +118,6 @@ void Skybox::Render()
 		this->m_dxDeviceContext->IASetIndexBuffer(m_meshes[i].GetIndexBuffer().Get(), DXGI_FORMAT_R32_UINT, 0);
 
 
-		//设置常量缓冲
-		this->m_dxDeviceContext->VSSetConstantBuffers(0, 1, materialManager->materials[i].GetConstantBuffer_TransformMatrix().GetAddressOf());
-
-		//更新世界矩阵
-		DirectX::XMMATRIX W = owner->GetComponent<Transform>()->GetLocalToWorldMatrixXM();
-		materialManager->materials[i].GetConstantBuffer_TransformMatrix().bufferData.world = DirectX::XMMatrixTranspose(W);
-
-		//对世界矩阵求逆转置矩阵
-		DirectX::XMMATRIX A = W;
-		A.r[3] = DirectX::g_XMIdentityR3;
-		materialManager->materials[i].GetConstantBuffer_TransformMatrix().bufferData.worldInverseTranspose = XMMatrixTranspose(XMMatrixTranspose(XMMatrixInverse(nullptr, A)));
-
-		//更新视矩阵
-		DirectX::XMMATRIX V = SceneManager::mainCamera->GetComponent<Camera>()->GetViewMatrix();
-		materialManager->materials[i].GetConstantBuffer_TransformMatrix().bufferData.view = DirectX::XMMatrixTranspose(V);
-
-		//更新投影矩阵
-		DirectX::XMMATRIX P = SceneManager::mainCamera->GetComponent<Camera>()->GetProjectionMatrix();
-		materialManager->materials[i].GetConstantBuffer_TransformMatrix().bufferData.projection = DirectX::XMMatrixTranspose(P);
-
-		materialManager->materials[i].GetConstantBuffer_TransformMatrix().UpdateConstantBuffer(this->m_dxDeviceContext);
 
 
 		//=======绘制========

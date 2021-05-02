@@ -1,80 +1,104 @@
 #pragma once
 
+#include<memory>
+#include<vector>
+#include<map>
 #include <wrl/client.h>
 #include <d3d11_1.h>
 
 #include"..\..\Tools\ErrorLogger.h"
 
-template <class T>
-class ConstantBuffer 
+#include"Shader.h"
+#include"ConstantBufferVariable.h"
+
+class ConstantBuffer
 {
 public:
-	//缓冲区对应的结构体数据
-	T bufferData;
-
-	ConstantBuffer():
-		m_constantBuffer(nullptr)
-	{
-	
-	}
-
-	ID3D11Buffer* Get() const
-	{
-		return m_constantBuffer.Get();
-	}
-
-	ID3D11Buffer* const* GetAddressOf() const
-	{
-		return m_constantBuffer.GetAddressOf();
-	}
+	ConstantBuffer(UINT slot, UINT byteWidth);
 
 	/// <summary>
-	/// 常量缓冲区初始化
+	/// 实例化常量缓冲
 	/// </summary>
 	/// <param name="dxDevice">DirectX设备</param>
-	/// <returns>初始化是否成功</returns>
-	bool Instantiate(ID3D11Device* dxDevice)
-	{
-		//创建缓冲描述
-		D3D11_BUFFER_DESC cbd = {};
-		cbd.Usage = D3D11_USAGE_DYNAMIC;
-		cbd.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
-		cbd.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
-		cbd.MiscFlags = 0u;
-		cbd.StructureByteStride = 0u;
-		cbd.ByteWidth = static_cast<UINT>(sizeof(T) + (16 - (sizeof(T) % 16)));
-
-		HRESULT hr = dxDevice->CreateBuffer(&cbd, nullptr, this->m_constantBuffer.GetAddressOf());
-
-		//错误检查
-		COM_ERROR_IF_FAILED(hr, "Failed to create DirectX Constant Buffer.");
-
-
-		return true;
-	}
+	/// <returns></returns>
+	bool Instantiate(ID3D11Device* dxDevice);
 
 	/// <summary>
-	/// 更新常量缓冲区数据
+	/// 将常量缓冲绑定至DirectX上下文
 	/// </summary>
-	/// <param name="dxDeviceContext">DirectX上下文</param>
-	/// <returns>更新是否成功</returns>
-	bool UpdateConstantBuffer(ID3D11DeviceContext* dxDeviceContext)
-	{
-		// 更新常量缓冲区
-		D3D11_MAPPED_SUBRESOURCE mapped_data;
-		HRESULT hr = dxDeviceContext->Map(this->m_constantBuffer.Get(), 0, D3D11_MAP_WRITE_DISCARD, 0, &mapped_data);
+	/// <param name="deviceContext">DirectX上下文</param>
+	/// <param name="bufferSlot">寄存器槽位</param>
+	/// <param name="shaderType">着色器类型</param>
+	void Bind(ID3D11DeviceContext* deviceContext, Shader::ShaderType shaderType);
 
-		//错误检查
-		COM_ERROR_IF_FAILED(hr, "Failed to map DirectX Constant Buffer.");
+	/// <summary>
+	/// 更新常量缓冲
+	/// </summary>
+	/// <param name="dxDeviceContext"></param>
+	void UpdateConstantBuffer(ID3D11DeviceContext* dxDeviceContext);
+	
+	ID3D11Buffer* Get() const;
+	ID3D11Buffer* const* GetAddressOf() const;
 
-		memcpy_s(mapped_data.pData, sizeof(T), &bufferData, sizeof(T));
-		dxDeviceContext->Unmap(this->m_constantBuffer.Get(), 0);
+	/// <summary>
+	/// 根据着色器变量名返回对应变量
+	/// </summary>
+	/// <param name="variableName"></param>
+	/// <returns></returns>
+	ConstantBufferVariable GetConstantBufferVariableByName(std::string variableName);
 
-		return true;
-	}
+public:
+	/// <summary>
+	/// 设置指定位置、指定大小的缓冲数据值
+	/// </summary>
+	/// <param name="data">源数据</param>
+	/// <param name="byteOffset">首位置偏移值</param>
+	/// <param name="byteCount">数据字节大小</param>
+	void SetData(const void* data, UINT byteOffset = 0, UINT byteCount = 0xFFFFFFFF);
+
+	/// <summary>
+	/// 获取指定位置、指定大小的缓冲数据值
+	/// </summary>
+	/// <param name="pOutput">获取的数据</param>
+	/// <param name="byteOffset">首位置偏移值</param>
+	/// <param name="byteCount">数据字节大小</param>
+	/// <returns></returns>
+	HRESULT GetData(void* pOutput, UINT byteOffset = 0, UINT byteCount = 0xFFFFFFFF);
+
+	/// <summary>
+	/// 设置int类型数据
+	/// </summary>
+	/// <param name="numComponents">数据分量数</param>
+	/// <param name="byteOffset">首位置偏移值</param>
+	/// <param name="byteWidth">数据字节大小</param>
+	/// <param name="data">int数据列表</param>
+	void SetIntVec(UINT numComponents, UINT byteOffset, UINT byteWidth, const int data[4]);
+
+	/// <summary>
+	/// 设置float类型数据
+	/// </summary>
+	/// <param name="numComponents">数据分量数</param>
+	/// <param name="byteOffset">首位置偏移值</param>
+	/// <param name="byteWidth">数据字节大小</param>
+	/// <param name="data">float数据列表</param>
+	void SetFloatVec(UINT numComponents, UINT byteOffset, UINT byteWidth, const FLOAT data[4]);
+
+	/// <summary>
+	/// 设置结构体数据
+	/// </summary>
+	/// <param name="data">结构体数据指针</param>
+	/// <param name="byteWidth">结构体数据大小</param>
+	void SetStructure(void* data,UINT byteWidth);
+
+public:
+	std::map<std::string, ConstantBufferVariable> constantVariablesMap;
 
 private:
-	
-	Microsoft::WRL::ComPtr<ID3D11Buffer> m_constantBuffer;
+	Microsoft::WRL::ComPtr<ID3D11Buffer> m_constantBuffer;//DirectX常量缓冲对象
+	std::unique_ptr<BYTE[]> m_data;//常量缓冲数据
+	bool m_dirty;//常量缓冲数据是否被修改且未提交更新
+	UINT m_slot;//常量缓冲在寄存器的槽位
+	UINT m_byteWidth;//常量缓冲字节大小
+
 
 };
