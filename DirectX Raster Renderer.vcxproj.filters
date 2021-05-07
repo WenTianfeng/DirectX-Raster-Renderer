@@ -215,6 +215,9 @@
     <ClCompile Include="Src\Cpp\Graphics\Structures\Texture.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
+    <ClCompile Include="Src\Cpp\UI\ImGui\imgui_tables.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Src\Cpp\Mouse\Mouse.h">

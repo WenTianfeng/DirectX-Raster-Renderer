@@ -46,6 +46,7 @@
     <ClCompile Include="Src\Cpp\UI\ImGui\imgui_draw.cpp" />
     <ClCompile Include="Src\Cpp\UI\ImGui\imgui_impl_dx11.cpp" />
     <ClCompile Include="Src\Cpp\UI\ImGui\imgui_impl_win32.cpp" />
+    <ClCompile Include="Src\Cpp\UI\ImGui\imgui_tables.cpp" />
     <ClCompile Include="Src\Cpp\UI\ImGui\imgui_widgets.cpp" />
     <ClCompile Include="Src\Cpp\Components\MeshRenderer.cpp" />
     <ClCompile Include="Src\Cpp\Graphics\Helpers\ShaderProcessor.cpp" />
