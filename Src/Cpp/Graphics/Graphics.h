@@ -26,6 +26,10 @@ class Graphics
 {
 public:
 
+	Graphics();
+	~Graphics();
+
+
 	/// <summary>
 	/// 图形处理初始化——当前：DirectX初始化、ImGui 初始化
 	/// </summary>
@@ -40,6 +44,13 @@ public:
 	/// </summary>
 	/// <param name="objects">对象列表（从SceneManager获取）</param>
 	void RenderFrame(std::vector<Object*> objects, std::vector<Object*> lights);
+
+	/// <summary>
+	/// 窗口缩放后调用，根据新窗口大小修改DirectX资源属性
+	/// </summary>
+	/// <param name="clientWidth">新窗口宽度</param>
+	/// <param name="clientHeight">新窗口高度</param>
+	void OnWindowResize(int clientWidth, int clientHeight);
 
 	//获取DirectX设备
 	ID3D11Device* GetDirectXDevice();
@@ -93,6 +104,7 @@ private:
 	//渲染相关通用成员
 	StructuredBuffer<SB_PS_Light> m_lightSB;
 	
+private:
 	//UI相关
 	UserInterface* m_userInterface = new UserInterface();//UI对象
 

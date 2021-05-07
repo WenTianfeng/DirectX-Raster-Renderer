@@ -5,11 +5,19 @@
 #include"Graphics\Graphics.h"
 #include"Logic\SceneManager.h"
 
+
 class RenderingEngine 
 {
 public:
 
+	/// <summary>
+	/// 构造函数
+	/// </summary>
 	RenderingEngine();
+
+	~RenderingEngine();
+
+	static RenderingEngine* GetInstance();
 
 	/// <summary>
 	/// 引擎相关内容初始化
@@ -28,6 +36,16 @@ public:
 	/// <returns>程序运行结束返回值</returns>
 	int Run();
 
+	/// <summary>
+	/// 
+	/// </summary>
+	/// <param name="hwnd"></param>
+	/// <param name="msg"></param>
+	/// <param name="wParam"></param>
+	/// <param name="lParam"></param>
+	/// <returns></returns>
+	LRESULT EngineMsgProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam);
+
 private:
 
 	/// <summary>
@@ -43,13 +61,13 @@ private:
 
 public:
 
-	static RenderWindow* renderWindow;//引擎程序使用的窗口实例
-	static SceneManager* sceneManager;//场景管理使用到实例
-	static Graphics* graphics;//引擎程序使用的渲染实例
-	static Timer* timer;//计时器
+	RenderWindow* renderWindow;//引擎程序使用的窗口实例
+	SceneManager* sceneManager;//场景管理使用到实例
+	Graphics* graphics;//引擎程序使用的渲染实例
+	Timer* timer;//计时器
 
 private:
-
+	static RenderingEngine* m_instance;
 	bool m_paused;//程序是否暂停
 
 };

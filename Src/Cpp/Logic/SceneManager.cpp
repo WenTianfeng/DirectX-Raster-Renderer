@@ -8,6 +8,14 @@ Object* SceneManager::mainCamera = nullptr;
 std::vector<Object*> SceneManager::lights = {};
 std::vector<Object*> SceneManager::objects = {};
 
+SceneManager::SceneManager()
+{
+}
+
+SceneManager::~SceneManager()
+{
+}
+
 bool SceneManager::Initialize(ID3D11Device* device, ID3D11DeviceContext* deviceContext)
 {
 	//初始化场景
@@ -26,6 +34,13 @@ void SceneManager::Update(float dt)
 	{
 		object->Update(dt);
 	}
+}
+
+void SceneManager::OnWindowResize(int clientWidth, int clientHeight)
+{
+	//重设主相机的横纵比
+	mainCamera->GetComponent<Camera>()->SetAspect((float)clientWidth / (float)clientHeight);
+
 }
 
 bool SceneManager::InitializeScene(ID3D11Device* device, ID3D11DeviceContext* deviceContext)
@@ -48,7 +63,7 @@ bool SceneManager::InitializeScene(ID3D11Device* device, ID3D11DeviceContext* de
 
 	Object* camera = new Object(0);
 	camera->AddComponent<Attributes>("Main Camera","Camera");
-	camera->AddComponent<Transform>(DirectX::XMFLOAT3(0, 30.0f, -80.0f), DirectX::XMFLOAT3(0, 0, 0), DirectX::XMFLOAT3(1, 1, 1));
+	camera->AddComponent<Transform>(DirectX::XMFLOAT3(0, 80.0f, -120.0f), DirectX::XMFLOAT3(DirectX::XM_PI / 6, 0, 0), DirectX::XMFLOAT3(1, 1, 1));
 	camera->AddComponent<Camera>(DirectX::XM_PI / 3, 2.0f, 0.5f, 2000.0f);
 
 	mainCamera = camera;
@@ -118,23 +133,14 @@ bool SceneManager::InitializeScene(ID3D11Device* device, ID3D11DeviceContext* de
 
 	this->objects.push_back(cube);
 
-	//生成四边形
-	//Object* quad = new Object(5);
-	//quad->AddComponent<Attributes>("Quad");
-	//quad->AddComponent<Transform>(DirectX::XMFLOAT3(0, 40, 0), DirectX::XMFLOAT3(0, 0, 0), DirectX::XMFLOAT3(3, 3, 3));//添加Transform组件
-	//quad->AddComponent<MeshRenderer>(device, deviceContext, "Assets\\Models\\Quad.FBX");//添加MeshRender组件
+	//生成地面平面
+	Object* ground = new Object(5);
+	ground->AddComponent<Attributes>("Ground");
+	ground->AddComponent<Transform>(DirectX::XMFLOAT3(0, 0, 0), DirectX::XMFLOAT3(DirectX::XM_PI / 2, 0, 0), DirectX::XMFLOAT3(10, 10, 10));//添加Transform组件
+	ground->AddComponent<MeshRenderer>(device, deviceContext, "Assets\\Models\\Quad.FBX");//添加MeshRender组件
+	ground->AddComponent<MaterialManager>(device, shaderFilePaths, 1);//添加MaterialManager组件
 
-	//std::wstring quadVertexShaderFilePaths[] = {
-	//	shaderFolderPath + L"PBRTest.hlsl",
-	//};
-
-	//std::wstring quadPixelShaderFilePaths[] = {
-	//	shaderFolderPath + L"PBRTest.hlsl",
-	//};
-
-	//quad->AddComponent<MaterialManager>(device, quadVertexShaderFilePaths, quadPixelShaderFilePaths, 1);//添加MaterialManager组件
-
-	//this->objects.push_back(quad);
+	this->objects.push_back(ground);
 
 #pragma endregion
 

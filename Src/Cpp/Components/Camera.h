@@ -10,6 +10,8 @@ class Camera : public Component {
 public:
 	Camera(float fovY, float aspect, float nearClip, float farClip);
 
+	void SetAspect(float aspect);
+
 	DirectX::XMMATRIX GetViewMatrix();
 
 	DirectX::XMMATRIX GetProjectionMatrix();

@@ -8,161 +8,28 @@
 #include"..\Tools\ErrorLogger.h"
 
 
-
 RenderWindow::RenderWindow():
 	m_hAppInstance(nullptr),
 	m_hMainWindow(nullptr),
 	m_mainWndCaption(L""),
 	m_mainWndClassName(L""),
 	m_clientWidth(800),
-	m_clientHeight(600)
+	m_clientHeight(600),
+	m_minimized(false),
+	m_maximized(false),
+	m_resizing(false)
 {
 }
 
-HWND RenderWindow::GetWindowHandle()
+RenderWindow::~RenderWindow()
 {
-	return this->m_hMainWindow;
+	if (this->m_hMainWindow != NULL) {
+		UnregisterClass(this->m_mainWndClassName.c_str(), this->m_hAppInstance);
+		DestroyWindow(this->m_hMainWindow);
+	}
 }
 
-extern LRESULT ImGui_ImplWin32_WndProcHandler(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam);
-
-LRESULT CALLBACK MainWndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
-{
-	if (ImGui_ImplWin32_WndProcHandler(hwnd, msg, wParam, lParam)) {
-		return true;
-	}
-
-	switch (msg)
-	{
-
-	case WM_CLOSE:
-		PostQuitMessage(0);
-
-		return 0;
-
-	case WM_CHAR:
-	{
-		unsigned char c = static_cast<unsigned char>(wParam);
-		if (Keyboard::GetInstance()->IsCharsAutoRepeat()) {
-			Keyboard::GetInstance()->OnChar(c);
-		}
-		else {
-			bool pressedBefore = lParam & 0x40000000;
-			if (!pressedBefore) {
-				Keyboard::GetInstance()->OnChar(c);
-			}
-		}
-
-		return 0;
-	}
-	case WM_KEYDOWN:
-	{
-		unsigned char keycode_down = static_cast<unsigned char>(wParam);
-		if (Keyboard::GetInstance()->IsKeysAutoRepeat()) {
-			Keyboard::GetInstance()->OnKeyPressed(keycode_down);
-		}
-		else {
-			bool pressedBefore = lParam & 0x40000000;
-			if (!pressedBefore) {
-				Keyboard::GetInstance()->OnKeyPressed(keycode_down);
-			}
-		}
-		return 0;
-	}
-	case WM_KEYUP:
-	{
-		unsigned char keycode_up = static_cast<unsigned char>(wParam);
-		Keyboard::GetInstance()->OnKeyReleased(keycode_up);
-		return 0;
-	}
-	case WM_MOUSEMOVE:
-	{
-		int x = LOWORD(lParam);
-		int y = HIWORD(lParam);
-		Mouse::GetInstance()->OnMouseMove(x, y);
-		return 0;
-	}
-	case WM_LBUTTONDOWN:
-	{
-		int x = LOWORD(lParam);
-		int y = HIWORD(lParam);
-		Mouse::GetInstance()->OnLeftPressed(x, y);
-		return 0;
-	}
-	case WM_RBUTTONDOWN:
-	{
-		int x = LOWORD(lParam);
-		int y = HIWORD(lParam);
-		Mouse::GetInstance()->OnRightPressed(x, y);
-		return 0;
-	}
-	case WM_MBUTTONDOWN:
-	{
-		int x = LOWORD(lParam);
-		int y = HIWORD(lParam);
-		Mouse::GetInstance()->OnMiddlePressed(x, y);
-		return 0;
-	}
-	case WM_LBUTTONUP:
-	{
-		int x = LOWORD(lParam);
-		int y = HIWORD(lParam);
-		Mouse::GetInstance()->OnLeftReleased(x, y);
-		return 0;
-	}
-	case WM_RBUTTONUP:
-	{
-		int x = LOWORD(lParam);
-		int y = HIWORD(lParam);
-		Mouse::GetInstance()->OnRightReleased(x, y);
-		return 0;
-	}
-	case WM_MBUTTONUP:
-	{
-		int x = LOWORD(lParam);
-		int y = HIWORD(lParam);
-		Mouse::GetInstance()->OnMiddleReleased(x, y);
-		return 0;
-	}
-	case WM_MOUSEWHEEL:
-	{
-		int x = LOWORD(lParam);
-		int y = HIWORD(lParam);
-		if (GET_WHEEL_DELTA_WPARAM(wParam) > 0)
-		{
-			Mouse::GetInstance()->OnWheelUp(x, y);
-		}
-		else if (GET_WHEEL_DELTA_WPARAM(wParam) < 0)
-		{
-			Mouse::GetInstance()->OnWheelDown(x, y);
-		}
-		return 0;
-	}
-	case WM_INPUT:
-	{
-		UINT dataSize = 0;
-		GetRawInputData(reinterpret_cast<HRAWINPUT>(lParam), RID_INPUT, NULL, &dataSize, sizeof(RAWINPUTHEADER)); //Need to populate data size first
-
-		if (dataSize > 0)
-		{
-			std::unique_ptr<BYTE[]> rawdata = std::make_unique<BYTE[]>(dataSize);
-			if (GetRawInputData(reinterpret_cast<HRAWINPUT>(lParam), RID_INPUT, rawdata.get(), &dataSize, sizeof(RAWINPUTHEADER)) == dataSize)
-			{
-				RAWINPUT* raw = reinterpret_cast<RAWINPUT*>(rawdata.get());
-				if (raw->header.dwType == RIM_TYPEMOUSE)
-				{
-					Mouse::GetInstance()->OnMouseMoveRaw(raw->data.mouse.lLastX, raw->data.mouse.lLastY);
-				}
-			}
-		}
-
-		return DefWindowProc(hwnd, msg, wParam, lParam);
-	}
-
-	default:
-		return DefWindowProc(hwnd, msg, wParam, lParam);
-	}
-}
+extern LRESULT CALLBACK MainWndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam);
 
 bool RenderWindow::Initialize(HINSTANCE hInstance, std::string windowCaption, std::string windowClassName, int width, int height)
 {
@@ -220,6 +87,12 @@ bool RenderWindow::Initialize(HINSTANCE hInstance, std::string windowCaption, st
 	return true;
 }
 
+void RenderWindow::OnWindowResize(int clientWidth, int clientHeight)
+{
+	this->m_clientWidth = clientWidth;
+	this->m_clientHeight = clientHeight;
+}
+
 void RenderWindow::DisplayFrameStats(float totalTime)
 {
 	static int frameCnt = 0;
@@ -245,14 +118,54 @@ void RenderWindow::DisplayFrameStats(float totalTime)
 	}
 }
 
-RenderWindow::~RenderWindow()
+#pragma region Get/Set Functions
+
+HWND RenderWindow::GetWindowHandle()
 {
-	if (this->m_hMainWindow != NULL) {
-		UnregisterClass(this->m_mainWndClassName.c_str(), this->m_hAppInstance);
-		DestroyWindow(this->m_hMainWindow);
-	}
+	return this->m_hMainWindow;
 }
 
+int RenderWindow::GetWindowWidth()
+{
+	return this->m_clientWidth;
+}
+
+int RenderWindow::GetWindowHeight()
+{
+	return this->m_clientHeight;
+}
+
+bool RenderWindow::IsWindowMinimized()
+{
+	return this->m_minimized;
+}
+
+bool RenderWindow::IsWindowMaximized()
+{
+	return this->m_maximized;
+}
+
+bool RenderWindow::isWindowResizing()
+{
+	return this->m_resizing;
+}
+
+void RenderWindow::SetWindowMinimized(bool minimized)
+{
+	this->m_minimized = minimized;
+}
+
+void RenderWindow::SetWindowMaximized(bool maximized)
+{
+	this->m_maximized = maximized;
+}
+
+void RenderWindow::SetWindowResizing(bool resizing)
+{
+	this->m_resizing = resizing;
+}
+
+#pragma endregion
 
 
 

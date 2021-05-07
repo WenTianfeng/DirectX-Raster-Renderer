@@ -9,6 +9,11 @@ Camera::Camera(float fovY, float aspect, float nearClip, float farClip) :
 	this->m_componentName = "Camera";
 }
 
+void Camera::SetAspect(float aspect)
+{
+	this->m_aspect = aspect;
+}
+
 
 DirectX::XMMATRIX Camera::GetViewMatrix()
 {

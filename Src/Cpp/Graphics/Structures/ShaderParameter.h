@@ -3,6 +3,7 @@
 #include<string>
 #include"Shader.h"
 #include"ConstantBuffer.h"
+#include"Texture.h"
 
 class ShaderParameter
 {
@@ -42,7 +43,6 @@ public:
 	ShaderParameterType GetShaderParameterType() const;
 
 public:
-	ConstantBuffer* constantBuffer;
 	std::map<Shader::ShaderType, UINT> ownerShaderTypesMap = {
 		{Shader::ShaderType::VertexShader, 0},
 		{Shader::ShaderType::PixelShader, 0},
@@ -52,10 +52,13 @@ public:
 		{Shader::ShaderType::ComputeShader, 0}
 	};
 
+	ConstantBuffer* constantBuffer;
+	Texture* texture;
+
+
 private:
 	std::string m_shaderParameterName;
 	UINT m_slot;
 	ShaderParameterType m_shaderParameterType = ShaderParameterType::Invalid;
-
 
 };

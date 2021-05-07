@@ -7,10 +7,14 @@ void UI_Material::Render()
 	//显示所有常量缓冲内变量
 	for (UINT i = 0; i < imGuiAvailableVariables.size(); i++)
 	{
+
+		//判断变量类型
 		switch (imGuiAvailableVariables[i].type)
 		{
+			//当变量为float值
 			case ImGuiAvailableVariableType::VT_FLOAT:
 			{
+				//根据变量大小判定分量数
 				switch (imGuiAvailableVariables[i].size)
 				{
 					case sizeof(float) :
@@ -37,8 +41,10 @@ void UI_Material::Render()
 			}
 			break;
 
+			//当变量为int值
 			case ImGuiAvailableVariableType::VT_INT:
 			{
+				//根据变量大小判定分量数
 				switch (imGuiAvailableVariables[i].size)
 				{
 					case sizeof(int) :
@@ -62,6 +68,12 @@ void UI_Material::Render()
 					}
 					break;
 				}
+			}
+			break;
+
+			case ImGuiAvailableVariableType::VT_BOOL:
+			{
+				ImGui::Checkbox("Active", &imGuiAvailableVariables[i].boolVal);
 			}
 			break;
 		}

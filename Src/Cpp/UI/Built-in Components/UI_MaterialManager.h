@@ -23,9 +23,9 @@ struct ImGuiAvailableVariable
 	ConstantBuffer* ownerBuffer;
 	UINT size;
 
-	bool boolVal;
+	bool boolVal = false;
 	int intVec[4] = { 0 };
-	float floatVec[4] = { 0,0,0,0 };
+	float floatVec[4] = { 1,1,1,1 };
 
 	ImGuiAvailableVariable() {}
 
@@ -33,16 +33,23 @@ struct ImGuiAvailableVariable
 		ownerBuffer(constantBuffer),
 		size(constantBufferVariable.size),
 		name(constantBufferVariable.name)
-
 	{
 		//如果为浮点数
 		if (constantBufferVariable.variableType == D3D_SHADER_VARIABLE_TYPE::D3D_SVT_FLOAT)
 		{
 			type = ImGuiAvailableVariableType::VT_FLOAT;
+			ownerBuffer->GetData(floatVec, constantBufferVariable.startOffset, constantBufferVariable.size);
+
 		}
 		else if (constantBufferVariable.variableType == D3D_SHADER_VARIABLE_TYPE::D3D_SVT_INT)
 		{
 			type = ImGuiAvailableVariableType::VT_INT;
+			ownerBuffer->GetData(intVec, constantBufferVariable.startOffset, constantBufferVariable.size);
+		}
+		else if (constantBufferVariable.variableType == D3D_SHADER_VARIABLE_TYPE::D3D_SVT_BOOL)
+		{
+			type = ImGuiAvailableVariableType::VT_BOOL;
+			ownerBuffer->GetData(&boolVal, constantBufferVariable.startOffset, constantBufferVariable.size);
 		}
 	}
 

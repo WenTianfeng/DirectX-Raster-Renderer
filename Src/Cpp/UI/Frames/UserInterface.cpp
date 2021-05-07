@@ -9,10 +9,13 @@ bool UserInterface::Initialize(HWND hwnd,ID3D11Device* device,ID3D11DeviceContex
 	ImGui_ImplDX11_Init(device, deviceContext);
 	ImGui::StyleColorsDark();
 
+
 	//¼ÓÔØ×ÖÌå
 	ImFont* defaultFont = io.Fonts->AddFontFromFileTTF("Assets\\Fonts\\Roboto-Medium.ttf", 15.0f, NULL, io.Fonts->GetGlyphRangesChineseFull());
 
-	this->m_inspector->Initialize();
+	ImGuiStyle& style = ImGui::GetStyle();
+	style.WindowRounding = 0;
+
 
 	return true;
 }

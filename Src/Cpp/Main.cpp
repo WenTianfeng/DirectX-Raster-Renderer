@@ -10,13 +10,10 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE prevInstance, _I
 	_CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
 #endif
 
-
-	RenderingEngine render_engine;
-
 	try
 	{
 		//引擎初始化
-		render_engine.Initialize(hInstance, "Wind Rendering Engine v1.0", "WndClassName", 1600, 800);
+		RenderingEngine::GetInstance()->Initialize(hInstance, "Rendering Engine v1.0", "WndClassName", 1800, 1000);
 	}
 	catch (COMException& exception)
 	{
@@ -24,7 +21,7 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE prevInstance, _I
 		return -1;
 	}
 	//引擎执行
-	return render_engine.Run();
+	return RenderingEngine::GetInstance()->Run();
 	
 
 }

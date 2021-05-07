@@ -6,10 +6,11 @@
 #include <wrl/client.h>
 #include <d3d11_1.h>
 
-#include"..\..\Tools\ErrorLogger.h"
-
 #include"Shader.h"
 #include"ConstantBufferVariable.h"
+
+#include"..\..\Tools\ErrorLogger.h"
+
 
 class ConstantBuffer
 {
@@ -72,7 +73,7 @@ public:
 	/// <param name="byteOffset">首位置偏移值</param>
 	/// <param name="byteWidth">数据字节大小</param>
 	/// <param name="data">int数据列表</param>
-	void SetIntVec(UINT numComponents, UINT byteOffset, UINT byteWidth, const int data[4]);
+	void SetIntVec(const int data[4], UINT numComponents, UINT byteOffset, UINT byteWidth);
 
 	/// <summary>
 	/// 设置float类型数据
@@ -81,7 +82,14 @@ public:
 	/// <param name="byteOffset">首位置偏移值</param>
 	/// <param name="byteWidth">数据字节大小</param>
 	/// <param name="data">float数据列表</param>
-	void SetFloatVec(UINT numComponents, UINT byteOffset, UINT byteWidth, const FLOAT data[4]);
+	void SetFloatVec(const FLOAT data[4], UINT numComponents, UINT byteOffset, UINT byteWidth);
+
+	/// <summary>
+	/// 设置bool类型数据
+	/// </summary>
+	/// <param name="data">bool值</param>
+	/// <param name="byteOffset">首位置偏移值</param>
+	void SetBool(bool data, UINT byteOffset);
 
 	/// <summary>
 	/// 设置结构体数据

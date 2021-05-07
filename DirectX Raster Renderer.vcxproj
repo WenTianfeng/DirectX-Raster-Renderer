@@ -30,6 +30,7 @@
     <ClCompile Include="Src\Cpp\Graphics\Structures\Mesh.cpp" />
     <ClCompile Include="Src\Cpp\Graphics\Structures\Shader.cpp" />
     <ClCompile Include="Src\Cpp\Graphics\Structures\ShaderParameter.cpp" />
+    <ClCompile Include="Src\Cpp\Graphics\Structures\Texture.cpp" />
     <ClCompile Include="Src\Cpp\Logic\ObjectScripts\CameraControl.cpp" />
     <ClCompile Include="Src\Cpp\Logic\SceneManager.cpp" />
     <ClCompile Include="Src\Cpp\UI\Built-in Components\UI_Attributes.cpp" />
@@ -77,6 +78,7 @@
     <ClInclude Include="Src\Cpp\Graphics\Structures\ShaderParameter.h" />
     <ClInclude Include="Src\Cpp\Graphics\Structures\StructuredBuffer.h" />
     <ClInclude Include="Src\Cpp\Graphics\Structures\StructuredBufferTypes.h" />
+    <ClInclude Include="Src\Cpp\Graphics\Structures\Texture.h" />
     <ClInclude Include="Src\Cpp\Logic\ObjectScripts\CameraControl.h" />
     <ClInclude Include="Src\Cpp\Logic\SceneManager.h" />
     <ClInclude Include="Src\Cpp\UI\Built-in Components\UI_Attributes.h" />

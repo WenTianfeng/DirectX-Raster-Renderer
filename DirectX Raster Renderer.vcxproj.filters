@@ -212,6 +212,9 @@
     <ClCompile Include="Src\Cpp\Graphics\Structures\ConstantBuffer.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
+    <ClCompile Include="Src\Cpp\Graphics\Structures\Texture.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Src\Cpp\Mouse\Mouse.h">
@@ -380,6 +383,9 @@
       <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="Src\Cpp\Graphics\Structures\ConstantBuffer.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Cpp\Graphics\Structures\Texture.h">
       <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>

@@ -128,11 +128,15 @@ void Inspector::Render()
 
 							if (imGuiAvailableVariable.type == ImGuiAvailableVariableType::VT_FLOAT)
 							{
-								imGuiAvailableVariable.ownerBuffer->SetFloatVec(imGuiAvailableVariable.size / sizeof(float), cbVariable.startOffset, cbVariable.size, imGuiAvailableVariable.floatVec);
+								imGuiAvailableVariable.ownerBuffer->SetFloatVec(imGuiAvailableVariable.floatVec, imGuiAvailableVariable.size / sizeof(float), cbVariable.startOffset, cbVariable.size);
 							}
 							else if (imGuiAvailableVariable.type == ImGuiAvailableVariableType::VT_INT)
 							{
-								imGuiAvailableVariable.ownerBuffer->SetIntVec(imGuiAvailableVariable.size / sizeof(float), cbVariable.startOffset, cbVariable.size, imGuiAvailableVariable.intVec);
+								imGuiAvailableVariable.ownerBuffer->SetIntVec(imGuiAvailableVariable.intVec, imGuiAvailableVariable.size / sizeof(float), cbVariable.startOffset, cbVariable.size);
+							}
+							else if (imGuiAvailableVariable.type == ImGuiAvailableVariableType::VT_BOOL)
+							{
+								imGuiAvailableVariable.ownerBuffer->SetBool(imGuiAvailableVariable.boolVal, cbVariable.startOffset);
 							}
 						}
 					}
@@ -160,8 +164,11 @@ void Inspector::Render()
 									//遍历常量缓冲的变量map，将获取的变量转换为ImGui接受的形式，加入到材质UI变量列表中
 									for (std::map<std::string, ConstantBufferVariable>::value_type pair_name_constantBufferVariable : pair_name_shaderParameter.second->constantBuffer->constantVariablesMap)
 									{
-										ImGuiAvailableVariable generalVariable(pair_name_constantBufferVariable.second, pair_name_shaderParameter.second->constantBuffer);
-										ui_Material.imGuiAvailableVariables.push_back(generalVariable);
+										if (pair_name_constantBufferVariable.second.variableClass != D3D_SHADER_VARIABLE_CLASS::D3D10_SVC_MATRIX_COLUMNS)
+										{
+											ImGuiAvailableVariable generalVariable(pair_name_constantBufferVariable.second, pair_name_shaderParameter.second->constantBuffer);
+											ui_Material.imGuiAvailableVariables.push_back(generalVariable);
+										}
 									}
 								}
 									break;

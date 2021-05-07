@@ -115,7 +115,7 @@ HRESULT ConstantBuffer::GetData(void* pOutput, UINT byteOffset, UINT byteCount)
 	return S_OK;
 }
 
-void ConstantBuffer::SetFloatVec(UINT numComponents, UINT byteOffset, UINT byteWidth, const FLOAT data[4])
+void ConstantBuffer::SetFloatVec(const FLOAT data[4], UINT numComponents, UINT byteOffset, UINT byteWidth)
 {
 	if (numComponents > 4)
 		numComponents = 4;
@@ -127,6 +127,11 @@ void ConstantBuffer::SetFloatVec(UINT numComponents, UINT byteOffset, UINT byteW
 	SetData(data, byteOffset, byteCount);
 }
 
+void ConstantBuffer::SetBool(bool data, UINT byteOffset)
+{
+	SetData(&data, byteOffset, sizeof(bool));
+}
+
 void ConstantBuffer::SetStructure(void* data, UINT byteWidth)
 {
 	if (byteWidth > m_byteWidth)
@@ -135,7 +140,7 @@ void ConstantBuffer::SetStructure(void* data, UINT byteWidth)
 	m_dirty = true;
 }
 
-void ConstantBuffer::SetIntVec(UINT numComponents, UINT byteOffset, UINT byteWidth, const int data[4])
+void ConstantBuffer::SetIntVec(const int data[4], UINT numComponents, UINT byteOffset, UINT byteWidth)
 {
 	if (numComponents > 4)
 		numComponents = 4;

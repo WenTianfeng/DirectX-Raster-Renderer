@@ -9,7 +9,6 @@ cbuffer CB_VS_UVScaleOffset : register(b1)
 
 cbuffer CB_PS_PBR : register(b2)
 {
-    int4 MM;
     float4 Albedo;
 };
 
@@ -32,8 +31,8 @@ VertexOutput VS_Main(VertexInput input)
 float4 PS_Main(VertexOutput input) : SV_TARGET
 {
     float4 color = float4(0, 0, 0, 1);
+    float4 ambient = float4(0.5, 0.5, 0.5, 1.0);
     
-
     for (uint i = 0; i < NUM_LIGHTS; i++)
     {
         //跳过超过光照范围的Point和Spot光源
@@ -50,7 +49,7 @@ float4 PS_Main(VertexOutput input) : SV_TARGET
                     DirectIlluminationData directionalLightData = ProcessDirectionalLight(Lights[i], input.world_pos);
              
                 //将经过光照模型计算的颜色叠加到最终颜色
-                    color += MM*Albedo * directionalLightData.color * max(0, dot(-directionalLightData.direction, input.world_normal));
+                    color += (ambient + Albedo) * directionalLightData.color * max(0, dot(-directionalLightData.direction, input.world_normal));
 
                 }
                 break;

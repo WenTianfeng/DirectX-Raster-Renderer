@@ -12,6 +12,10 @@ class SceneManager
 {
 
 public:
+
+	SceneManager();
+	~SceneManager();
+
 	/// <summary>
 	/// 场景管理器初始化
 	/// </summary>
@@ -25,6 +29,13 @@ public:
 	/// </summary>
 	/// <param name="dt">单帧时间</param>
 	void Update(float dt);
+
+	/// <summary>
+	/// 窗口缩放后调用，根据新窗口大小修改相关内容
+	/// </summary>
+	/// <param name="clientWidth">新窗口宽度</param>
+	/// <param name="clientHeight">新窗口高度</param>
+	void OnWindowResize(int clientWidth, int clientHeight);
 
 private:
 	/// <summary>

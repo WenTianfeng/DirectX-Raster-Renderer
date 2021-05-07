@@ -1,6 +1,15 @@
 ﻿#include "Graphics.h"
 #include"..\Components\Light.h"
 
+Graphics::Graphics()
+{
+
+}
+
+Graphics::~Graphics()
+{
+}
+
 bool Graphics::Initialize(HWND hwnd, int width, int height)
 {
 	//初始化DirectX
@@ -23,7 +32,6 @@ bool Graphics::Initialize(HWND hwnd, int width, int height)
 
 	return true;
 }
-
 
 bool Graphics::InitializeDirectX(HWND hwnd, int width, int height)
 {
@@ -80,7 +88,7 @@ bool Graphics::InitializeDirectX(HWND hwnd, int width, int height)
 	//错误检查
 	COM_ERROR_IF_FAILED(hr, "Failed to create DirectX Render Target View.");
 
-
+	backBuffer.Reset();
 //===================创建 深度缓冲/模板缓冲 视图===========================
 	D3D11_TEXTURE2D_DESC depthStencilDesc;
 	ZeroMemory(&depthStencilDesc, sizeof(depthStencilDesc));
@@ -114,8 +122,8 @@ bool Graphics::InitializeDirectX(HWND hwnd, int width, int height)
 //===================设置视口========================
 	D3D11_VIEWPORT vp;
 	ZeroMemory(&vp, sizeof(vp));
-	vp.Height = (float)height;
 	vp.Width = (float)width;
+	vp.Height = (float)height;
 	vp.MaxDepth = 1;
 	vp.MinDepth = 0;
 	vp.TopLeftX = 0;
@@ -170,12 +178,10 @@ void Graphics::UpdateEffect(std::vector<Object*> lights)
 
 }
 
-
 bool Graphics::InitializeUI(HWND hwnd)
 {
 	return this->m_userInterface->Initialize(hwnd, this->m_dxDevice.Get(), this->m_dxDeviceContext.Get());
 }
-
 
 void Graphics::RenderFrame(std::vector<Object*> objects, std::vector<Object*> lights)
 {
@@ -202,12 +208,87 @@ void Graphics::RenderFrame(std::vector<Object*> objects, std::vector<Object*> li
 
 }
 
+void Graphics::OnWindowResize(int clientWidth, int clientHeight)
+{
+
+	if (m_dxDevice && m_dxSwapChain && m_dxDeviceContext)
+	{
+		// 释放渲染管线输出用到的相关资源
+		this->m_dxRenderTargetView.Reset();
+		this->m_dxDepthStencilView.Reset();
+		this->m_dxDepthStencilBuffer.Reset();
+
+		HRESULT hr;
+
+		// 重设交换链并且重新创建渲染目标视图
+		hr = this->m_dxSwapChain->ResizeBuffers(1, clientWidth, clientHeight, DXGI_FORMAT_B8G8R8A8_UNORM, 0);
+		COM_ERROR_IF_FAILED(hr, "Failed to resize swap chain buffer.");
+
+		//===================创建并获取 backBuffer==========================
+		Microsoft::WRL::ComPtr<ID3D11Texture2D> backBuffer;
+		hr = m_dxSwapChain->GetBuffer(0, __uuidof(ID3D11Texture2D), &backBuffer);
+		//错误检查
+		COM_ERROR_IF_FAILED(hr, "Failed to get Buffer from Swap Chain.");
+
+		//创建 渲染目标视图
+		hr = m_dxDevice->CreateRenderTargetView(backBuffer.Get(), nullptr, m_dxRenderTargetView.GetAddressOf());
+		//错误检查
+		COM_ERROR_IF_FAILED(hr, "Failed to create DirectX Render Target View.");
+
+		backBuffer.Reset();
+		//===================创建 深度缓冲/模板缓冲 视图===========================
+		D3D11_TEXTURE2D_DESC depthStencilDesc;
+		ZeroMemory(&depthStencilDesc, sizeof(depthStencilDesc));
+
+		depthStencilDesc.Width = clientWidth;
+		depthStencilDesc.Height = clientHeight;
+		depthStencilDesc.MipLevels = 1;
+		depthStencilDesc.ArraySize = 1;
+		depthStencilDesc.Format = DXGI_FORMAT_D24_UNORM_S8_UINT;
+		depthStencilDesc.SampleDesc.Count = 1;
+		depthStencilDesc.SampleDesc.Quality = 0;
+		depthStencilDesc.Usage = D3D11_USAGE_DEFAULT;
+		depthStencilDesc.BindFlags = D3D11_BIND_DEPTH_STENCIL;
+		depthStencilDesc.CPUAccessFlags = 0;
+		depthStencilDesc.MiscFlags = 0;
+		
+		//创建2D纹理缓冲
+		hr = m_dxDevice->CreateTexture2D(&depthStencilDesc, nullptr, m_dxDepthStencilBuffer.GetAddressOf());
+		//错误检查
+		COM_ERROR_IF_FAILED(hr, "Failed to create DirectX Depth/Stencil Buffer.");
+
+		//创建深度模板缓冲视图
+		hr = m_dxDevice->CreateDepthStencilView(m_dxDepthStencilBuffer.Get(), nullptr, m_dxDepthStencilView.GetAddressOf());
+		//错误检查
+		COM_ERROR_IF_FAILED(hr, "Failed to create DirectX Depth-Stencil View.");
+
+		//设置渲染目标
+		m_dxDeviceContext->OMSetRenderTargets(1, m_dxRenderTargetView.GetAddressOf(), m_dxDepthStencilView.Get());
+
+
+		//===================设置视口========================
+		D3D11_VIEWPORT vp;
+		ZeroMemory(&vp, sizeof(vp));
+		vp.Width = (float)clientWidth;
+		vp.Height = (float)clientHeight;
+		vp.MaxDepth = 1;
+		vp.MinDepth = 0;
+		vp.TopLeftX = 0;
+		vp.TopLeftY = 0;
+
+		//设置视口
+		m_dxDeviceContext->RSSetViewports(1, &vp);
+	}
+	else
+	{
+		return;
+	}
+}
 
 ID3D11Device* Graphics::GetDirectXDevice()
 {
 	return this->m_dxDevice.Get();
 }
-
 
 ID3D11DeviceContext* Graphics::GetDirectXDeviceContext()
 {
