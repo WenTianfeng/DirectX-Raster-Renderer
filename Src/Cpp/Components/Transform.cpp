@@ -1,5 +1,12 @@
 #include"Transform.h"
 
+Transform::Transform():
+	m_position(DirectX::XMFLOAT3(0,0,0)),
+	m_rotation(DirectX::XMFLOAT3(0,0,0)),
+	m_scale(DirectX::XMFLOAT3(1,1,1))
+{
+}
+
 Transform::Transform(DirectX::XMFLOAT3 position, DirectX::XMFLOAT3 rotation, DirectX::XMFLOAT3 scale) :
 	m_position(position),
 	m_rotation(rotation),

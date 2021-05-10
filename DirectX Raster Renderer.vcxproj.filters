@@ -218,6 +218,9 @@
     <ClCompile Include="Src\Cpp\UI\ImGui\imgui_tables.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
+    <ClCompile Include="Src\Cpp\Graphics\Structures\SamplerState.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Src\Cpp\Mouse\Mouse.h">
@@ -391,12 +394,20 @@
     <ClInclude Include="Src\Cpp\Graphics\Structures\Texture.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="Src\Cpp\Graphics\Structures\SamplerState.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Cpp\Tools\FileManagement.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Cpp\UI\Structures\DisplayableVariable.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <FxCompile Include="Src\Shaders\VertexShader_Skybox.hlsl" />
-    <FxCompile Include="Src\Shaders\PixelShader_Skybox.hlsl" />
     <FxCompile Include="Src\Shaders\PBRTest.hlsl" />
     <FxCompile Include="Src\Shaders\Error.hlsl" />
+    <FxCompile Include="Src\Shaders\DefaultSkybox.hlsl" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Src\Shaders\LightHelper.hlsli" />

@@ -6,7 +6,7 @@ std::string UI_Attributes::attributes_Tag = "";
 
 void UI_Attributes::Render()
 {
-	if (!ImGui::CollapsingHeader("Attributes"))
+	if (!ImGui::CollapsingHeader("ATTRIBUTES"))
 	{
 		ImGui::Checkbox("Active", &attributes_Active);
 

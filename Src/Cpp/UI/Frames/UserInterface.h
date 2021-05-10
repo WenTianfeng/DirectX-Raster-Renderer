@@ -4,7 +4,6 @@
 #include <d3d11_1.h>//DirectX 11.1相关引用（https://docs.microsoft.com/en-us/windows/win32/api/d3d11_1/）
 
 #include"Inspector.h"
-#include"Hierarchy.h"
 #include"TopToolbar.h"
 #include"Console.h"
 

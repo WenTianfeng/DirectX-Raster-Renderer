@@ -19,7 +19,6 @@ void MeshRenderer::Render()
 	//如果Object拥有MaterialManager组件
 	if (this->owner->HasComponent<MaterialManager>())
 	{
-
 		//获取 MaterialManager 组件
 		MaterialManager* materialManager = this->owner->GetComponent<MaterialManager>();
 
@@ -54,12 +53,17 @@ void MeshRenderer::Render()
 
 
 			//=============着色器资源更新==============
-
-			for (std::map<std::string, ShaderParameter*>::value_type value : materialManager->materials[i].shaderParametersMap)
+			for (std::map<std::string, ShaderParameter*>::value_type pair_name_shaderParameter : materialManager->materials[i].shaderParametersMap)
 			{
-				value.second->Bind(m_dxDeviceContext);
+				//将着色器资源绑定至DirectX上下文
+				pair_name_shaderParameter.second->Bind(m_dxDeviceContext);
 
-				if (value.second->GetName() == "CB_VS_TransformMatrix")
+				//=========手动更改不通过UI控制的着色器资源参数=========
+
+				#pragma region 设置着色器变换矩阵参数
+
+				//
+				if (pair_name_shaderParameter.first == "CB_VS_TransformMatrix")
 				{
 					CB_VS_TransformMatrix transformMatrix = {};
 
@@ -80,17 +84,26 @@ void MeshRenderer::Render()
 					DirectX::XMMATRIX P = SceneManager::mainCamera->GetComponent<Camera>()->GetProjectionMatrix();
 					transformMatrix.projection = DirectX::XMMatrixTranspose(P);
 
-					value.second->constantBuffer->SetStructure(&transformMatrix, sizeof(CB_VS_TransformMatrix));
+					pair_name_shaderParameter.second->constantBuffer->SetStructure(&transformMatrix, sizeof(CB_VS_TransformMatrix));
 
 				}
 
+				#pragma endregion 
+
 				//更新 ShaderParameter 包含的特定类型的资源
-				value.second->UpdateParameterResource(this->m_dxDeviceContext);
+				pair_name_shaderParameter.second->UpdateParameterResource(this->m_dxDeviceContext);
 			}
 			
 			//===============绘制================
 			this->m_dxDeviceContext->DrawIndexed(this->m_meshes[i].GetIndexBuffer().IndexCount(), 0, 0);
 
+
+			for (std::map<std::string, ShaderParameter*>::value_type pair_name_shaderParameter : materialManager->materials[i].shaderParametersMap)
+			{
+				//解除着色器的资源绑定
+				pair_name_shaderParameter.second->UnBind(m_dxDeviceContext);
+
+			}
 		}
 	}
 	else    //如果Object没有MaterialManager组件

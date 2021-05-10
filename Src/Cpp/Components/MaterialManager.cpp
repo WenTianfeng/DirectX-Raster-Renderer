@@ -1,6 +1,6 @@
 #include "MaterialManager.h"
 
-MaterialManager::MaterialManager(ID3D11Device* device, std::wstring* shaderFiles, UINT shaderFileCount):
+MaterialManager::MaterialManager(ID3D11Device* device, std::string* shaderFiles, UINT shaderFileCount):
 	m_dxDevice(device)
 {
 	//设置组件名称
@@ -10,7 +10,8 @@ MaterialManager::MaterialManager(ID3D11Device* device, std::wstring* shaderFiles
 	for (UINT i = 0; i < shaderFileCount; i++)
 	{
 		//实例化材质
-		Material material(this->m_dxDevice, *shaderFiles);
+		Material material(this->m_dxDevice);
+		material.Instantiate(*shaderFiles);
 
 		//将材质加入到材质列表
 		this->materials.push_back(material);

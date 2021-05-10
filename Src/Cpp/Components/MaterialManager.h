@@ -9,7 +9,7 @@
 class MaterialManager : public Component
 {
 public:
-	MaterialManager(ID3D11Device* device, std::wstring* shaderFiles, UINT shaderFileCount);
+	MaterialManager(ID3D11Device* device, std::string* shaderFiles, UINT shaderFileCount);
 public:
 	std::vector<Material> materials;
 

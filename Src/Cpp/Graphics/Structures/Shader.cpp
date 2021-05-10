@@ -1,6 +1,6 @@
 #include "Shader.h"
 
-Shader::Shader(ShaderType shaderType, std::wstring shaderFilePath, std::string entryPoint, std::string shaderModel):
+Shader::Shader(ShaderType shaderType, std::string shaderFilePath, std::string entryPoint, std::string shaderModel):
     m_shaderType(shaderType),
     m_shaderFilePath(shaderFilePath),
     m_entryPoint(entryPoint),
@@ -12,9 +12,9 @@ bool Shader::Instantiate(ID3D11Device* dxDevice)
 {
     HRESULT hr;
 
-    hr = ShaderProcessor::CreateShaderFromFile(ShaderProcessor::CompileFormat::HLSL, m_shaderFilePath, m_entryPoint, m_shaderModel, m_blob.ReleaseAndGetAddressOf());
+    hr = ShaderProcessor::CreateShaderFromFile(ShaderProcessor::CompileFormat::HLSL, DataTypeConverter::StringToWideString(m_shaderFilePath), m_entryPoint, m_shaderModel, m_blob.ReleaseAndGetAddressOf());
     //´íÎó¼ì²é
-    COM_ERROR_IF_FAILED(hr, L"Failed to create shader blob from file : " + m_shaderFilePath);
+    COM_ERROR_IF_FAILED(hr, "Failed to create shader blob from file : " + m_shaderFilePath);
 
     switch (m_shaderType)
     {
@@ -39,7 +39,7 @@ bool Shader::Instantiate(ID3D11Device* dxDevice)
     }
 
     //´íÎó¼ì²é
-    COM_ERROR_IF_FAILED(hr, L"Failed to create shader : " + m_shaderFilePath);
+    COM_ERROR_IF_FAILED(hr, "Failed to create shader : " + m_shaderFilePath);
 
     return true;
 }

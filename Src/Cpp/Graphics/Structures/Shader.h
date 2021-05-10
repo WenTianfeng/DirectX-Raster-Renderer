@@ -8,7 +8,6 @@
 
 class Shader
 {
-
 /// <summary>
 /// 着色器类型枚举
 /// </summary>
@@ -32,7 +31,7 @@ public:
 	/// <param name="shaderFilePath">着色器文件路径</param>
 	/// <param name="entryPoint">着色器编译入口点</param>
 	/// <param name="shaderModel">着色模型</param>
-	Shader(ShaderType shaderType, std::wstring shaderFilePath, std::string entryPoint, std::string shaderModel);
+	Shader(ShaderType shaderType, std::string shaderFilePath, std::string entryPoint, std::string shaderModel);
 
 	/// <summary>
 	/// 着色器实例化
@@ -64,10 +63,10 @@ private:
 	Microsoft::WRL::ComPtr<ID3D11GeometryShader> m_geometryShader;
 	Microsoft::WRL::ComPtr<ID3D11ComputeShader> m_computeShader;
 
+	std::string m_shaderFilePath;//着色器文件路径
 	ShaderType m_shaderType = ShaderType::UnknownShaderType;//着色器类型
 	std::string m_entryPoint;//着色器编译入口函数
 	std::string m_shaderModel;//着色模型版本号
-	std::wstring m_shaderFilePath;//着色器文件路径
 	Microsoft::WRL::ComPtr<ID3DBlob> m_blob;//着色器编译后二进制数据对象
 
 };

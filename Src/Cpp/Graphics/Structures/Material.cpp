@@ -1,13 +1,29 @@
 #include "Material.h"
 
-Material::Material(ID3D11Device* device, std::wstring shaderFilePath)
+Material::Material(ID3D11Device* device):
+	m_dxDevice(device)
 {
+
+}
+
+bool Material::Instantiate(std::string shaderFilePath)
+{
+	//清空成员
+	m_dxInputLayout.Reset();
+	m_dxDepthStencilState.Reset();
+	m_dxBlendState.Reset();
+	m_shadersMap.clear();
+	shaderParametersMap.clear();
+
+
+	this->m_shaderFilePath = shaderFilePath;
+
 	HRESULT hr;
 
 	Shader* vertexShader = new Shader(Shader::ShaderType::VertexShader, shaderFilePath, "VS_Main", "vs_5_0");
 	Shader* pixelShader = new Shader(Shader::ShaderType::PixelShader, shaderFilePath, "PS_Main", "ps_5_0");
-	vertexShader->Instantiate(device);
-	pixelShader->Instantiate(device);
+	vertexShader->Instantiate(m_dxDevice);
+	pixelShader->Instantiate(m_dxDevice);
 
 	m_shadersMap.insert(std::map<Shader::ShaderType, Shader*>::value_type(Shader::ShaderType::VertexShader, vertexShader));
 	m_shadersMap.insert(std::map<Shader::ShaderType, Shader*>::value_type(Shader::ShaderType::PixelShader, pixelShader));
@@ -66,13 +82,13 @@ Material::Material(ID3D11Device* device, std::wstring shaderFilePath)
 			if (inputElements.size() > 0)
 			{
 				//使用输入布局列表创建输入布局
-				hr = device->CreateInputLayout(inputElements.data(), (UINT)inputElements.size(), value.second->GetBlob()->GetBufferPointer(), value.second->GetBlob()->GetBufferSize(), this->m_dxInputLayout.GetAddressOf());
+				hr = m_dxDevice->CreateInputLayout(inputElements.data(), (UINT)inputElements.size(), value.second->GetBlob()->GetBufferPointer(), value.second->GetBlob()->GetBufferSize(), this->m_dxInputLayout.GetAddressOf());
 				COM_ERROR_IF_FAILED(hr, L"Failed to create DirectX Input Layout.");
 			}
 
 		}
 
-#pragma endregion
+		#pragma endregion
 
 		//==========================读取着色器资源信息===========================
 		#pragma region 读取着色器资源信息
@@ -94,94 +110,110 @@ Material::Material(ID3D11Device* device, std::wstring shaderFilePath)
 			if (shaderParametersMap.count(resourceName) != 0)
 			{
 				//将存在的资源参数的宿主着色器类型扩增
-				shaderParametersMap[resourceName]->ownerShaderTypesMap[value.first] = 1;
+				shaderParametersMap[resourceName]->ownerShaderTypesMap[value.first] = true;
 
 				//跳过这一资源的处理
 				continue;
 			}
 
-			//声明ShaderParameter
-			ShaderParameter* shaderParameter;
-
 			//根据资源类型分别进行处理
 			switch (shaderInputBindDesc.Type)
 			{
 				//============如果资源类型为 Texture============
-				case D3D_SIT_TEXTURE:
-				{
-					shaderParameter = new ShaderParameter(device, resourceName, ShaderParameter::ShaderParameterType::Texture, slot);
-				}
-					break;
+			case D3D_SIT_TEXTURE:
+			{
+				//创建ShaderParameter
+				ShaderParameter* shaderParameter = new ShaderParameter(m_dxDevice, resourceName, ShaderParameter::ShaderParameterType::Texture, slot);
 
-				//============如果资源类型 Sampler============
-				case D3D_SIT_SAMPLER:
-				{
-					shaderParameter = new ShaderParameter(device, resourceName, ShaderParameter::ShaderParameterType::Sampler, slot);
-				}
-					break;
+				//添加ShaderParameter所属着色器类型
+				shaderParameter->ownerShaderTypesMap[value.first] = true;
 
-				//============如果资源类型为 StructuredBuffer============
-				case D3D_SIT_STRUCTURED:
-				{
-					shaderParameter = new ShaderParameter(device, resourceName, ShaderParameter::ShaderParameterType::StructuredBuffer, slot);
-				}
-					break;
+				//将新的 ShaderParameter 加入到 shaderParametersMap
+				shaderParametersMap.insert(std::map<std::string, ShaderParameter*>::value_type(shaderParameter->GetName(), shaderParameter));
+			}
+			break;
 
-				//============如果资源类型为 ConstantBuffer============
-				case D3D_SIT_CBUFFER:
-				{
-					//根据资源名获取着色器的常量缓冲
-					ID3D11ShaderReflectionConstantBuffer* srConstantBuffer = shaderReflection->GetConstantBufferByName(shaderInputBindDesc.Name);
+			//============如果资源类型 Sampler============
+			case D3D_SIT_SAMPLER:
+			{
+				//创建ShaderParameter
+				ShaderParameter* shaderParameter = new ShaderParameter(m_dxDevice, resourceName, ShaderParameter::ShaderParameterType::Sampler, slot);
 
-					//获取常量缓冲描述
-					D3D11_SHADER_BUFFER_DESC shaderBufferDesc;
-					hr = srConstantBuffer->GetDesc(&shaderBufferDesc);
-					COM_ERROR_IF_FAILED(hr, "Failed to GetDesc of pixel shader constant buffer.");
+				//添加ShaderParameter所属着色器类型
+				shaderParameter->ownerShaderTypesMap[value.first] = true;
 
-					shaderParameter = new ShaderParameter(device, resourceName, ShaderParameter::ShaderParameterType::ConstantBuffer, slot, shaderBufferDesc.Size);
-					shaderParameter->ownerShaderTypesMap[value.first] = 1;
-				
+				//将新的 ShaderParameter 加入到 shaderParametersMap
+				shaderParametersMap.insert(std::map<std::string, ShaderParameter*>::value_type(shaderParameter->GetName(), shaderParameter));
+			}
+			break;
 
-					//遍历常量缓冲的所有变量
-					for (UINT j = 0; j < shaderBufferDesc.Variables; ++j)
-					{
-						//获取对应位置的变量（其实并不是变量）
-						ID3D11ShaderReflectionVariable* shaderVariable = srConstantBuffer->GetVariableByIndex(j);
-
-						//获取变量的描述
-						D3D11_SHADER_VARIABLE_DESC shaderVariableDesc;
-						hr = shaderVariable->GetDesc(&shaderVariableDesc);
-						COM_ERROR_IF_FAILED(hr, "Failed to GetDesc of pixel shader constant buffer variable.");
-
-						//获取变量类型描述
-						ID3D11ShaderReflectionType* shaderReflectionType = shaderVariable->GetType();
-						D3D11_SHADER_TYPE_DESC shaderTypeDesc;
-						hr = shaderReflectionType->GetDesc(&shaderTypeDesc);
-						COM_ERROR_IF_FAILED(hr, "Failed to GetDesc of pixel shader constant buffer variable type.");
-
-						//生成变量
-						ConstantBufferVariable constantBufferVariable(shaderVariableDesc.Name,
-							shaderVariableDesc.StartOffset, shaderVariableDesc.Size, shaderTypeDesc.Class, shaderTypeDesc.Type);
-
-						//将变量加入到 shaderParameter的constantBuffer 的 map 中
-						shaderParameter->constantBuffer->constantVariablesMap.insert(
-							std::map<std::string, ConstantBufferVariable>::value_type(constantBufferVariable.name, constantBufferVariable));
-
-					}
-				}
-					break;
+			//============如果资源类型为 StructuredBuffer============
+			case D3D_SIT_STRUCTURED:
+			{
 
 			}
+			break;
 
-			//将 ShaderParameter 加入到 shaderParametersMap
-			shaderParametersMap.insert(std::map<std::string, ShaderParameter*>::value_type(shaderParameter->GetName(), shaderParameter));
+			//============如果资源类型为 ConstantBuffer============
+			case D3D_SIT_CBUFFER:
+			{
+				//根据资源名获取着色器的常量缓冲
+				ID3D11ShaderReflectionConstantBuffer* srConstantBuffer = shaderReflection->GetConstantBufferByName(shaderInputBindDesc.Name);
+
+				//获取常量缓冲描述
+				D3D11_SHADER_BUFFER_DESC shaderBufferDesc;
+				hr = srConstantBuffer->GetDesc(&shaderBufferDesc);
+				COM_ERROR_IF_FAILED(hr, "Failed to GetDesc of pixel shader constant buffer.");
+
+				//创建ShaderParameter
+				ShaderParameter* shaderParameter = new ShaderParameter(m_dxDevice, resourceName, ShaderParameter::ShaderParameterType::ConstantBuffer, slot, shaderBufferDesc.Size);
+				//添加ShaderParameter所属着色器类型
+				shaderParameter->ownerShaderTypesMap[value.first] = true;
+
+				//==========遍历常量缓冲的所有变量，将变量加入到 ShaderParameter 的 ConstantBuffer 的 map 中=============
+				#pragma region 常量缓冲变量处理
+
+				for (UINT j = 0; j < shaderBufferDesc.Variables; ++j)
+				{
+					//获取对应位置的变量（其实并不是变量）
+					ID3D11ShaderReflectionVariable* shaderVariable = srConstantBuffer->GetVariableByIndex(j);
+
+					//获取变量的描述
+					D3D11_SHADER_VARIABLE_DESC shaderVariableDesc;
+					hr = shaderVariable->GetDesc(&shaderVariableDesc);
+					COM_ERROR_IF_FAILED(hr, "Failed to GetDesc of pixel shader constant buffer variable.");
+
+					//获取变量类型描述
+					ID3D11ShaderReflectionType* shaderReflectionType = shaderVariable->GetType();
+					D3D11_SHADER_TYPE_DESC shaderTypeDesc;
+					hr = shaderReflectionType->GetDesc(&shaderTypeDesc);
+					COM_ERROR_IF_FAILED(hr, "Failed to GetDesc of pixel shader constant buffer variable type.");
+
+					//生成变量
+					ConstantBufferVariable constantBufferVariable(shaderVariableDesc.Name,
+						shaderVariableDesc.StartOffset, shaderVariableDesc.Size, shaderTypeDesc.Class, shaderTypeDesc.Type);
+
+					//将变量加入到 shaderParameter的constantBuffer 的 map 中
+					shaderParameter->constantBuffer->constantVariablesMap.insert(
+						std::map<std::string, ConstantBufferVariable>::value_type(constantBufferVariable.name, constantBufferVariable));
+
+				}
+
+				#pragma endregion
+
+				//将新的 ShaderParameter 加入到 shaderParametersMap
+				shaderParametersMap.insert(std::map<std::string, ShaderParameter*>::value_type(shaderParameter->GetName(), shaderParameter));
+			}
+			break;
+
+			}
 		}
 
-#pragma endregion
+	#pragma endregion
 
 	}
 
-//========================创建深度-模板缓冲状态=======================
+	//========================创建深度-模板缓冲状态=======================
 	#pragma region 创建深度-模板缓冲状态
 	//深度模板测试状态描述
 	D3D11_DEPTH_STENCIL_DESC dsc;
@@ -192,13 +224,13 @@ Material::Material(ID3D11Device* device, std::wstring shaderFilePath)
 	dsc.StencilEnable = false;
 	//……………………其余模板缓冲描述待填写……………………
 
-	hr = device->CreateDepthStencilState(&dsc, m_dxDepthStencilState.GetAddressOf());
+	hr = m_dxDevice->CreateDepthStencilState(&dsc, m_dxDepthStencilState.GetAddressOf());
 	//错误检查
 	COM_ERROR_IF_FAILED(hr, L"Failed to create DirectX DepthStencil State.");
 
-#pragma endregion
+	#pragma endregion
 
-//==========================创建混合状态===========================
+	//==========================创建混合状态===========================
 	#pragma region 创建混合状态
 	D3D11_BLEND_DESC bd;
 	ZeroMemory(&bd, sizeof(bd));
@@ -217,12 +249,18 @@ Material::Material(ID3D11Device* device, std::wstring shaderFilePath)
 
 	bd.RenderTarget[0] = rtbd;
 
-	hr = device->CreateBlendState(&bd, this->m_dxBlendState.GetAddressOf());
+	hr = m_dxDevice->CreateBlendState(&bd, this->m_dxBlendState.GetAddressOf());
 	//错误检查
 	COM_ERROR_IF_FAILED(hr, L"Failed to create DirectX Blend State.");
 
-#pragma endregion 
+	#pragma endregion 
 
+	return true;
+}
+
+std::string Material::GetShaderFilePath()
+{
+	return this->m_shaderFilePath;
 }
 
 Shader* Material::GetShader(Shader::ShaderType shaderType) const

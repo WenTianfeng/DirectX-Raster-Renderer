@@ -9,6 +9,15 @@ Light::Light(LightType lightType, DirectX::XMFLOAT4 lightColor, float intensity,
 	this->m_componentName = "Light";
 }
 
+void Light::UpdataProperties(LightType lightType, DirectX::XMFLOAT4 lightColor, float intensity, float range)
+{
+	this->m_type = lightType;
+	this->m_color = lightColor;
+	this->m_intensity = intensity;
+	this->m_range = range;
+
+}
+
 Light::LightType Light::GetType()
 {
 	return this->m_type;

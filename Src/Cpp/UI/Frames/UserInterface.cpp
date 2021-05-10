@@ -15,6 +15,7 @@ bool UserInterface::Initialize(HWND hwnd,ID3D11Device* device,ID3D11DeviceContex
 
 	ImGuiStyle& style = ImGui::GetStyle();
 	style.WindowRounding = 0;
+	style.WindowMenuButtonPosition = -1;
 
 
 	return true;

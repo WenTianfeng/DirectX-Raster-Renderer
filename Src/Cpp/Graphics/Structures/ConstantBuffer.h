@@ -15,14 +15,18 @@
 class ConstantBuffer
 {
 public:
+	/// <summary>
+	/// 构造函数
+	/// </summary>
+	/// <param name="slot">常量缓冲所在的寄存器槽位</param>
+	/// <param name="byteWidth">常量缓冲字节大小</param>
 	ConstantBuffer(UINT slot, UINT byteWidth);
 
 	/// <summary>
 	/// 实例化常量缓冲
 	/// </summary>
 	/// <param name="dxDevice">DirectX设备</param>
-	/// <returns></returns>
-	bool Instantiate(ID3D11Device* dxDevice);
+	void Instantiate(ID3D11Device* dxDevice);
 
 	/// <summary>
 	/// 将常量缓冲绑定至DirectX上下文
@@ -31,6 +35,9 @@ public:
 	/// <param name="bufferSlot">寄存器槽位</param>
 	/// <param name="shaderType">着色器类型</param>
 	void Bind(ID3D11DeviceContext* deviceContext, Shader::ShaderType shaderType);
+
+	void UnBind(ID3D11DeviceContext* deviceContext, Shader::ShaderType shaderType);
+
 
 	/// <summary>
 	/// 更新常量缓冲

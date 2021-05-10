@@ -13,7 +13,7 @@ private:
 	DirectX::XMFLOAT3 m_scale = { 1.0f, 1.0f, 1.0f };
 
 public:
-
+	Transform();
 	Transform(DirectX::XMFLOAT3 position, DirectX::XMFLOAT3 rotation, DirectX::XMFLOAT3 scale);
 
 	~Transform() = default;

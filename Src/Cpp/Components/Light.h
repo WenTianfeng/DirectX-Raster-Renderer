@@ -18,6 +18,8 @@ public:
 public:
 	Light(LightType lightType, DirectX::XMFLOAT4 lightColor,float intensity,float range);
 
+	void UpdataProperties(LightType lightType, DirectX::XMFLOAT4 lightColor, float intensity, float range);
+
 	LightType GetType();
 	DirectX::XMFLOAT3 GetPosition();
 	DirectX::XMFLOAT3 GetDirection();

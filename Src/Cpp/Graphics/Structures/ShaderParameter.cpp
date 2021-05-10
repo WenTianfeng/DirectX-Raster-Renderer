@@ -4,7 +4,9 @@ ShaderParameter::ShaderParameter(ID3D11Device* device, std::string parameterName
 	m_shaderParameterName(parameterName),
 	m_shaderParameterType(parameterType),
 	m_slot(slotID),
-	constantBuffer(nullptr)
+	constantBuffer(nullptr),
+	texture(nullptr),
+	samplerState(nullptr)
 {
 	switch (parameterType)
 	{
@@ -14,8 +16,15 @@ ShaderParameter::ShaderParameter(ID3D11Device* device, std::string parameterName
 	case ShaderParameter::ShaderParameterType::ConstantBuffer:
 		break;
 	case ShaderParameter::ShaderParameterType::Texture:
+
+		texture = new Texture(device, slotID);
+
 		break;
 	case ShaderParameter::ShaderParameterType::Sampler:
+
+		samplerState = new SamplerState(slotID);
+		samplerState->Instantiate(device);
+
 		break;
 	case ShaderParameter::ShaderParameterType::StructuredBuffer:
 		break;
@@ -29,7 +38,9 @@ ShaderParameter::ShaderParameter(ID3D11Device* device, std::string parameterName
 	m_shaderParameterName(parameterName),
 	m_shaderParameterType(parameterType),
 	m_slot(slotID),
-	constantBuffer(nullptr)
+	constantBuffer(nullptr),
+	texture(nullptr),
+	samplerState(nullptr)
 {
 	switch (parameterType)
 	{
@@ -55,10 +66,11 @@ ShaderParameter::ShaderParameter(ID3D11Device* device, std::string parameterName
 
 void ShaderParameter::Bind(ID3D11DeviceContext* deviceContext)
 {
-	for (std::map<Shader::ShaderType, UINT>::value_type value : ownerShaderTypesMap)
+	//遍历ShaderParameter属于的每一种着色器类型
+	for (std::map<Shader::ShaderType, bool>::value_type pair_shaderType_used : ownerShaderTypesMap)
 	{
 		//如果ShaderParameter不属于此类型着色器，则跳过绑定
-		if (value.second == 0)
+		if (pair_shaderType_used.second == false)
 		{
 			continue;
 		}
@@ -67,15 +79,19 @@ void ShaderParameter::Bind(ID3D11DeviceContext* deviceContext)
 		{
 			case ShaderParameterType::ConstantBuffer:
 
-				this->constantBuffer->Bind(deviceContext, value.first);
+				this->constantBuffer->Bind(deviceContext, pair_shaderType_used.first);
 
 				break;
 
 			case ShaderParameterType::Texture:
 
+				this->texture->Bind(deviceContext, pair_shaderType_used.first);
+
 				break;
 
 			case ShaderParameterType::Sampler:
+
+				this->samplerState->Bind(deviceContext, pair_shaderType_used.first);
 
 				break;
 
@@ -88,6 +104,49 @@ void ShaderParameter::Bind(ID3D11DeviceContext* deviceContext)
 				break;
 		}
 	}
+}
+
+void ShaderParameter::UnBind(ID3D11DeviceContext* deviceContext)
+{
+	//遍历ShaderParameter属于的每一种着色器类型
+	for (std::map<Shader::ShaderType, bool>::value_type pair_shaderType_used : ownerShaderTypesMap)
+	{
+		//如果ShaderParameter不属于此类型着色器，则跳过绑定
+		if (pair_shaderType_used.second == false)
+		{
+			continue;
+		}
+
+		switch (m_shaderParameterType)
+		{
+		case ShaderParameterType::ConstantBuffer:
+
+			this->constantBuffer->UnBind(deviceContext, pair_shaderType_used.first);
+
+			break;
+
+		case ShaderParameterType::Texture:
+
+			this->texture->UnBind(deviceContext, pair_shaderType_used.first);
+
+			break;
+
+		case ShaderParameterType::Sampler:
+
+			this->samplerState->UnBind(deviceContext, pair_shaderType_used.first);
+
+			break;
+
+		case ShaderParameterType::StructuredBuffer:
+
+			break;
+
+		case ShaderParameterType::Invalid:
+
+			break;
+		}
+	}
+
 }
 
 void ShaderParameter::UpdateParameterResource(ID3D11DeviceContext* deviceContext)

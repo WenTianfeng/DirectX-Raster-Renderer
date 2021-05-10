@@ -9,7 +9,7 @@ ConstantBuffer::ConstantBuffer(UINT slot, UINT byteWidth):
 
 }
 
-bool ConstantBuffer::Instantiate(ID3D11Device* dxDevice)
+void ConstantBuffer::Instantiate(ID3D11Device* dxDevice)
 {
 
 	//´´½¨»º³åÃèÊö
@@ -25,8 +25,6 @@ bool ConstantBuffer::Instantiate(ID3D11Device* dxDevice)
 
 	//´íÎó¼ì²é
 	COM_ERROR_IF_FAILED(hr, "Failed to create DirectX Constant Buffer.");
-
-	return true;
 }
 
 void ConstantBuffer::Bind(ID3D11DeviceContext* deviceContext, Shader::ShaderType shaderType)
@@ -56,6 +54,38 @@ void ConstantBuffer::Bind(ID3D11DeviceContext* deviceContext, Shader::ShaderType
 	default:
 		break;
 	}
+}
+
+void ConstantBuffer::UnBind(ID3D11DeviceContext* deviceContext, Shader::ShaderType shaderType)
+{
+	ID3D11Buffer* pBuffers[] = { nullptr };
+
+	switch (shaderType)
+	{
+	case Shader::ShaderType::UnknownShaderType:
+		break;
+	case Shader::ShaderType::VertexShader:
+		deviceContext->VSSetConstantBuffers(m_slot, 1, pBuffers);
+		break;
+	case Shader::ShaderType::PixelShader:
+		deviceContext->PSSetConstantBuffers(m_slot, 1, pBuffers);
+		break;
+	case Shader::ShaderType::TessellationControlShader:
+		deviceContext->HSSetConstantBuffers(m_slot, 1, pBuffers);
+		break;
+	case Shader::ShaderType::TessellationEvaluationShader:
+		deviceContext->DSSetConstantBuffers(m_slot, 1, pBuffers);
+		break;
+	case Shader::ShaderType::GeometryShader:
+		deviceContext->GSSetConstantBuffers(m_slot, 1, pBuffers);
+		break;
+	case Shader::ShaderType::ComputeShader:
+		deviceContext->CSSetConstantBuffers(m_slot, 1, pBuffers);
+		break;
+	default:
+		break;
+	}
+
 }
 
 void ConstantBuffer::UpdateConstantBuffer(ID3D11DeviceContext* dxDeviceContext)

@@ -137,7 +137,7 @@ bool Graphics::InitializeDirectX(HWND hwnd, int width, int height)
 	D3D11_RASTERIZER_DESC rd;
 	ZeroMemory(&rd, sizeof(rd));
 	rd.FillMode = D3D11_FILL_SOLID;
-	rd.CullMode = D3D11_CULL_BACK;
+	rd.CullMode = D3D11_CULL_NONE;
 	rd.FrontCounterClockwise = false;
 	rd.DepthClipEnable = true;
 	

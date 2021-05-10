@@ -15,8 +15,21 @@ public:
 	/// 构造函数
 	/// </summary>
 	/// <param name="device">DirectX设备</param>
+	Material(ID3D11Device* device);
+
+	/// <summary>
+	/// 材质实例化
+	/// </summary>
+	/// <param name="device"></param>
 	/// <param name="shaderFilePath">着色器文件路径（多种着色器整合文件）</param>
-	Material(ID3D11Device* device, std::wstring shaderFilePath);
+	/// <returns></returns>
+	bool Instantiate(std::string shaderFilePath);
+
+	/// <summary>
+	/// 获取材质着色器文件路径
+	/// </summary>
+	/// <returns></returns>
+	std::string GetShaderFilePath();
 
 	/// <summary>
 	/// 获取指定类型着色器
@@ -51,16 +64,14 @@ public:
 
 
 public:
-	//std::vector<ShaderParameter*> shaderParameters;	//材质包含的着色器资源参数列表
-	std::map<std::string, ShaderParameter*> shaderParametersMap;	//材质包含的着色器资源参数map
+	std::map<std::string, ShaderParameter*> shaderParametersMap;	//<着色器参数名-参数>map
 
 private:
-	std::wstring m_shaderFilePath;//着色器文件路径
+	ID3D11Device* m_dxDevice;//DirectX 设备
+	std::string m_shaderFilePath;//着色器文件路径
 	std::map<Shader::ShaderType, Shader*> m_shadersMap;//<着色器类型-着色器> map
 
 	Microsoft::WRL::ComPtr<ID3D11InputLayout> m_dxInputLayout;//DirectX输入布局对象
 	Microsoft::WRL::ComPtr<ID3D11DepthStencilState> m_dxDepthStencilState;//深度模板状态
 	Microsoft::WRL::ComPtr<ID3D11BlendState> m_dxBlendState;//混合状态
-
-
 };

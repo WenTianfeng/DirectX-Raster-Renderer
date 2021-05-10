@@ -27,7 +27,7 @@ HRESULT ShaderProcessor::CreateShaderFromFile(CompileFormat compileFormat, const
 		hr = D3DCompileFromFile(hlslFormatFilePath.c_str(), nullptr, ((ID3DInclude*)(UINT_PTR)1),
 			shaderEntryPoint.c_str(), shaderModel.c_str(), dwShaderFlags, 0, blob, nullptr);
 
-		COM_ERROR_IF_FAILED(hr, "Failed to compile shader from file.");
+		COM_ERROR_IF_FAILED(hr, L"Failed to compile shader from file : "+ hlslFormatFilePath);
 
 	}
 

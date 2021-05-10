@@ -9,24 +9,19 @@ void Hierarchy::Render()
 
 	if (ImGui::Begin("HIERARCHY"))
 	{
-        if (ImGui::BeginChild("left pane", ImVec2(150, 0), true))
+        for (UINT i = 0; i < SceneManager::objects.size(); i++)
         {
-            for (UINT i = 0; i < SceneManager::objects.size(); i++)
+            char label[128];
+            std::string objectName(SceneManager::objects[i]->GetComponent<Attributes>()->ObjectName());
+
+            objectName.copy(label, objectName.size(), 0);
+            *(label + objectName.size()) = '\0';
+
+            if (ImGui::Selectable(label, selected == i))
             {
-                char label[128];
-                std::string objectName(SceneManager::objects[i]->GetComponent<Attributes>()->ObjectName());
-
-                objectName.copy(label, objectName.size(), 0);
-                *(label + objectName.size()) = '\0';
-
-                if (ImGui::Selectable(label, selected == i))
-                {
-                    selected = i;
-                }
+                selected = i;
             }
         }
-        ImGui::EndChild();
-
 	}
 
     ImGui::End();

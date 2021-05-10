@@ -10,6 +10,4 @@ public:
 	CameraControl() = default;
 	void Update(float dt);
 
-
-
 };

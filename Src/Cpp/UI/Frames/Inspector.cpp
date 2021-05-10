@@ -1,17 +1,8 @@
 #include"Inspector.h"
-#include"..\..\Logic\SceneManager.h"
-#include"..\..\Components\Skybox.h"
-#include"..\..\Components\Light.h"
-#include"..\..\Logic\ObjectScripts\CameraControl.h"
-#include"..\..\Components\Attributes.h"
+
 
 
 int Inspector::preSelected = -1;
-
-void Inspector::Initialize()
-{
-
-}
 
 void Inspector::Render()
 {
@@ -41,18 +32,18 @@ void Inspector::Render()
 
 			if (object->HasComponent<Attributes>())
 			{
-				if (!changed)
-				{
-					object->SetActivation(UI_Attributes::attributes_Active);
-					object->GetComponent<Attributes>()->UpdateProperties(UI_Attributes::attributes_ObjectName, UI_Attributes::attributes_Tag);
-				}
-				else
+				if (changed)
 				{
 					UI_Attributes::UpdateValues(
 						object->GetComponent<Attributes>()->ObjectName(),
 						object->IsActive(),
 						object->GetComponent<Attributes>()->ObjectTag()
 					);
+				}
+				else
+				{
+					object->SetActivation(UI_Attributes::attributes_Active);
+					object->GetComponent<Attributes>()->UpdateProperties(UI_Attributes::attributes_ObjectName, UI_Attributes::attributes_Tag);
 				}
 
 				UI_Attributes::Render();
@@ -65,20 +56,31 @@ void Inspector::Render()
 			//显示Transform UI
 			if (object->HasComponent<Transform>())
 			{
-				if (!changed)
+				if (changed)
 				{
-					object->GetComponent<Transform>()->UpdateProperties(
-						DirectX::XMFLOAT3(UI_Transform::transform_Position[0], UI_Transform::transform_Position[1], UI_Transform::transform_Position[2]),
-						DirectX::XMFLOAT3(UI_Transform::transform_Rotation[0], UI_Transform::transform_Rotation[1], UI_Transform::transform_Rotation[2]),
-						DirectX::XMFLOAT3(UI_Transform::transform_Scale[0], UI_Transform::transform_Scale[1], UI_Transform::transform_Scale[2])
+					//将弧度转换为角度
+					DirectX::XMFLOAT3 rotationInDegree = DirectX::XMFLOAT3(
+						DirectX::XMConvertToDegrees(object->GetComponent<Transform>()->GetRotation().x),
+						DirectX::XMConvertToDegrees(object->GetComponent<Transform>()->GetRotation().y),
+						DirectX::XMConvertToDegrees(object->GetComponent<Transform>()->GetRotation().z));
+
+					UI_Transform::UpdateValues(
+						object->GetComponent<Transform>()->GetPosition(),
+						rotationInDegree,
+						object->GetComponent<Transform>()->GetScale()
 					);
 				}
 				else
 				{
-					UI_Transform::UpdateValues(
-						object->GetComponent<Transform>()->GetPosition(),
-						object->GetComponent<Transform>()->GetRotation(),
-						object->GetComponent<Transform>()->GetScale()
+					object->GetComponent<Transform>()->UpdateProperties(
+						DirectX::XMFLOAT3(UI_Transform::transform_Position[0], UI_Transform::transform_Position[1], UI_Transform::transform_Position[2]),
+
+						DirectX::XMFLOAT3(
+							DirectX::XMConvertToRadians(UI_Transform::transform_Rotation[0]),
+							DirectX::XMConvertToRadians(UI_Transform::transform_Rotation[1]),
+							DirectX::XMConvertToRadians(UI_Transform::transform_Rotation[2])),
+
+						DirectX::XMFLOAT3(UI_Transform::transform_Scale[0], UI_Transform::transform_Scale[1], UI_Transform::transform_Scale[2])
 					);
 				}
 
@@ -114,34 +116,8 @@ void Inspector::Render()
 
 			if (object->HasComponent<MaterialManager>())
 			{
-				if (!changed)
-				{
-					//遍历所有的UI_Material
-					for (UINT i = 0; i < UI_MaterialManager::ui_Materials.size(); i++)
-					{
-						//遍历UI_Material 的所有变量
-						for (UINT j = 0; j < UI_MaterialManager::ui_Materials[i].imGuiAvailableVariables.size(); j++)
-						{
-							ImGuiAvailableVariable imGuiAvailableVariable = UI_MaterialManager::ui_Materials[i].imGuiAvailableVariables[j];
-							ConstantBufferVariable cbVariable = imGuiAvailableVariable.ownerBuffer->GetConstantBufferVariableByName(imGuiAvailableVariable.name);
-
-
-							if (imGuiAvailableVariable.type == ImGuiAvailableVariableType::VT_FLOAT)
-							{
-								imGuiAvailableVariable.ownerBuffer->SetFloatVec(imGuiAvailableVariable.floatVec, imGuiAvailableVariable.size / sizeof(float), cbVariable.startOffset, cbVariable.size);
-							}
-							else if (imGuiAvailableVariable.type == ImGuiAvailableVariableType::VT_INT)
-							{
-								imGuiAvailableVariable.ownerBuffer->SetIntVec(imGuiAvailableVariable.intVec, imGuiAvailableVariable.size / sizeof(float), cbVariable.startOffset, cbVariable.size);
-							}
-							else if (imGuiAvailableVariable.type == ImGuiAvailableVariableType::VT_BOOL)
-							{
-								imGuiAvailableVariable.ownerBuffer->SetBool(imGuiAvailableVariable.boolVal, cbVariable.startOffset);
-							}
-						}
-					}
-				}
-				else
+				//------------------------------------------------------------------如果选中了新的对象--------------------------------------------------------------------
+				if (changed)
 				{
 					//清空UI_MaterialManagerd的UI_Material列表
 					UI_MaterialManager::ui_Materials.clear();
@@ -150,44 +126,33 @@ void Inspector::Render()
 					for (UINT i = 0; i < object->GetComponent<MaterialManager>()->materials.size(); i++)
 					{
 						//实例化新的材质UI
-						UI_Material ui_Material;
+						UI_Material ui_Material(&object->GetComponent<MaterialManager>()->materials[i]);
 
-						//遍历材质的所有着色器资源
-						for (std::map<std::string, ShaderParameter*>::value_type pair_name_shaderParameter : object->GetComponent<MaterialManager>()->materials[i].shaderParametersMap)
-						{
-							//根据着色器资源参数类型分别处理
-							switch (pair_name_shaderParameter.second->GetShaderParameterType())
-							{
-								//当资源类型为 ConstantBuffer
-								case ShaderParameter::ShaderParameterType::ConstantBuffer:
-								{
-									//遍历常量缓冲的变量map，将获取的变量转换为ImGui接受的形式，加入到材质UI变量列表中
-									for (std::map<std::string, ConstantBufferVariable>::value_type pair_name_constantBufferVariable : pair_name_shaderParameter.second->constantBuffer->constantVariablesMap)
-									{
-										if (pair_name_constantBufferVariable.second.variableClass != D3D_SHADER_VARIABLE_CLASS::D3D10_SVC_MATRIX_COLUMNS)
-										{
-											ImGuiAvailableVariable generalVariable(pair_name_constantBufferVariable.second, pair_name_shaderParameter.second->constantBuffer);
-											ui_Material.imGuiAvailableVariables.push_back(generalVariable);
-										}
-									}
-								}
-									break;
-
-								case ShaderParameter::ShaderParameterType::Sampler:
-									break;
-								case ShaderParameter::ShaderParameterType::Texture:
-									break;
-								case ShaderParameter::ShaderParameterType::StructuredBuffer:
-									break;
-								case ShaderParameter::ShaderParameterType::Invalid:
-									break;
-							}
-
-						}
+						//根据材质内容对其UI进行初始化
+						ui_Material.Initialize(object->GetComponent<MaterialManager>()->materials[i]);
 
 						//将 UI_Material 加入到 UI_MaterialManager 的 UI_Material 列表
 						UI_MaterialManager::ui_Materials.push_back(ui_Material);
+					}
+				}
+				//------------------------------------------------------------------没有选中新对象，则根据输入修改参数--------------------------------------------------------------------
+				else
+				{
+					//遍历所有的UI_Material
+					for (UINT i = 0; i < UI_MaterialManager::ui_Materials.size(); i++)
+					{
+						//===================遍历UI_Material 的所有 displayableVariable，更新其对应的着色器资源参数=================
+						for (UINT j = 0; j < UI_MaterialManager::ui_Materials[i].displayableVariables.size(); j++)
+						{
+							UI_MaterialManager::ui_Materials[i].displayableVariables[j].UpdateOwnerParameterValues();
+						}
 
+						//===================如果在材质UI修改了其着色器路径，那么使用新路径重新实例化材质（材质对象不变），并重初始化材质UI==================
+						if (UI_MaterialManager::ui_Materials[i].shaderFilePath != UI_MaterialManager::ui_Materials[i].ownerMaterial->GetShaderFilePath())
+						{
+							UI_MaterialManager::ui_Materials[i].ownerMaterial->Instantiate(UI_MaterialManager::ui_Materials[i].shaderFilePath);
+							UI_MaterialManager::ui_Materials[i].Initialize(*UI_MaterialManager::ui_Materials[i].ownerMaterial);
+						}
 					}
 				}
 
@@ -203,7 +168,34 @@ void Inspector::Render()
 			//显示Light信息UI
 			if (object->HasComponent<Light>())
 			{
+				//------------------------------------------------------------------如果选中了新的对象--------------------------------------------------------------------
+				if (changed)
+				{
+					UI_Light::UpdateValues(
+						object->GetComponent<Light>()->GetType(),
+						object->GetComponent<Light>()->GetColor(),
+						object->GetComponent<Light>()->GetIntensity(),
+						object->GetComponent<Light>()->GetRange()
+					);
+				}
+				//------------------------------------------------------------------没有选中新对象，则根据输入修改参数--------------------------------------------------------------------
+				else
+				{
+					object->GetComponent<Light>()->UpdataProperties(
+						UI_Light::light_Type,
 
+						DirectX::XMFLOAT4(
+							UI_Light::light_Color[0],
+							UI_Light::light_Color[1],
+							UI_Light::light_Color[2],
+							UI_Light::light_Color[3]),
+
+						UI_Light::light_Intensity,
+						UI_Light::light_Range
+					);
+				}
+
+				UI_Light::Render();
 
 			}
 
@@ -214,7 +206,26 @@ void Inspector::Render()
 			//显示Camera UI
 			if (object->HasComponent<Camera>())
 			{
+				//------------------------------------------------------------------如果选中了新的对象--------------------------------------------------------------------
+				if (changed)
+				{
+					UI_Camera::UpdateValues(
+						DirectX::XMConvertToDegrees(object->GetComponent<Camera>()->GetFovY()), 
+						object->GetComponent<Camera>()->GetAspect(), 
+						object->GetComponent<Camera>()->GetNearClip(), 
+						object->GetComponent<Camera>()->GetFarClip());
+				}
+				//------------------------------------------------------------------没有选中新对象，则根据输入修改参数--------------------------------------------------------------------
+				else
+				{
+					object->GetComponent<Camera>()->UpdateProperties(
+						DirectX::XMConvertToRadians(UI_Camera::camera_FovY),
+						UI_Camera::camera_Aspect,
+						UI_Camera::camera_NearClip,
+						UI_Camera::camera_FarClip);
+				}
 
+				UI_Camera::Render();
 
 			}
 
@@ -230,27 +241,61 @@ void Inspector::Render()
 			if (ImGui::Button("Modify Component"))
 			{
 				ImGui::OpenPopup("my_toggle_popup");
-				ImGui::Unindent();
 			}
-
+			ImGui::Unindent(50.0f);
 			if (ImGui::BeginPopup("my_toggle_popup"))
 			{
 				ImGui::MenuItem("Built-in Components", NULL, false, false);
-				ImGui::Separator();
-				if (ImGui::BeginMenu("Sub-menu"))
+
+				static int componentNameSelected = -1;
+
+				//绘制纹理文件选择框
+				for (UINT n = 0; n < builtInComponentNames.size(); n++)
 				{
-					ImGui::MenuItem("Click me");
-					ImGui::EndMenu();
+					if (ImGui::Selectable(builtInComponentNames[n].c_str(), componentNameSelected == n))
+					{
+						componentNameSelected = n;
+					}
 				}
+
 				ImGui::EndPopup();
 			}
 
 			#pragma endregion
-
 		}
 	}
 
 	ImGui::End();
 
 }
+
+void Inspector::AddComponentToObject(Object* object, std::string componentName)
+{
+	if (componentName == "Transform")
+	{
+		if (!object->HasComponent<Transform>())
+		{
+			object->AddComponent<Transform>(DirectX::XMFLOAT3(0, 0, 0), DirectX::XMFLOAT3(0, 0, 0), DirectX::XMFLOAT3(1, 1, 1));
+		}
+	}
+
+	else if (componentName == "MeshRenderer")
+	{
+		if (!object->HasComponent<MeshRenderer>())
+		{
+
+		}
+	}
+
+	else if (componentName == "MaterialManager")
+	{
+		if (!object->HasComponent<MaterialManager>())
+		{
+
+		}
+	}
+
+
+}
+
 

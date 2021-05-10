@@ -13,7 +13,7 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE prevInstance, _I
 	try
 	{
 		//引擎初始化
-		RenderingEngine::GetInstance()->Initialize(hInstance, "Rendering Engine v1.0", "WndClassName", 1800, 1000);
+		RenderingEngine::GetInstance()->Initialize(hInstance, "Rendering Engine v1.0", "WndClassName", 1800, 900);
 	}
 	catch (COMException& exception)
 	{

@@ -33,7 +33,6 @@ void Skybox::Initialize()
 	texArrayDesc.MiscFlags = D3D11_RESOURCE_MISC_TEXTURECUBE;
 
 	Microsoft::WRL::ComPtr<ID3D11Texture2D> texArray;
-	//ID3D11Texture2D* texArray;
 	this->m_dxDevice->CreateTexture2D(&texArrayDesc, nullptr, texArray.GetAddressOf());
 
 	texArray->GetDesc(&texArrayDesc);
@@ -73,56 +72,94 @@ void Skybox::Initialize()
 
 void Skybox::Render()
 {
+	//如果Object拥有MaterialManager组件
+	if (this->owner->HasComponent<MaterialManager>())
+	{
+		//获取 MaterialManager 组件
+		MaterialManager* materialManager = this->owner->GetComponent<MaterialManager>();
 
-	MaterialManager* materialManager = this->owner->GetComponent<MaterialManager>();
-	if (!materialManager)
+		//遍历拥有的所有 Mesh
+		for (UINT i = 0; i < this->m_meshes.size(); i++)
+		{
+
+			//================着色器设置================
+			materialManager->materials[i].BindShaders(m_dxDeviceContext);
+
+			//===============状态设置================
+			//设置输入布局
+			this->m_dxDeviceContext->IASetInputLayout(materialManager->materials[i].GetInputLayout());
+
+			//设置图元类型
+			this->m_dxDeviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+
+			//设置深度-模板缓冲状态
+			this->m_dxDeviceContext->OMSetDepthStencilState(materialManager->materials[i].GetDepthStencilState(), 0);
+
+			//设置混合状态
+			this->m_dxDeviceContext->OMSetBlendState(materialManager->materials[i].GetBlendState(), nullptr, 0xffffffff);
+
+
+			this->m_dxDeviceContext->PSSetSamplers(0, 1, m_skyboxTextureCubeSampler.GetAddressOf());
+			this->m_dxDeviceContext->PSSetShaderResources(1, 1, m_skyboxTextureCubeSRV.GetAddressOf());
+
+			//===============缓冲设置================
+			//设置顶点缓冲
+			UINT offsets = 0;
+			this->m_dxDeviceContext->IASetVertexBuffers(0, 1, m_meshes[i].GetVertexBuffer().GetAddressOf(), m_meshes[i].GetVertexBuffer().StridePtr(), &offsets);
+
+			//设置索引缓冲
+			this->m_dxDeviceContext->IASetIndexBuffer(m_meshes[i].GetIndexBuffer().Get(), DXGI_FORMAT_R32_UINT, 0);
+
+
+			//=============着色器资源更新==============
+
+			for (std::map<std::string, ShaderParameter*>::value_type value : materialManager->materials[i].shaderParametersMap)
+			{
+				value.second->Bind(m_dxDeviceContext);
+
+				if (value.second->GetName() == "CB_VS_TransformMatrix")
+				{
+					CB_VS_TransformMatrix transformMatrix = {};
+
+					//更新世界矩阵
+					DirectX::XMMATRIX W = owner->GetComponent<Transform>()->GetLocalToWorldMatrixXM();
+					transformMatrix.world = DirectX::XMMatrixTranspose(W);
+
+					//对世界矩阵求逆转置矩阵
+					DirectX::XMMATRIX A = W;
+					A.r[3] = DirectX::g_XMIdentityR3;
+					transformMatrix.worldInverseTranspose = XMMatrixTranspose(XMMatrixTranspose(XMMatrixInverse(nullptr, A)));
+
+					//更新视矩阵
+					DirectX::XMMATRIX V = SceneManager::mainCamera->GetComponent<Camera>()->GetViewMatrix();
+					transformMatrix.view = DirectX::XMMatrixTranspose(V);
+
+					//更新投影矩阵
+					DirectX::XMMATRIX P = SceneManager::mainCamera->GetComponent<Camera>()->GetProjectionMatrix();
+					transformMatrix.projection = DirectX::XMMatrixTranspose(P);
+
+					value.second->constantBuffer->SetStructure(&transformMatrix, sizeof(CB_VS_TransformMatrix));
+
+				}
+
+				//更新 ShaderParameter 包含的特定类型的资源
+				value.second->UpdateParameterResource(this->m_dxDeviceContext);
+			}
+
+			//===============绘制================
+			this->m_dxDeviceContext->DrawIndexed(this->m_meshes[i].GetIndexBuffer().IndexCount(), 0, 0);
+
+		}
+	}
+	else    //如果Object没有MaterialManager组件
 	{
 		ErrorLogger::Log("There is no MaterialManager Component on this object.");
 		exit(-1);
+
 	}
 
-	for (UINT i = 0; i < this->m_meshes.size(); i++)
-	{
-		//绑定着色器至上下文
-		materialManager->materials[i].BindShaders(m_dxDeviceContext);
-
-		//=======状态设置========
-
-		//设置输入布局
-		this->m_dxDeviceContext->IASetInputLayout(materialManager->materials[i].GetInputLayout());
-
-		//设置图元类型
-		this->m_dxDeviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-
-		//设置深度-模板缓冲状态
-		this->m_dxDeviceContext->OMSetDepthStencilState(materialManager->materials[i].GetDepthStencilState(), 0);
-
-		//设置混合状态
-		this->m_dxDeviceContext->OMSetBlendState(materialManager->materials[i].GetBlendState(), nullptr, 0xffffffff);
-
-		//设置采样器状态
-		this->m_dxDeviceContext->PSSetSamplers(0, 1, this->m_skyboxTextureCubeSampler.GetAddressOf());
-
-		//设置纹理资源
-		this->m_dxDeviceContext->PSSetShaderResources(1, 1, this->m_skyboxTextureCubeSRV.GetAddressOf());
-
-
-		//=======缓冲设置========
-
-		//设置顶点缓冲
-		UINT offsets = 0;
-		this->m_dxDeviceContext->IASetVertexBuffers(0, 1, m_meshes[i].GetVertexBuffer().GetAddressOf(), m_meshes[i].GetVertexBuffer().StridePtr(), &offsets);
-
-
-		//设置索引缓冲
-		this->m_dxDeviceContext->IASetIndexBuffer(m_meshes[i].GetIndexBuffer().Get(), DXGI_FORMAT_R32_UINT, 0);
-
-
-
-
-		//=======绘制========
-		this->m_dxDeviceContext->DrawIndexed(this->m_meshes[i].GetIndexBuffer().IndexCount(), 0, 0);
-	}
 }
+
+
 
 
