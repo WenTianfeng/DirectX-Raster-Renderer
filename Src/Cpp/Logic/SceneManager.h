@@ -44,6 +44,8 @@ private:
 	/// <returns>相关内容是否初始化成功</returns>
 	bool InitializeScene(ID3D11Device* device, ID3D11DeviceContext* deviceContext);
 
+	UINT GetNewObjectID();
+
 public:
 	static Object* mainCamera;//场景主相机
 	static std::vector<Object*> lights;//场景光源列表

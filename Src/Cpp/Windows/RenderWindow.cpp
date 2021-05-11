@@ -7,6 +7,7 @@
 #include"..\Tools\DataTypeConverter.h"
 #include"..\Tools\ErrorLogger.h"
 
+#include"..\..\..\resource.h"//图标资源加载
 
 RenderWindow::RenderWindow():
 	m_hAppInstance(nullptr),
@@ -45,7 +46,8 @@ bool RenderWindow::Initialize(HINSTANCE hInstance, std::string windowCaption, st
 	wc.hInstance = m_hAppInstance;
 	wc.lpfnWndProc = MainWndProc;
 	wc.lpszClassName = m_mainWndClassName.c_str();
-	wc.hIcon = LoadIcon(NULL, IDI_APPLICATION);
+	//wc.hIcon = LoadIcon(NULL, IDI_QUESTION);
+	wc.hIcon = LoadIcon(hInstance, MAKEINTRESOURCE(IDI_ICON1));//加载自定义图标
 	wc.cbClsExtra = NULL;
 	wc.cbWndExtra = NULL;
 	wc.hbrBackground = (HBRUSH)GetStockObject(NULL_BRUSH);
@@ -117,6 +119,40 @@ void RenderWindow::DisplayFrameStats(float totalTime)
 		timeElapsed += 1.0f;
 	}
 }
+
+//设置鼠标的显隐和锁定
+void RenderWindow::SetCursorShowLock(bool show, bool lock)
+{
+	ShowCursor(show);
+	if (lock) {
+		//将鼠标限制在窗口范围内
+		RECT window_rect;
+		GetClientRect(m_hMainWindow, &window_rect);
+
+		POINT left_up_point = {};
+		left_up_point.x = window_rect.left;
+		left_up_point.y = window_rect.top;
+
+		POINT right_bottom_point = {};
+		right_bottom_point.x = window_rect.right;
+		right_bottom_point.y = window_rect.bottom;
+
+		//将窗口坐标系的对角线端点坐标映射到屏幕坐标系
+		MapWindowPoints(m_hMainWindow, nullptr, &left_up_point, 1);
+		MapWindowPoints(m_hMainWindow, nullptr, &right_bottom_point, 1);
+
+		window_rect.left = left_up_point.x;
+		window_rect.top = left_up_point.y;
+		window_rect.right = right_bottom_point.x;
+		window_rect.bottom = right_bottom_point.y;
+
+		ClipCursor(&window_rect);//限制鼠标范围在窗口矩形内
+	}
+	else {
+		ClipCursor(NULL);
+	}
+}
+
 
 #pragma region Get/Set Functions
 

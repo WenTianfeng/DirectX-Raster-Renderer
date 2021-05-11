@@ -15,10 +15,14 @@ private:
 	bool leftIsDown = false;
 	bool rightIsDown = false;
 	bool mbuttonDown = false;
+
 	int x = 0;
 	int y = 0;
+
 public:
 	static Mouse* GetInstance();
+
+	std::queue<MouseEvent> GetEventBuffer();
 
 	void OnLeftPressed(int x, int y);
 	void OnLeftReleased(int x, int y);
@@ -39,7 +43,9 @@ public:
 	int GetPosY();
 	MousePoint GetPos();
 
+	//消息队列是否为空
 	bool EventBufferIsEmpty();
-	MouseEvent ReadEvent();
+	//清理消息队列
+	void CleanEvent();
 
 };

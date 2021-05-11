@@ -2,6 +2,7 @@
 #include"..\Components\Skybox.h"
 #include"..\Components\Light.h"
 #include"..\Components\Attributes.h"
+#include"..\Logic\ObjectScripts\CameraControl.h"
 
 //全局静态变量初始化
 Object* SceneManager::mainCamera = nullptr;
@@ -45,48 +46,41 @@ void SceneManager::OnWindowResize(int clientWidth, int clientHeight)
 
 bool SceneManager::InitializeScene(ID3D11Device* device, ID3D11DeviceContext* deviceContext)
 {
-
-	#pragma region 判定shader文件路径
-
-	std::string shaderFolderPath;
-
-	//调式模式
-	#ifdef _DEBUG
-			shaderFolderPath = "Src\\Shaders\\";
-	#endif
-	
-	//发布模式
-	#ifdef NDEBUG
-			shaderFolderPath = "Assets\\Shaders\\";
-	#endif
-	
-	#pragma endregion
+	//着色器文件路径
+	std::string shaderFolderPath = "Assets\\Shaders\\";
 
 //=================场景生成=================
 
 	#pragma region 生成相机
 
-	Object* camera = new Object(0);
-	camera->AddComponent<Attributes>("Main Camera","Camera");
-	camera->AddComponent<Transform>(DirectX::XMFLOAT3(0, 80.0f, -120.0f), DirectX::XMFLOAT3(DirectX::XM_PI / 12, 0, 0), DirectX::XMFLOAT3(1, 1, 1));
-	camera->AddComponent<Camera>();
+	//编辑模式相机
+	Object* editModeCamera = new Object(GetNewObjectID());
+	editModeCamera->AddComponent<Attributes>("EditMode Camera", "Camera", false);
+	editModeCamera->AddComponent<Transform>(DirectX::XMFLOAT3(0, 80.0f, -120.0f), DirectX::XMFLOAT3(DirectX::XM_PI / 12, 0, 0), DirectX::XMFLOAT3(1, 1, 1));
+	editModeCamera->AddComponent<Camera>();
+	editModeCamera->AddComponent<CameraControl>();
+	mainCamera = editModeCamera;
+	this->objects.push_back(editModeCamera);//将对象加入列表中
 
-	mainCamera = camera;
-
-	this->objects.push_back(camera);//将对象加入列表中
+	//渲染模式相机
+	Object* renderingModeCamera = new Object(GetNewObjectID());
+	renderingModeCamera->AddComponent<Attributes>("RenderingMode Camera","Camera", true);
+	renderingModeCamera->AddComponent<Transform>(DirectX::XMFLOAT3(0, 100.0f, -200.0f), DirectX::XMFLOAT3(DirectX::XM_PI / 6, 0, 0), DirectX::XMFLOAT3(1, 1, 1));
+	renderingModeCamera->AddComponent<Camera>();
+	this->objects.push_back(renderingModeCamera);//将对象加入列表中
 
 #	pragma endregion
 
 	#pragma region 生成光源
 
-	Object* directional_light1 = new Object(1);
+	Object* directional_light1 = new Object(GetNewObjectID());
 	directional_light1->AddComponent<Attributes>("Directional Light1","Light");
 	directional_light1->AddComponent<Transform>(DirectX::XMFLOAT3(80, 80, -80), DirectX::XMFLOAT3(DirectX::XM_PI / 4, DirectX::XM_PI / 4, 0), DirectX::XMFLOAT3(1, 1, 1));
 	directional_light1->AddComponent<Light>(Light::LightType::Directional, DirectX::XMFLOAT4(1.0f, 1.0f, 1.0f, 0), 1.0f, 2000.0f);
 	this->objects.push_back(directional_light1);
 	lights.push_back(directional_light1);
 
-	Object* directional_light2 = new Object(2);
+	Object* directional_light2 = new Object(GetNewObjectID());
 	directional_light2->AddComponent<Attributes>("Directional Light2", "Light");
 	directional_light2->AddComponent<Transform>(DirectX::XMFLOAT3(-80, 80, -80), DirectX::XMFLOAT3(DirectX::XM_PI / 4, -DirectX::XM_PI / 4, 0), DirectX::XMFLOAT3(1, 1, 1));
 	directional_light2->AddComponent<Light>(Light::LightType::Directional, DirectX::XMFLOAT4(1.0f, 1.0f, 1.0f, 0), 1.0f, 2000.0f);
@@ -97,7 +91,7 @@ bool SceneManager::InitializeScene(ID3D11Device* device, ID3D11DeviceContext* de
 
 	#pragma region 生成天空盒
 
-	//Object* skybox = new Object(3);
+	//Object* skybox = new Object(GetNewObjectID());
 	//skybox->AddComponent<Attributes>("DefaultSkybox", "Skybox");
 	//skybox->AddComponent<Transform>(DirectX::XMFLOAT3(0, 0, 0), DirectX::XMFLOAT3(0, 0, 0), DirectX::XMFLOAT3(500, 500, 500));
 
@@ -123,22 +117,22 @@ bool SceneManager::InitializeScene(ID3D11Device* device, ID3D11DeviceContext* de
 	#pragma region 生成场景对象
 
 	//机器人
-	Object* cube = new Object(4);
-	cube->AddComponent<Attributes>("Robot", "Object");
-	cube->AddComponent<Transform>(DirectX::XMFLOAT3(0, 0, 0), DirectX::XMFLOAT3(0, 0, 0), DirectX::XMFLOAT3(0.5f, 0.5f, 0.5f));//添加Transform组件
-	cube->AddComponent<MeshRenderer>(device, deviceContext, "Assets\\Models\\Robot Kyle.fbx");//添加MeshRender组件
+	Object* robot = new Object(GetNewObjectID());
+	robot->AddComponent<Attributes>("Robot", "Object");
+	robot->AddComponent<Transform>(DirectX::XMFLOAT3(0, 0, 0), DirectX::XMFLOAT3(0, 0, 0), DirectX::XMFLOAT3(0.5f, 0.5f, 0.5f));//添加Transform组件
+	robot->AddComponent<MeshRenderer>(device, deviceContext, "Assets\\Models\\Robot Kyle.fbx");//添加MeshRender组件
 	
 	std::string shaderFilePaths[] = {
 		shaderFolderPath + "PBRTest.hlsl",
 		shaderFolderPath + "PBRTest.hlsl"
 	};
 
-	cube->AddComponent<MaterialManager>(device, shaderFilePaths, 2);//添加MaterialManager组件
+	robot->AddComponent<MaterialManager>(device, shaderFilePaths, 2);//添加MaterialManager组件
 
-	this->objects.push_back(cube);
+	this->objects.push_back(robot);
 
 	//生成地面平面
-	Object* ground = new Object(5);
+	Object* ground = new Object(GetNewObjectID());
 	ground->AddComponent<Attributes>("Ground");
 	ground->AddComponent<Transform>(DirectX::XMFLOAT3(0, 0, 0), DirectX::XMFLOAT3(DirectX::XM_PI / 2, 0, 0), DirectX::XMFLOAT3(10, 10, 10));//添加Transform组件
 	ground->AddComponent<MeshRenderer>(device, deviceContext, "Assets\\Models\\Quad.fbx");//添加MeshRender组件
@@ -149,4 +143,9 @@ bool SceneManager::InitializeScene(ID3D11Device* device, ID3D11DeviceContext* de
 	#pragma endregion
 
 	return true;
+}
+
+UINT SceneManager::GetNewObjectID()
+{
+	return objects.size();
 }

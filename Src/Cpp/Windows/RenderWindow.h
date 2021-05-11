@@ -28,6 +28,9 @@ public:
 	/// <param name="totalTime"></param>
 	void DisplayFrameStats(float totalTime);
 
+	//设置鼠标的显隐和锁定
+	void SetCursorShowLock(bool show, bool lock);
+
 	//Get/Set方法
 	#pragma region Get/Set Functions
 

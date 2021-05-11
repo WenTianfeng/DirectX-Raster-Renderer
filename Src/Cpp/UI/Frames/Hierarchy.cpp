@@ -11,16 +11,20 @@ void Hierarchy::Render()
 	{
         for (UINT i = 0; i < SceneManager::objects.size(); i++)
         {
-            char label[128];
-            std::string objectName(SceneManager::objects[i]->GetComponent<Attributes>()->ObjectName());
-
-            objectName.copy(label, objectName.size(), 0);
-            *(label + objectName.size()) = '\0';
-
-            if (ImGui::Selectable(label, selected == i))
+            if (SceneManager::objects[i]->GetComponent<Attributes>()->IsDisplayInHierarchy())
             {
-                selected = i;
+                char label[128];
+                std::string objectName(SceneManager::objects[i]->GetComponent<Attributes>()->ObjectName());
+
+                objectName.copy(label, objectName.size(), 0);
+                *(label + objectName.size()) = '\0';
+
+                if (ImGui::Selectable(label, selected == i))
+                {
+                    selected = i;
+                }
             }
+
         }
 	}
 

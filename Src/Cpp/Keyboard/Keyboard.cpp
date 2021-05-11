@@ -33,17 +33,12 @@ bool Keyboard::CharBufferEmpty()
 	return charBuffer.empty();
 }
 
-KeyboardEvent Keyboard::ReadKey()
+void Keyboard::CleanEvent()
 {
-	if (this->keyBuffer.empty()) {
-		return KeyboardEvent();
+	while (!keyBuffer.empty())
+	{
+		keyBuffer.pop();
 	}
-	else {
-		KeyboardEvent e = this->keyBuffer.front();
-		this->keyBuffer.pop();
-		return e;
-	}
-
 }
 
 unsigned char Keyboard::ReadChar()

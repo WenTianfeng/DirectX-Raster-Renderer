@@ -10,7 +10,7 @@ Mouse::Mouse()
 	static bool raw_input_initialized = false;
 	if (raw_input_initialized == false)
 	{
-		RAWINPUTDEVICE rid;
+		RAWINPUTDEVICE rid = {};
 
 		rid.usUsagePage = 0x01; //Mouse
 		rid.usUsage = 0x02;
@@ -31,6 +31,11 @@ Mouse* Mouse::GetInstance()
     if (mouseInstance == nullptr)  //判断是否第一次调用
         mouseInstance = new Mouse();
     return mouseInstance;
+}
+
+std::queue<MouseEvent> Mouse::GetEventBuffer()
+{
+	return this->eventBuffer;
 }
 
 void Mouse::OnLeftPressed(int x, int y)
@@ -127,16 +132,10 @@ bool Mouse::EventBufferIsEmpty()
 	return this->eventBuffer.empty();
 }
 
-MouseEvent Mouse::ReadEvent()
+void Mouse::CleanEvent()
 {
-	if (this->eventBuffer.empty())
+	while (!eventBuffer.empty())
 	{
-		return MouseEvent();
-	}
-	else
-	{
-		MouseEvent e = this->eventBuffer.front(); //Get first event from buffer
-		this->eventBuffer.pop(); //Remove first event from buffer
-		return e;
-	}
+		eventBuffer.pop();
+	}	
 }

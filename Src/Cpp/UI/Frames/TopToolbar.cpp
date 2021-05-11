@@ -104,6 +104,15 @@ void TopToolbar::Render()
 			ImGui::EndMenu();
 		}
 
+		if (ImGui::BeginMenu("View"))
+		{
+			if (ImGui::MenuItem("Examine Mode", NULL))
+			{
+				SceneManager::mainCamera->GetComponent<CameraControl>()->SetExamineMode(true);
+			}
+
+			ImGui::EndMenu();
+		}
 
 		if (ImGui::BeginMenu("Help"))
 		{

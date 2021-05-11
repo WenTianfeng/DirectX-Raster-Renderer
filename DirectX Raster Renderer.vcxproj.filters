@@ -221,6 +221,9 @@
     <ClCompile Include="Src\Cpp\Graphics\Structures\SamplerState.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
+    <ClCompile Include="Src\Cpp\UI\CustomLogicScripts\UI_CameraControl.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Src\Cpp\Mouse\Mouse.h">
@@ -403,16 +406,28 @@
     <ClInclude Include="Src\Cpp\UI\Structures\DisplayableVariable.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="resource.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Cpp\UI\CustomLogicScripts\UI_CameraControl.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <FxCompile Include="Src\Shaders\PBRTest.hlsl" />
-    <FxCompile Include="Src\Shaders\Error.hlsl" />
-    <FxCompile Include="Src\Shaders\DefaultSkybox.hlsl" />
+    <FxCompile Include="Assets\Shaders\PBRTest.hlsl" />
+    <FxCompile Include="Assets\Shaders\Error.hlsl" />
+    <FxCompile Include="Assets\Shaders\DefaultSkybox.hlsl" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Src\Shaders\LightHelper.hlsli" />
-    <None Include="Src\Shaders\CommonIncludes.hlsli" />
-    <None Include="Src\Shaders\PBR.hlsli" />
-    <None Include="Src\Shaders\IlluminationModels.hlsli" />
+    <None Include="Assets\Shaders\LightHelper.hlsli" />
+    <None Include="Assets\Shaders\CommonIncludes.hlsli" />
+    <None Include="Assets\Shaders\PBR.hlsli" />
+    <None Include="Assets\Shaders\IlluminationModels.hlsli" />
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="Assets\Icon\IconW.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="DirectX Raster Renderer.rc" />
   </ItemGroup>
 </Project>

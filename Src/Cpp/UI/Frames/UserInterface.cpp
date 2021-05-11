@@ -1,6 +1,6 @@
 #include "UserInterface.h"
 
-bool UserInterface::Initialize(HWND hwnd,ID3D11Device* device,ID3D11DeviceContext* deviceContext)
+bool UserInterface::Initialize(HWND hwnd, ID3D11Device* device,ID3D11DeviceContext* deviceContext)
 {
 	IMGUI_CHECKVERSION();
 	ImGui::CreateContext();
@@ -8,7 +8,6 @@ bool UserInterface::Initialize(HWND hwnd,ID3D11Device* device,ID3D11DeviceContex
 	ImGui_ImplWin32_Init(hwnd);
 	ImGui_ImplDX11_Init(device, deviceContext);
 	ImGui::StyleColorsDark();
-
 
 	//¼ÓÔØ×ÖÌå
 	ImFont* defaultFont = io.Fonts->AddFontFromFileTTF("Assets\\Fonts\\Roboto-Medium.ttf", 15.0f, NULL, io.Fonts->GetGlyphRangesChineseFull());

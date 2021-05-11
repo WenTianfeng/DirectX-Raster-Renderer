@@ -1,8 +1,9 @@
 #include "Attributes.h"
 
-Attributes::Attributes(std::string objectName, std::string tag):
+Attributes::Attributes(std::string objectName, std::string tag, bool displayInHierarchy):
 	m_objectName(objectName),
-	m_tag(tag)
+	m_tag(tag),
+	m_displayInHierarchy(displayInHierarchy)
 {
 	this->m_componentName = "Attributes";
 }
@@ -31,4 +32,14 @@ void Attributes::SetObjectName(std::string objectName)
 void Attributes::SetObjectTag(std::string tag)
 {
 	this->m_tag = tag;
+}
+
+void Attributes::SetDisplayInHierarchy(bool displayInHierarchy)
+{
+	this->m_displayInHierarchy = displayInHierarchy;
+}
+
+bool Attributes::IsDisplayInHierarchy() const
+{
+	return m_displayInHierarchy;
 }

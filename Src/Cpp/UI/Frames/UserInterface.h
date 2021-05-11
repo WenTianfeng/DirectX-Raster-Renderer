@@ -10,11 +10,10 @@
 class UserInterface
 {
 public:
-	bool Initialize(HWND hwnd,ID3D11Device* device, ID3D11DeviceContext* deviceContext);
+	bool Initialize(HWND hwnd, ID3D11Device* device, ID3D11DeviceContext* deviceContext);
 	void Render();
 
 private:
-	
 	Inspector* m_inspector = new Inspector();
 	Hierarchy* m_hierarchy = new Hierarchy();
 	TopToolbar* m_topToolbar = new TopToolbar();

@@ -7,13 +7,16 @@
 #include"..\Built-in Components\UI_Transform.h"
 #include"..\Built-in Components\UI_Attributes.h"
 #include"..\Built-in Components\UI_MaterialManager.h"
-#include"..\Built-in Components\UI_Camera.h"
 #include"..\Built-in Components\UI_Light.h"
+#include"..\Built-in Components\UI_Camera.h"
+#include"..\CustomLogicScripts\UI_CameraControl.h"
 
 #include"..\..\Logic\SceneManager.h"
 #include"..\..\Components\Skybox.h"
 #include"..\..\Components\Light.h"
 #include"..\..\Components\Attributes.h"
+#include"..\..\Logic\ObjectScripts\CameraControl.h"
+
 
 class Inspector 
 {

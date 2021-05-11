@@ -40,6 +40,7 @@
     <ClCompile Include="Src\Cpp\UI\Built-in Components\UI_MaterialManager.cpp" />
     <ClCompile Include="Src\Cpp\UI\Built-in Components\UI_MeshRenderer.cpp" />
     <ClCompile Include="Src\Cpp\UI\Built-in Components\UI_Transform.cpp" />
+    <ClCompile Include="Src\Cpp\UI\CustomLogicScripts\UI_CameraControl.cpp" />
     <ClCompile Include="Src\Cpp\UI\Frames\Console.cpp" />
     <ClCompile Include="Src\Cpp\UI\Frames\Hierarchy.cpp" />
     <ClCompile Include="Src\Cpp\UI\ImGui\imgui.cpp" />
@@ -70,6 +71,7 @@
     <ClCompile Include="Src\Cpp\Windows\RenderWindow.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="resource.h" />
     <ClInclude Include="Src\Cpp\Components\Attributes.h" />
     <ClInclude Include="Src\Cpp\Components\Light.h" />
     <ClInclude Include="Src\Cpp\Components\MaterialManager.h" />
@@ -92,6 +94,7 @@
     <ClInclude Include="Src\Cpp\UI\Built-in Components\UI_MaterialManager.h" />
     <ClInclude Include="Src\Cpp\UI\Built-in Components\UI_MeshRenderer.h" />
     <ClInclude Include="Src\Cpp\UI\Built-in Components\UI_Transform.h" />
+    <ClInclude Include="Src\Cpp\UI\CustomLogicScripts\UI_CameraControl.h" />
     <ClInclude Include="Src\Cpp\UI\Frames\Console.h" />
     <ClInclude Include="Src\Cpp\UI\Frames\Hierarchy.h" />
     <ClInclude Include="Src\Cpp\UI\ImGui\imconfig.h" />
@@ -132,7 +135,7 @@
     <ClInclude Include="Src\Cpp\RenderingEngine.h" />
   </ItemGroup>
   <ItemGroup>
-    <FxCompile Include="Src\Shaders\DefaultSkybox.hlsl">
+    <FxCompile Include="Assets\Shaders\DefaultSkybox.hlsl">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Vertex</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Vertex</ShaderType>
@@ -142,7 +145,7 @@
       <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">VS_Main</EntryPointName>
       <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Release|x64'">VS_Main</EntryPointName>
     </FxCompile>
-    <FxCompile Include="Src\Shaders\Error.hlsl">
+    <FxCompile Include="Assets\Shaders\Error.hlsl">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Vertex</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Vertex</ShaderType>
@@ -152,7 +155,7 @@
       <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">VS_Main</EntryPointName>
       <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Release|x64'">VS_Main</EntryPointName>
     </FxCompile>
-    <FxCompile Include="Src\Shaders\PBRTest.hlsl">
+    <FxCompile Include="Assets\Shaders\PBRTest.hlsl">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Vertex</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Vertex</ShaderType>
@@ -164,10 +167,16 @@
     </FxCompile>
   </ItemGroup>
   <ItemGroup>
-    <None Include="Src\Shaders\CommonIncludes.hlsli" />
-    <None Include="Src\Shaders\IlluminationModels.hlsli" />
-    <None Include="Src\Shaders\LightHelper.hlsli" />
-    <None Include="Src\Shaders\PBR.hlsli" />
+    <None Include="Assets\Shaders\CommonIncludes.hlsli" />
+    <None Include="Assets\Shaders\IlluminationModels.hlsli" />
+    <None Include="Assets\Shaders\LightHelper.hlsli" />
+    <None Include="Assets\Shaders\PBR.hlsli" />
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="Assets\Icon\IconW.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="DirectX Raster Renderer.rc" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>

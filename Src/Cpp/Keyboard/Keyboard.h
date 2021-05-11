@@ -21,7 +21,9 @@ public:
 	bool KeyIsPressed(const unsigned char keycode);
 	bool KeyBufferEmpty();
 	bool CharBufferEmpty();
-	KeyboardEvent ReadKey();
+	void CleanEvent();
+
+
 	unsigned char ReadChar();
 	void OnKeyPressed(const unsigned char key);
 	void OnKeyReleased(const unsigned char key);
