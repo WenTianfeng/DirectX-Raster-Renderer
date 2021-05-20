@@ -3,7 +3,7 @@
 #include<DirectXMath.h>
 
 #include"Transform.h"
-#include"..\Object\Object.h"
+#include"..\Logic\Object.h"
 
 class Camera : public Component {
 
@@ -23,6 +23,9 @@ public:
 	DirectX::XMMATRIX GetViewMatrix();
 
 	DirectX::XMMATRIX GetProjectionMatrix();
+
+	DirectX::XMFLOAT3 GetViewPos();
+
 
 private:
 	float m_fovY;

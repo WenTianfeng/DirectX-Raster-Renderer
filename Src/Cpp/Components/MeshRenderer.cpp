@@ -1,18 +1,24 @@
 #include"MeshRenderer.h"
 
 
-MeshRenderer::MeshRenderer(ID3D11Device* device, ID3D11DeviceContext* deviceContext, std::string modelFilePath):
+MeshRenderer::MeshRenderer(ID3D11Device* device, ID3D11DeviceContext* deviceContext, std::string meshFilePath):
 	m_dxDevice(device),
-	m_dxDeviceContext(deviceContext)
+	m_dxDeviceContext(deviceContext),
+	m_meshFilePath(meshFilePath)
 {
 	this->m_componentName = "Mesh Renderer";
 
-	if (!this->LoadModel(modelFilePath))
+
+}
+
+
+void MeshRenderer::Initialize()
+{
+	if (!this->LoadModel(m_meshFilePath))
 	{
 		ErrorLogger::Log("Failed to load model.");
 	}
 }
-
 
 void MeshRenderer::Render()
 {
@@ -63,28 +69,31 @@ void MeshRenderer::Render()
 				#pragma region 设置着色器变换矩阵参数
 
 				//
-				if (pair_name_shaderParameter.first == "CB_VS_TransformMatrix")
+				if (pair_name_shaderParameter.first == "CB_PresetVariables")
 				{
-					CB_VS_TransformMatrix transformMatrix = {};
+					CB_PresetVariables presetVariables = {};
 
 					//更新世界矩阵
 					DirectX::XMMATRIX W = owner->GetComponent<Transform>()->GetLocalToWorldMatrixXM();
-					transformMatrix.world = DirectX::XMMatrixTranspose(W);
+					presetVariables.world = DirectX::XMMatrixTranspose(W);
 
 					//对世界矩阵求逆转置矩阵
 					DirectX::XMMATRIX A = W;
 					A.r[3] = DirectX::g_XMIdentityR3;
-					transformMatrix.worldInverseTranspose = XMMatrixTranspose(XMMatrixTranspose(XMMatrixInverse(nullptr, A)));
+					presetVariables.worldInverseTranspose = XMMatrixTranspose(XMMatrixTranspose(XMMatrixInverse(nullptr, A)));
 
 					//更新视矩阵
-					DirectX::XMMATRIX V = SceneManager::mainCamera->GetComponent<Camera>()->GetViewMatrix();
-					transformMatrix.view = DirectX::XMMatrixTranspose(V);
+					DirectX::XMMATRIX V = owner->GetOwnerManager()->GetMainCamera()->GetComponent<Camera>()->GetViewMatrix();
+					presetVariables.view = DirectX::XMMatrixTranspose(V);
 
 					//更新投影矩阵
-					DirectX::XMMATRIX P = SceneManager::mainCamera->GetComponent<Camera>()->GetProjectionMatrix();
-					transformMatrix.projection = DirectX::XMMatrixTranspose(P);
+					DirectX::XMMATRIX P = owner->GetOwnerManager()->GetMainCamera()->GetComponent<Camera>()->GetProjectionMatrix();
+					presetVariables.projection = DirectX::XMMatrixTranspose(P);
 
-					pair_name_shaderParameter.second->constantBuffer->SetStructure(&transformMatrix, sizeof(CB_VS_TransformMatrix));
+					presetVariables.viewPos = owner->GetOwnerManager()->GetMainCamera()->GetComponent<Camera>()->GetViewPos();
+					presetVariables.padding = 0;
+
+					pair_name_shaderParameter.second->constantBuffer->SetStructure(&presetVariables, sizeof(CB_PresetVariables));
 
 				}
 
@@ -112,6 +121,11 @@ void MeshRenderer::Render()
 		exit(-1);
 
 	}
+}
+
+UINT MeshRenderer::GetMeshCount()
+{
+	return this->m_meshes.size();
 }
 
 

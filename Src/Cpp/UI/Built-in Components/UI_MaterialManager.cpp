@@ -1,5 +1,5 @@
 #include"UI_MaterialManager.h"
-#include"..\..\Tools\FileManagement.h"
+#include"..\..\Tools\FileManager.h"
 
 std::vector<UI_Material> UI_MaterialManager::ui_Materials = {};//初始化 UI_MaterialManager 的材质UI列表静态成员
 
@@ -29,14 +29,17 @@ void UI_Material::Initialize(const Material& material)
 			//=========当资源类型为 ConstantBuffer =========
 			case ShaderParameter::ShaderParameterType::ConstantBuffer:
 			{
+				//如果常量缓冲属于预置变量，则不将其UI化
+				if (pair_name_shaderParameter.first == "CB_PresetVariables")
+				{
+					break;
+				}
+
 				//遍历常量缓冲的变量map，将获取的变量转换为ImGui接受的形式，加入到材质UI变量列表中
 				for (std::map<std::string, ConstantBufferVariable>::value_type pair_name_constantBufferVariable : pair_name_shaderParameter.second->constantBuffer->constantVariablesMap)
 				{
-					if (pair_name_constantBufferVariable.second.variableClass != D3D_SHADER_VARIABLE_CLASS::D3D10_SVC_MATRIX_COLUMNS)
-					{
-						DisplayableVariable displayableVariable(pair_name_constantBufferVariable.second, pair_name_shaderParameter.second->constantBuffer);
-						displayableVariables.push_back(displayableVariable);
-					}
+					DisplayableVariable displayableVariable(pair_name_constantBufferVariable.second, pair_name_shaderParameter.second->constantBuffer);
+					displayableVariables.push_back(displayableVariable);	
 				}
 			}
 			break;
@@ -72,9 +75,9 @@ void UI_Material::Render()
 	if (ImGui::BeginCombo("Shader", shaderFilePath.c_str(), 0))
 	{
 		std::vector<std::string> files;
-		std::string filePath = "Src\\Shaders";
+		std::string filePath = ShaderFiles;
 		std::string format = ".hlsl";
-		GetAllFormatFiles(filePath, files, format);
+		FileManager::GetFileNamesByFormat(filePath, files, format);
 
 		static int shaderFIlesSelected = -1;
 
@@ -84,7 +87,7 @@ void UI_Material::Render()
 			if (ImGui::Selectable(files[n].c_str(), shaderFIlesSelected == n))
 			{
 				shaderFIlesSelected = n;
-				shaderFilePath = files[n];//设置预览文件名为选择的文件
+				shaderFilePath = ShaderFiles+files[n];//设置预览文件名为选择的文件
 			}
 		}
 
@@ -171,36 +174,36 @@ void UI_Material::Render()
 			{
 
 				//显示纹理文件选择框
-				if (ImGui::BeginCombo(" ", displayableVariables[i].textureFile.c_str(), 0))
+				if (ImGui::BeginCombo(displayableVariables[i].variableName.c_str(), displayableVariables[i].textureFile.c_str(), 0))
 				{
 					//检测资源文件目录下所有纹理文件
 					std::vector<std::string> files;//获取的文件路径列表
-					std::string filePath = "Assets\\Textures";//搜索路径
+					files.push_back("None");
+
+					std::string filePath = CustomizedTextureFiles;//搜索路径
 
 					std::string format = ".png";//搜索文件扩展名
-					GetAllFormatFiles(filePath, files, format);//搜索文件
+					FileManager::GetFileNamesByFormat(filePath, files, format);//搜索文件
+
 					format = ".jpg";//搜索文件扩展名
-					GetAllFormatFiles(filePath, files, format);//搜索文件
+					FileManager::GetFileNamesByFormat(filePath, files, format);//搜索文件
+
+
 
 					static int textureFileSelected = -1;
 
 					//绘制纹理文件选择框
 					for (UINT n = 0; n < files.size(); n++)
 					{
-						if (ImGui::Selectable(files[n].c_str(), textureFileSelected == n))
+						if (ImGui::Selectable((files[n]).c_str(), textureFileSelected == n))
 						{
 							textureFileSelected = n;
-							displayableVariables[i].textureFile = files[n];//设置预览文件名为选择的文件
+							displayableVariables[i].textureFile = filePath+files[n];//设置预览文件名为选择的文件
 						}
 					}
 
 					ImGui::EndCombo();
 				}
-
-
-				//显示纹理变量名
-				ImGui::SameLine();
-				ImGui::Text(displayableVariables[i].variableName.c_str());
 
 				//显示纹理缩略图
 				if (displayableVariables[i].textureFile != "None")

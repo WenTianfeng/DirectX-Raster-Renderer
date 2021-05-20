@@ -21,8 +21,13 @@
 class MeshRenderer : public Component
 {
 public:
-	MeshRenderer(ID3D11Device* device, ID3D11DeviceContext* deviceContext, std::string modelFilePath);
+	MeshRenderer(ID3D11Device* device, ID3D11DeviceContext* deviceContext, std::string meshFilePath);
+	
+	void Initialize();
 	void Render();
+	
+	UINT GetMeshCount();
+
 
 protected:
 	/// <summary>
@@ -48,14 +53,12 @@ protected:
 	/// <returns>自定义Mesh结构对象</returns>
 	Mesh ProcessMesh(aiMesh* mesh, const aiScene* scene);
 
-protected:
-	//Mesh 列表
-	std::vector<Mesh> m_meshes;
 
-	//DirectX 设备
-	ID3D11Device* m_dxDevice = nullptr;
-	//DirectX 上下文
-	ID3D11DeviceContext* m_dxDeviceContext = nullptr;
+protected:
+	std::string m_meshFilePath;
+	std::vector<Mesh> m_meshes;//Mesh 列表
+	ID3D11Device* m_dxDevice = nullptr;//DirectX 设备
+	ID3D11DeviceContext* m_dxDeviceContext = nullptr;//DirectX 上下文
 };
 
 

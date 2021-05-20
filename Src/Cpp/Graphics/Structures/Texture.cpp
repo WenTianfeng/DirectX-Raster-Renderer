@@ -9,21 +9,33 @@ Texture::Texture(ID3D11Device* dxDevice, UINT slot):
 
 void Texture::Instantiate(std::string textureFilePath)
 {
-	//清空资源
-	m_shaderResourceView.Reset();
+	if (textureFilePath.empty())
+	{
+		return;
+	}
+	else if (textureFilePath == "None")
+	{
+		//清空资源
+		m_shaderResourceView.Reset();
+		this->m_textureFilePath = textureFilePath;
+	}
+	else
+	{
+		this->m_textureFilePath = textureFilePath;
 
-	HRESULT hr;
+		HRESULT hr;
+		hr = DirectX::CreateWICTextureFromFile(m_dxDevice, DataTypeConverter::StringToWideString(m_textureFilePath).c_str(), nullptr, m_shaderResourceView.GetAddressOf());
+		//从文件路径加载文件，填充 ID3D11Texture2D
+		//hr = DirectX::CreateWICTextureFromFileEx(m_dxDevice, DataTypeConverter::StringToWideString(m_textureFileName).c_str(),
+		//	0, D3D11_USAGE_STAGING,
+		//	0, D3D11_CPU_ACCESS_WRITE | D3D11_CPU_ACCESS_READ,
+		//	0, DirectX::WIC_LOADER_FLAGS::WIC_LOADER_DEFAULT,
+		//	reinterpret_cast<ID3D11Resource**>(m_texture2D.ReleaseAndGetAddressOf()), m_shaderResourceView.ReleaseAndGetAddressOf());
 
-	this->m_textureFilePath = textureFilePath;
+	}
 
-	//从文件路径加载文件，填充 ID3D11Texture2D
-	//hr = DirectX::CreateWICTextureFromFileEx(m_dxDevice, DataTypeConverter::StringToWideString(m_textureFileName).c_str(),
-	//	0, D3D11_USAGE_STAGING,
-	//	0, D3D11_CPU_ACCESS_WRITE | D3D11_CPU_ACCESS_READ,
-	//	0, DirectX::WIC_LOADER_FLAGS::WIC_LOADER_DEFAULT,
-	//	reinterpret_cast<ID3D11Resource**>(m_texture2D.ReleaseAndGetAddressOf()), m_shaderResourceView.ReleaseAndGetAddressOf());
 
-	hr = DirectX::CreateWICTextureFromFile(m_dxDevice, DataTypeConverter::StringToWideString(m_textureFilePath).c_str(), nullptr, m_shaderResourceView.GetAddressOf());
+	
 }
 
 void Texture::Bind(ID3D11DeviceContext* deviceContext, Shader::ShaderType shaderType)

@@ -140,7 +140,7 @@
     <ClCompile Include="Src\Cpp\Windows\RenderWindow.cpp">
       <Filter>源文件\Windows</Filter>
     </ClCompile>
-    <ClCompile Include="Src\Cpp\Object\Object.cpp">
+    <ClCompile Include="Src\Cpp\Logic\Object.cpp">
       <Filter>源文件\Object</Filter>
     </ClCompile>
     <ClCompile Include="Src\Cpp\Graphics\Helpers\ShaderProcessor.cpp">
@@ -222,6 +222,9 @@
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="Src\Cpp\UI\CustomLogicScripts\UI_CameraControl.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Cpp\Tools\FileManager.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>
@@ -313,7 +316,7 @@
     <ClInclude Include="Src\Cpp\Components\Transform.h">
       <Filter>头文件\Components</Filter>
     </ClInclude>
-    <ClInclude Include="Src\Cpp\Object\Object.h">
+    <ClInclude Include="Src\Cpp\Logic\Object.h">
       <Filter>头文件\Object</Filter>
     </ClInclude>
     <ClInclude Include="Src\Cpp\Time\Timer.h">
@@ -400,7 +403,7 @@
     <ClInclude Include="Src\Cpp\Graphics\Structures\SamplerState.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="Src\Cpp\Tools\FileManagement.h">
+    <ClInclude Include="Src\Cpp\Tools\FileManager.h">
       <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="Src\Cpp\UI\Structures\DisplayableVariable.h">
@@ -417,11 +420,12 @@
     <FxCompile Include="Assets\Shaders\PBRTest.hlsl" />
     <FxCompile Include="Assets\Shaders\Error.hlsl" />
     <FxCompile Include="Assets\Shaders\DefaultSkybox.hlsl" />
+    <FxCompile Include="Assets\Shaders\PureColor.hlsl" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\Shaders\LightHelper.hlsli" />
     <None Include="Assets\Shaders\CommonIncludes.hlsli" />
-    <None Include="Assets\Shaders\PBR.hlsli" />
+    <None Include="Assets\Shaders\PBRHelper.hlsli" />
     <None Include="Assets\Shaders\IlluminationModels.hlsli" />
   </ItemGroup>
   <ItemGroup>

@@ -11,7 +11,9 @@ VertexOutput VS_Main(VertexInput input)
     output.uv = input.texcoord;
     output.world_normal = mul(input.normal, (float3x3) ObjectToWorld_InverseTranspose);
     output.world_pos = mul(float4(input.vertex, 1.0), ObjectToWorld).xyz;
-
+    output.world_tangent = mul(input.tangent, ObjectToWorld).xyz;
+    output.world_binormal = cross(output.world_normal, output.world_tangent) * input.tangent.w;
+    
     return output;
 }
 

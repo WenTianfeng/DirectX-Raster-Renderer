@@ -25,6 +25,10 @@ public:
 	std::vector<std::string> builtInComponentNames = { "Transform","MeshRenderer","MaterialManager" };
 
 public:
+	void Initialize(SceneManager* sceneManager);
 	void Render();
 	void AddComponentToObject(Object* object, std::string componentName);
+
+private:
+	SceneManager* m_sceneManager = nullptr;
 };

@@ -9,10 +9,12 @@ struct CB_PS_Light
 	float range;
 };
 
-struct CB_VS_TransformMatrix
+struct CB_PresetVariables
 {
 	DirectX::XMMATRIX world;
 	DirectX::XMMATRIX view;
 	DirectX::XMMATRIX projection;
 	DirectX::XMMATRIX worldInverseTranspose;
+	DirectX::XMFLOAT3 viewPos;
+	float padding;
 };

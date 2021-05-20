@@ -1,7 +1,8 @@
 ﻿#include "Graphics.h"
 #include"..\Components\Light.h"
 
-Graphics::Graphics()
+Graphics::Graphics():
+	m_sceneManager(nullptr)
 {
 
 }
@@ -10,8 +11,10 @@ Graphics::~Graphics()
 {
 }
 
-bool Graphics::Initialize(HWND hwnd, int width, int height)
+bool Graphics::Initialize(HWND hwnd, int width, int height, SceneManager* sceneManager)
 {
+	m_sceneManager = sceneManager;
+
 	//初始化DirectX
 	if (!InitializeDirectX(hwnd, width, height)) 
 	{
@@ -25,7 +28,7 @@ bool Graphics::Initialize(HWND hwnd, int width, int height)
 	}
 
 	//初始化UI
-	if (!InitializeUI(hwnd)) 
+	if (!InitializeUI(hwnd, sceneManager))
 	{
 		return false;
 	}
@@ -178,12 +181,12 @@ void Graphics::UpdateEffect(std::vector<Object*> lights)
 
 }
 
-bool Graphics::InitializeUI(HWND hwnd)
+bool Graphics::InitializeUI(HWND hwnd, SceneManager* sceneManager)
 {
-	return this->m_userInterface->Initialize(hwnd, this->m_dxDevice.Get(), this->m_dxDeviceContext.Get());
+	return m_userInterface->Initialize(hwnd, this->m_dxDevice.Get(), this->m_dxDeviceContext.Get(), sceneManager);
 }
 
-void Graphics::RenderFrame(std::vector<Object*> objects, std::vector<Object*> lights)
+void Graphics::Render()
 {
 	//刷新渲染目标
 	m_dxDeviceContext->ClearRenderTargetView(m_dxRenderTargetView.Get(), this->m_renderTargetBackgroundColor);
@@ -191,10 +194,10 @@ void Graphics::RenderFrame(std::vector<Object*> objects, std::vector<Object*> li
 	m_dxDeviceContext->ClearDepthStencilView(m_dxDepthStencilView.Get(), D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
 
 	//更新渲染所需成员状态
-	UpdateEffect(lights);
+	UpdateEffect(m_sceneManager->GetLights());
 
 	//=======场景对象渲染=======
-	for (auto object : objects)
+	for (auto object : m_sceneManager->GetObjects())
 	{
 		object->Render();
 	}

@@ -7,13 +7,13 @@ RenderingEngine* RenderingEngine::m_instance = nullptr;
 RenderingEngine::RenderingEngine():
 	m_paused(false),
 	renderWindow(nullptr),
-	sceneManager(nullptr),
 	graphics(nullptr),
+	sceneManager(nullptr),
 	timer(nullptr)
 {
 	renderWindow = new RenderWindow();
-	sceneManager = new SceneManager();
 	graphics = new Graphics();
+	sceneManager = new SceneManager();
 	timer = new Timer();
 
 }
@@ -39,7 +39,7 @@ bool RenderingEngine::Initialize(HINSTANCE hInstance,std::string windowCaption,s
 	}
 
 	//初始化图形
-	if (!graphics->Initialize(renderWindow->GetWindowHandle(), width, height)) 
+	if (!graphics->Initialize(renderWindow->GetWindowHandle(), width, height, sceneManager))
 	{
 		return false;
 	}
@@ -95,6 +95,18 @@ int RenderingEngine::Run()
 	return 0;
 }
 
+void RenderingEngine::Update(float dt)
+{
+	this->sceneManager->Update(dt);
+
+}
+
+void RenderingEngine::Render()
+{
+	//图形渲染
+	this->graphics->Render();
+
+}
 
 LRESULT CALLBACK MainWndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
 {
@@ -323,13 +335,3 @@ LRESULT RenderingEngine::EngineMsgProc(HWND hwnd, UINT msg, WPARAM wParam, LPARA
 	}
 }
 
-void RenderingEngine::Update(float dt)
-{
-	this->sceneManager->Update(dt);
-
-}
-
-void RenderingEngine::Render()
-{
-	this->graphics->RenderFrame(SceneManager::objects,SceneManager::lights);
-}

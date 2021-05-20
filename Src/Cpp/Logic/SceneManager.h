@@ -4,8 +4,8 @@
 #include<DirectXMath.h>
 #include <d3d11_1.h>//DirectX 11.1相关引用（https://docs.microsoft.com/en-us/windows/win32/api/d3d11_1/）
 
+#include"..\Logic\Object.h"
 #include"..\Tools\ErrorLogger.h"
-#include"..\Object\Object.h"
 
 
 class SceneManager
@@ -37,18 +37,35 @@ public:
 	/// <param name="clientHeight">新窗口高度</param>
 	void OnWindowResize(int clientWidth, int clientHeight);
 
+
+	//Get
+	Object* GetMainCamera();
+	std::vector<Object*> GetLights();
+	std::vector<Object*> GetObjects();
+
+	void AddNewObject(std::string objectName, std::string objectMeshFilePath = "");
+
 private:
 	/// <summary>
 	/// 场景内容初始化
 	/// </summary>
 	/// <returns>相关内容是否初始化成功</returns>
-	bool InitializeScene(ID3D11Device* device, ID3D11DeviceContext* deviceContext);
+	bool InitializeScene();
 
 	UINT GetNewObjectID();
+	std::string ObtainNewObjectNameWithPostfix(std::string objectName);
 
-public:
-	static Object* mainCamera;//场景主相机
-	static std::vector<Object*> lights;//场景光源列表
-	static std::vector<Object*> objects;//场景对象列表
+private:
+	ID3D11Device* m_dxDevice = nullptr;//Dx设备
+	ID3D11DeviceContext* m_dxDeviceContext = nullptr;//Dx上下文
+	Object* m_mainCamera;//场景主相机
+	std::vector<Object*> m_lights;//场景光源列表
+	std::vector<Object*> m_objects;//场景对象列表
 
+
+};
+
+struct PostfixFlag
+{
+	bool flags[50] = {};
 };

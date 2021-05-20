@@ -1,8 +1,11 @@
 #include"Inspector.h"
 
-
-
 int Inspector::preSelected = -1;
+
+void Inspector::Initialize(SceneManager* sceneManager)
+{
+	this->m_sceneManager = sceneManager;
+}
 
 void Inspector::Render()
 {
@@ -24,7 +27,7 @@ void Inspector::Render()
 		if (preSelected != -1)
 		{
 			//获取从Hierarchy中选中的Object对象
-			Object* object = SceneManager::objects[preSelected];
+			Object* object = m_sceneManager->GetObjects()[preSelected];
 
 //============如果Object拥有对应组件，则显示对应UI===========
 
@@ -247,14 +250,28 @@ void Inspector::Render()
 			{
 				ImGui::MenuItem("Built-in Components", NULL, false, false);
 
-				static int componentNameSelected = -1;
-
-				//绘制纹理文件选择框
+				//绘制组件选择框
 				for (UINT n = 0; n < builtInComponentNames.size(); n++)
 				{
-					if (ImGui::Selectable(builtInComponentNames[n].c_str(), componentNameSelected == n))
+					if (ImGui::MenuItem(builtInComponentNames[n].c_str()))
 					{
-						componentNameSelected = n;
+						//组件添加
+						if (builtInComponentNames[n] == "MeshRenderer")
+						{
+							//如果对象没有此类组件
+							if (!object->HasComponent<MeshRenderer>())
+							{
+
+							}
+							else
+							{
+								//否则打印错误信息
+							}
+						}
+						else if (builtInComponentNames[n] == "MaterialManager")
+						{
+
+						}
 					}
 				}
 

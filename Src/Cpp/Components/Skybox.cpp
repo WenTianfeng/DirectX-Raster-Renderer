@@ -113,37 +113,40 @@ void Skybox::Render()
 
 			//=============着色器资源更新==============
 
-			for (std::map<std::string, ShaderParameter*>::value_type value : materialManager->materials[i].shaderParametersMap)
+			for (std::map<std::string, ShaderParameter*>::value_type pair_name_shaderParameter : materialManager->materials[i].shaderParametersMap)
 			{
-				value.second->Bind(m_dxDeviceContext);
+				pair_name_shaderParameter.second->Bind(m_dxDeviceContext);
 
-				if (value.second->GetName() == "CB_VS_TransformMatrix")
+				if (pair_name_shaderParameter.first == "CB_PresetVariables")
 				{
-					CB_VS_TransformMatrix transformMatrix = {};
+					CB_PresetVariables presetVariables = {};
 
 					//更新世界矩阵
 					DirectX::XMMATRIX W = owner->GetComponent<Transform>()->GetLocalToWorldMatrixXM();
-					transformMatrix.world = DirectX::XMMatrixTranspose(W);
+					presetVariables.world = DirectX::XMMatrixTranspose(W);
 
 					//对世界矩阵求逆转置矩阵
 					DirectX::XMMATRIX A = W;
 					A.r[3] = DirectX::g_XMIdentityR3;
-					transformMatrix.worldInverseTranspose = XMMatrixTranspose(XMMatrixTranspose(XMMatrixInverse(nullptr, A)));
+					presetVariables.worldInverseTranspose = XMMatrixTranspose(XMMatrixTranspose(XMMatrixInverse(nullptr, A)));
 
 					//更新视矩阵
-					DirectX::XMMATRIX V = SceneManager::mainCamera->GetComponent<Camera>()->GetViewMatrix();
-					transformMatrix.view = DirectX::XMMatrixTranspose(V);
+					DirectX::XMMATRIX V = owner->GetOwnerManager()->GetMainCamera()->GetComponent<Camera>()->GetViewMatrix();
+					presetVariables.view = DirectX::XMMatrixTranspose(V);
 
 					//更新投影矩阵
-					DirectX::XMMATRIX P = SceneManager::mainCamera->GetComponent<Camera>()->GetProjectionMatrix();
-					transformMatrix.projection = DirectX::XMMatrixTranspose(P);
+					DirectX::XMMATRIX P = owner->GetOwnerManager()->GetMainCamera()->GetComponent<Camera>()->GetProjectionMatrix();
+					presetVariables.projection = DirectX::XMMatrixTranspose(P);
 
-					value.second->constantBuffer->SetStructure(&transformMatrix, sizeof(CB_VS_TransformMatrix));
+					presetVariables.viewPos = owner->GetOwnerManager()->GetMainCamera()->GetComponent<Camera>()->GetViewPos();
+					presetVariables.padding = 0;
+
+					pair_name_shaderParameter.second->constantBuffer->SetStructure(&presetVariables, sizeof(CB_PresetVariables));
 
 				}
 
 				//更新 ShaderParameter 包含的特定类型的资源
-				value.second->UpdateParameterResource(this->m_dxDeviceContext);
+				pair_name_shaderParameter.second->UpdateParameterResource(this->m_dxDeviceContext);
 			}
 
 			//===============绘制================

@@ -3,7 +3,7 @@
 #include<DirectXMath.h>
 
 #include"Transform.h"
-#include"..\Object\Object.h"
+#include"..\Logic\Object.h"
 
 class Light : public Component
 {

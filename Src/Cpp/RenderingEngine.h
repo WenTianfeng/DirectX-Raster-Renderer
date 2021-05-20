@@ -6,6 +6,7 @@
 #include"Logic\SceneManager.h"
 
 
+
 class RenderingEngine 
 {
 public:
@@ -62,8 +63,8 @@ private:
 public:
 
 	RenderWindow* renderWindow;//引擎程序使用的窗口实例
-	SceneManager* sceneManager;//场景管理使用到实例
 	Graphics* graphics;//引擎程序使用的渲染实例
+	SceneManager* sceneManager;//场景管理使用到实例
 	Timer* timer;//计时器
 
 private:

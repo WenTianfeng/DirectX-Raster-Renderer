@@ -60,3 +60,8 @@ DirectX::XMMATRIX Camera::GetProjectionMatrix()
 {
 	return DirectX::XMMatrixPerspectiveFovLH(m_fovY, m_aspect, m_nearClip, m_farClip);
 }
+
+DirectX::XMFLOAT3 Camera::GetViewPos()
+{
+	return this->owner->GetComponent<Transform>()->GetPosition();
+}

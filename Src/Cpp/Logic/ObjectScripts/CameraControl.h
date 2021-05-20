@@ -1,7 +1,7 @@
 #pragma once
 
 #include"..\..\Components\Transform.h"
-#include"..\..\Object\Object.h"
+#include"..\..\Logic\Object.h"
 
 #include"..\..\Keyboard\Keyboard.h"
 #include"..\..\Mouse\Mouse.h"

@@ -14,7 +14,7 @@
 #include<vector>
 
 #include"..\Tools\ErrorLogger.h"
-#include"..\Object\Object.h"
+#include"..\Logic\Object.h"
 
 #include"Structures\StructuredBuffer.h"
 #include"Structures\StructuredBufferTypes.h"
@@ -37,13 +37,13 @@ public:
 	/// <param name="width">窗口宽度</param>
 	/// <param name="height">窗口高度</param>
 	/// <returns>所有相关内容是否初始化成功</returns>
-	bool Initialize(HWND hwnd, int width, int height);
+	bool Initialize(HWND hwnd, int width, int height, SceneManager* sceneManager);
 
 	/// <summary>
 	/// 帧渲染
 	/// </summary>
 	/// <param name="objects">对象列表（从SceneManager获取）</param>
-	void RenderFrame(std::vector<Object*> objects, std::vector<Object*> lights);
+	void Render();
 
 	/// <summary>
 	/// 窗口缩放后调用，根据新窗口大小修改DirectX资源属性
@@ -86,7 +86,7 @@ private:
 	/// </summary>
 	/// <param name="hwnd">窗口句柄</param>
 	/// <returns>相关内容是否初始化成功</returns>
-	bool InitializeUI(HWND hwnd);
+	bool InitializeUI(HWND hwnd, SceneManager* sceneManager);
 
 
 
@@ -105,7 +105,7 @@ private:
 	StructuredBuffer<SB_PS_Light> m_lightSB;
 	
 private:
-	//UI相关
+	SceneManager* m_sceneManager;
 	UserInterface* m_userInterface = new UserInterface();//UI对象
 
 };

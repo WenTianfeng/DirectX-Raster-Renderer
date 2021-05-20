@@ -95,6 +95,7 @@ struct DisplayableVariable
 
 		case D3D_SHADER_VARIABLE_TYPE::D3D_SVT_TEXTURE:
 		{
+			//如果经过UI修改后的纹理路径和之前不同，则重新实例化纹理
 			if (textureFile != ownerTexture->GetTextureFilePath())
 			{
 				ownerTexture->Instantiate(textureFile);

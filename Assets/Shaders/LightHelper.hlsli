@@ -37,7 +37,7 @@ DirectIlluminationData ProcessDirectionalLight(Light light,float3 pixelWorldPos)
     DirectIlluminationData lightData;
     
     lightData.color = light.Color;
-    lightData.direction = light.Direction;
+    lightData.direction = normalize(-light.Direction);
     
     return lightData;
 }
@@ -48,7 +48,7 @@ DirectIlluminationData ProcessPointlLight(Light light, float3 pixelWorldPos)
     DirectIlluminationData lightData;
         
     lightData.color = light.Color;
-    lightData.direction = light.Direction;
+    lightData.direction = normalize(light.Position - pixelWorldPos);
     
     return lightData;
 }

@@ -1,8 +1,14 @@
 #include "TopToolbar.h"
+#include"..\..\Tools\FileManager.h"
 
 bool TopToolbar::showStyleSettingPanel = false;
 bool TopToolbar::showRealTimeRenderingSettingPanel = false;
 bool TopToolbar::showOfflineRenderingSettingPanel = false;
+
+void TopToolbar::Initialize(SceneManager* sceneManager)
+{
+	this->m_sceneManager = sceneManager;
+}
 
 void TopToolbar::Render()
 {
@@ -77,20 +83,45 @@ void TopToolbar::Render()
 
 		if (ImGui::BeginMenu("Object"))
 		{
-			if (ImGui::BeginMenu("Create 3D Object"))
+			if (ImGui::BeginMenu("Create Basic Object"))
 			{
-				ImGui::MenuItem("Plane");
-				ImGui::MenuItem("Box");
-				ImGui::MenuItem("Sphere");
-				ImGui::MenuItem("Cylinder");
-				ImGui::MenuItem("Capsule");
+				std::vector<std::string> files;
+				std::string filePath = PresetMeshFiles;
+				std::string format = ".fbx";
+				FileManager::GetFileNamesByFormat(filePath, files, format);
+
+				//绘制着色器文件选择框
+				for (UINT n = 0; n < files.size(); n++)
+				{
+					if (ImGui::MenuItem(files[n].c_str()))
+					{
+						std::string fileName = files[n];
+						fileName.erase(fileName.size() - format.size());
+
+						this->m_sceneManager->AddNewObject(fileName, PresetMeshFiles + files[n]);
+					}
+				}
 
 				ImGui::EndMenu();
 			}
 
-			if (ImGui::MenuItem("Load Model", NULL))
+			if (ImGui::BeginMenu("Load Model"))
 			{
-				//打开文件加载窗口
+				std::vector<std::string> files;
+				std::string filePath = CustomizedMeshFiles;
+				std::string format = ".fbx";
+				FileManager::GetFilePathsByFormat(filePath, files, format);
+
+				//绘制着色器文件选择框
+				for (UINT n = 0; n < files.size(); n++)
+				{
+					if (ImGui::MenuItem(files[n].c_str())) 
+					{
+						//加载模型至场景	
+					}
+				}
+
+				ImGui::EndMenu();
 			}
 
 			ImGui::EndMenu();
@@ -108,7 +139,7 @@ void TopToolbar::Render()
 		{
 			if (ImGui::MenuItem("Examine Mode", NULL))
 			{
-				SceneManager::mainCamera->GetComponent<CameraControl>()->SetExamineMode(true);
+				m_sceneManager->GetMainCamera()->GetComponent<CameraControl>()->SetExamineMode(true);
 			}
 
 			ImGui::EndMenu();

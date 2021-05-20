@@ -15,6 +15,7 @@ public:
 	static bool showOfflineRenderingSettingPanel;
 
 public:
+	void Initialize(SceneManager* sceneManager);
 	void Render();
 
 private:
@@ -22,4 +23,7 @@ private:
 	void ShowStyleSettingPanel(bool* p_open);
 	void ShowRealTimeRenderingSettingPanel(bool* p_open);
 	void ShowOfflineRenderingSettingPanel(bool* p_open);
+
+private:
+	SceneManager* m_sceneManager;
 };

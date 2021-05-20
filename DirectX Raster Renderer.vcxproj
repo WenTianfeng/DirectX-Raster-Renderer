@@ -34,6 +34,7 @@
     <ClCompile Include="Src\Cpp\Graphics\Structures\Texture.cpp" />
     <ClCompile Include="Src\Cpp\Logic\ObjectScripts\CameraControl.cpp" />
     <ClCompile Include="Src\Cpp\Logic\SceneManager.cpp" />
+    <ClCompile Include="Src\Cpp\Tools\FileManager.cpp" />
     <ClCompile Include="Src\Cpp\UI\Built-in Components\UI_Attributes.cpp" />
     <ClCompile Include="Src\Cpp\UI\Built-in Components\UI_Camera.cpp" />
     <ClCompile Include="Src\Cpp\UI\Built-in Components\UI_Light.cpp" />
@@ -59,7 +60,7 @@
     <ClCompile Include="Src\Cpp\Keyboard\Keyboard.cpp" />
     <ClCompile Include="Src\Cpp\Keyboard\KeyboardEvent.cpp" />
     <ClCompile Include="Src\Cpp\Components\Camera.cpp" />
-    <ClCompile Include="Src\Cpp\Object\Object.cpp" />
+    <ClCompile Include="Src\Cpp\Logic\Object.cpp" />
     <ClCompile Include="Src\Cpp\Components\Transform.cpp" />
     <ClCompile Include="src\cpp\Main.cpp" />
     <ClCompile Include="Src\Cpp\Mouse\Mouse.cpp" />
@@ -86,7 +87,7 @@
     <ClInclude Include="Src\Cpp\Graphics\Structures\Texture.h" />
     <ClInclude Include="Src\Cpp\Logic\ObjectScripts\CameraControl.h" />
     <ClInclude Include="Src\Cpp\Logic\SceneManager.h" />
-    <ClInclude Include="Src\Cpp\Tools\FileManagement.h" />
+    <ClInclude Include="Src\Cpp\Tools\FileManager.h" />
     <ClInclude Include="Src\Cpp\UI\Built-in Components\UI_Attributes.h" />
     <ClInclude Include="Src\Cpp\UI\Built-in Components\UI_Camera.h" />
     <ClInclude Include="Src\Cpp\UI\Built-in Components\UI_Component.h" />
@@ -120,7 +121,7 @@
     <ClInclude Include="Src\Cpp\UI\Frames\UserInterface.h" />
     <ClInclude Include="Src\Cpp\Components\Camera.h" />
     <ClInclude Include="Src\Cpp\Components\Component.h" />
-    <ClInclude Include="Src\Cpp\Object\Object.h" />
+    <ClInclude Include="Src\Cpp\Logic\Object.h" />
     <ClInclude Include="Src\Cpp\Components\Transform.h" />
     <ClInclude Include="Src\Cpp\Keyboard\Keyboard.h" />
     <ClInclude Include="Src\Cpp\Keyboard\KeyboardEvent.h" />
@@ -135,6 +136,16 @@
     <ClInclude Include="Src\Cpp\RenderingEngine.h" />
   </ItemGroup>
   <ItemGroup>
+    <FxCompile Include="Assets\Shaders\PureColor.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Vertex</ShaderType>
+      <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">VS_Main</EntryPointName>
+      <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">VS_Main</EntryPointName>
+      <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">VS_Main</EntryPointName>
+      <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Release|x64'">VS_Main</EntryPointName>
+    </FxCompile>
     <FxCompile Include="Assets\Shaders\DefaultSkybox.hlsl">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Vertex</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>
@@ -170,7 +181,7 @@
     <None Include="Assets\Shaders\CommonIncludes.hlsli" />
     <None Include="Assets\Shaders\IlluminationModels.hlsli" />
     <None Include="Assets\Shaders\LightHelper.hlsli" />
-    <None Include="Assets\Shaders\PBR.hlsli" />
+    <None Include="Assets\Shaders\PBRHelper.hlsli" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="Assets\Icon\IconW.ico" />
