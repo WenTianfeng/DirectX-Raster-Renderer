@@ -221,9 +221,6 @@
     <ClCompile Include="Src\Cpp\Graphics\Structures\SamplerState.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="Src\Cpp\UI\CustomLogicScripts\UI_CameraControl.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
     <ClCompile Include="Src\Cpp\Tools\FileManager.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
@@ -410,9 +407,6 @@
       <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="resource.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="Src\Cpp\UI\CustomLogicScripts\UI_CameraControl.h">
       <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>

@@ -20,8 +20,6 @@ public:
 		Move,
 		RAW_MOVE,
 		Invalid
-	
-	
 	};
 
 private:

@@ -31,6 +31,13 @@ void MeshRenderer::Render()
 		//遍历拥有的所有 Mesh
 		for (UINT i = 0; i < this->m_meshes.size(); i++)
 		{
+			//===============缓冲设置================
+			//设置顶点缓冲
+			UINT offsets = 0;
+			this->m_dxDeviceContext->IASetVertexBuffers(0, 1, m_meshes[i].GetVertexBuffer().GetAddressOf(), m_meshes[i].GetVertexBuffer().StridePtr(), &offsets);
+
+			//设置索引缓冲
+			this->m_dxDeviceContext->IASetIndexBuffer(m_meshes[i].GetIndexBuffer().Get(), DXGI_FORMAT_R32_UINT, 0);
 
 			//================着色器设置================
 			materialManager->materials[i].BindShaders(m_dxDeviceContext);
@@ -48,14 +55,8 @@ void MeshRenderer::Render()
 			//设置混合状态
 			this->m_dxDeviceContext->OMSetBlendState(materialManager->materials[i].GetBlendState(), nullptr, 0xffffffff);
 
-
-			//===============缓冲设置================
-			//设置顶点缓冲
-			UINT offsets = 0;
-			this->m_dxDeviceContext->IASetVertexBuffers(0, 1, m_meshes[i].GetVertexBuffer().GetAddressOf(), m_meshes[i].GetVertexBuffer().StridePtr(), &offsets);
-
-			//设置索引缓冲
-			this->m_dxDeviceContext->IASetIndexBuffer(m_meshes[i].GetIndexBuffer().Get(), DXGI_FORMAT_R32_UINT, 0);
+			//设置光栅化状态
+			this->m_dxDeviceContext->RSSetState(materialManager->materials[i].GetRasterizerState());
 
 
 			//=============着色器资源更新==============

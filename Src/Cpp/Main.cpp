@@ -1,10 +1,9 @@
 ﻿#include"RenderingEngine.h"
 
-int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE prevInstance, _In_ LPSTR cmdLine, _In_ int showCmd) {
-	// 这些参数不使用
-	UNREFERENCED_PARAMETER(prevInstance);
-	UNREFERENCED_PARAMETER(cmdLine);
-	UNREFERENCED_PARAMETER(showCmd);
+int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _In_ LPSTR lpCmdLine, _In_ int nShowCmd) {
+	UNREFERENCED_PARAMETER(hPrevInstance);
+	UNREFERENCED_PARAMETER(lpCmdLine);
+	UNREFERENCED_PARAMETER(nShowCmd);
 	// 允许在Debug版本进行运行时内存分配和泄漏检测
 #if defined(DEBUG) | defined(_DEBUG)
 	_CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
@@ -12,16 +11,15 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE prevInstance, _I
 
 	try
 	{
-		//引擎初始化
-		RenderingEngine::GetInstance()->Initialize(hInstance, "StemCell Engine v-1.00", "WndClassName", 1800, 900);
+		//渲染引擎初始化
+		RenderingEngine::GetInstance()->Initialize(hInstance, "StemCell Engine", "WndClassName", 1200, 800);
 	}
 	catch (COMException& exception)
 	{
 		ErrorLogger::Log(exception);
 		return -1;
 	}
-	//引擎执行
+	//渲染引擎运行
 	return RenderingEngine::GetInstance()->Run();
 	
-
 }

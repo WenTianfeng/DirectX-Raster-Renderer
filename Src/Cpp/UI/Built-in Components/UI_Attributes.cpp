@@ -9,13 +9,11 @@ void UI_Attributes::Render()
 	if (!ImGui::CollapsingHeader("ATTRIBUTES"))
 	{
 		ImGui::Checkbox("Active", &attributes_Active);
-
-		ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), "Name :");
+		ImGui::Text("Name :");
 		ImGui::SameLine();
 		ImGui::Text(attributes_ObjectName.c_str());
 
-
-		ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), "Tag :");
+		ImGui::Text("Tag :");
 		ImGui::SameLine();
 		ImGui::Text(attributes_Tag.c_str());
 	}

@@ -33,10 +33,6 @@ SceneManager* Object::GetOwnerManager()
 }
 
 
-bool Object::Initialize()
-{
-	return true;
-}
 
 void Object::Update(float dt)
 {

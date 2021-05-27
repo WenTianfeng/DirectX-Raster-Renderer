@@ -253,6 +253,20 @@ bool Material::Instantiate(std::string shaderFilePath)
 	//错误检查
 	COM_ERROR_IF_FAILED(hr, L"Failed to create DirectX Blend State.");
 
+
+	//===================创建光栅化状态=======================
+	D3D11_RASTERIZER_DESC rd;
+	ZeroMemory(&rd, sizeof(rd));
+	rd.FillMode = D3D11_FILL_SOLID;
+	rd.CullMode = D3D11_CULL_BACK;
+	rd.FrontCounterClockwise = false;
+	rd.DepthClipEnable = true;
+
+	//创建光栅化状态
+	hr = m_dxDevice->CreateRasterizerState(&rd, m_dxRasterizerState.GetAddressOf());
+	//错误检查
+	COM_ERROR_IF_FAILED(hr, "Failed to create DirectX Rasterizer State.");
+
 	#pragma endregion 
 
 	return true;
@@ -282,6 +296,11 @@ ID3D11DepthStencilState* Material::GetDepthStencilState() const
 ID3D11BlendState* Material::GetBlendState() const
 {
 	return this->m_dxBlendState.Get();
+}
+
+ID3D11RasterizerState* Material::GetRasterizerState() const
+{
+	return this->m_dxRasterizerState.Get();
 }
 
 void Material::BindShaders(ID3D11DeviceContext* deviceContext)

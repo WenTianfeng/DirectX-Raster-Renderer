@@ -36,11 +36,11 @@ void UserInterface::InitializeImGui(HWND hwnd, ID3D11Device* device, ID3D11Devic
 	ImGuiIO& io = ImGui::GetIO();
 	ImGui_ImplWin32_Init(hwnd);
 	ImGui_ImplDX11_Init(device, deviceContext);
-	ImGui::StyleColorsDark();
+	ImGui::StyleColorsLight();
 
 	std::string fontPath = PresetFontFiles + "Roboto-Medium.ttf";
 	//¼ÓÔØ×ÖÌå
-	ImFont* defaultFont = io.Fonts->AddFontFromFileTTF(fontPath.c_str(), 16.0f, NULL, io.Fonts->GetGlyphRangesChineseFull());
+	ImFont* defaultFont = io.Fonts->AddFontFromFileTTF(fontPath.c_str(), 14.0f, NULL, io.Fonts->GetGlyphRangesChineseFull());
 
 	ImGuiStyle& style = ImGui::GetStyle();
 	style.WindowRounding = 0;

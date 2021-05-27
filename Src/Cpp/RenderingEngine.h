@@ -11,11 +11,6 @@ class RenderingEngine
 {
 public:
 
-	/// <summary>
-	/// 构造函数
-	/// </summary>
-	RenderingEngine();
-
 	~RenderingEngine();
 
 	static RenderingEngine* GetInstance();
@@ -48,6 +43,10 @@ public:
 	LRESULT EngineMsgProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam);
 
 private:
+	/// <summary>
+	/// 构造函数
+	/// </summary>
+	RenderingEngine();
 
 	/// <summary>
 	/// 每帧更新
@@ -59,6 +58,7 @@ private:
 	/// 每帧渲染
 	/// </summary>
 	void Render();
+
 
 public:
 

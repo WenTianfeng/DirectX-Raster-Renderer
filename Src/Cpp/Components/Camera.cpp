@@ -2,7 +2,7 @@
 
 Camera::Camera():
 	m_fovY(DirectX::XM_PI / 3),
-	m_aspect(2.0f),
+	m_aspect(1.5f),
 	m_nearClip(0.1f),
 	m_farClip(2000.0f)
 {

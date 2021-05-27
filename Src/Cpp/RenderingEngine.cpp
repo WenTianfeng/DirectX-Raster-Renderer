@@ -84,7 +84,6 @@ int RenderingEngine::Run()
 				//每一帧结束时清除键盘和鼠标接收到的事件
 				Mouse::GetInstance()->CleanEvent();
 				Keyboard::GetInstance()->CleanEvent();
-
 			}
 			else {
 				Sleep(100);

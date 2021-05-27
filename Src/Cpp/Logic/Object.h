@@ -4,7 +4,6 @@
 #include<map>
 #include<typeinfo>
 
-
 #include"..\Components\Component.h"
 
 class SceneManager;
@@ -27,11 +26,11 @@ public:
 	Object(SceneManager* ownerManager, int UID,bool active = true);
 	~Object();
 
-	bool Initialize();
 	void Update(float dt);
     void Render();
 	void Destroy();
 
+public:
     //模板函数：添加指定类型的component
     template <typename T, typename...TArgs>
     bool AddComponent(TArgs&&...args) 
@@ -60,10 +59,43 @@ public:
         return true;
     }
 
+    //模板函数：删除指定类型的组件
+    template <typename T>
+    bool RemoveComponent()
+    {
+        //如果对象没有拥有该类型组件，则返回
+        if (!this->HasComponent<T>())
+        {
+            return false;
+        }
+        unsigned int targetIndex = 0;
+        //遍历组件列表
+        for (unsigned int i = 0; i < m_components.size(); i++)
+        {
+            //如果当前组件的类型名和参数类型名相同，则记录其位置
+            if (typeid(T) == typeid(*m_components[i]))
+            {
+                targetIndex = i;
+                break;
+            }
+        }
+        //从列表中删除组件
+        m_components.erase(m_components.begin()+ targetIndex);
+        //从哈希表中删除组件
+        m_componentsMap.erase(&typeid(T));
+
+        return true;
+    }
+
     //模板函数：返回指定类型的组件
     template <typename T>
     T* GetComponent() 
     {
+        if (!HasComponent<T>())
+        {
+            return nullptr;
+        }
+
         return static_cast<T*>(m_componentsMap[&typeid(T)]);
     }
 
@@ -76,6 +108,5 @@ public:
 
 private:
 	std::vector<Component*> m_components;//组件列表
-
 	std::map<const std::type_info*, Component*> m_componentsMap;//组件map（组件类型：组件对象指针）
 };

@@ -128,6 +128,7 @@ bool SceneManager::InitializeScene()
 	directional_light2->AddComponent<Attributes>("Directional Light2", "Light");
 	directional_light2->AddComponent<Transform>(DirectX::XMFLOAT3(-80, 80, -80), DirectX::XMFLOAT3(DirectX::XM_PI / 4, -DirectX::XM_PI / 4, 0), DirectX::XMFLOAT3(1, 1, 1));
 	directional_light2->AddComponent<Light>(Light::LightType::Directional, DirectX::XMFLOAT4(1.0f, 1.0f, 1.0f, 0), 1.0f, 2000.0f);
+	
 	this->m_objects.push_back(directional_light2);
 	m_lights.push_back(directional_light2);
 

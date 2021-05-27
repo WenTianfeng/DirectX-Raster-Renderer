@@ -57,6 +57,12 @@ public:
 	ID3D11BlendState* GetBlendState() const;
 
 	/// <summary>
+	/// 获取光栅化状态
+	/// </summary>
+	/// <returns></returns>
+	ID3D11RasterizerState* GetRasterizerState() const;
+
+	/// <summary>
 	/// 绑定所有着色器至DirectX上下文
 	/// </summary>
 	/// <param name="deviceContext">DirectX上下文</param>
@@ -74,4 +80,5 @@ private:
 	Microsoft::WRL::ComPtr<ID3D11InputLayout> m_dxInputLayout;//DirectX输入布局对象
 	Microsoft::WRL::ComPtr<ID3D11DepthStencilState> m_dxDepthStencilState;//深度模板状态
 	Microsoft::WRL::ComPtr<ID3D11BlendState> m_dxBlendState;//混合状态
+	Microsoft::WRL::ComPtr<ID3D11RasterizerState> m_dxRasterizerState;//光栅化状态
 };

@@ -135,23 +135,6 @@ bool Graphics::InitializeDirectX(HWND hwnd, int width, int height)
 	//设置视口
 	m_dxDeviceContext->RSSetViewports(1, &vp);
 
-
-//===================设置光栅化状态=======================
-	D3D11_RASTERIZER_DESC rd;
-	ZeroMemory(&rd, sizeof(rd));
-	rd.FillMode = D3D11_FILL_SOLID;
-	rd.CullMode = D3D11_CULL_NONE;
-	rd.FrontCounterClockwise = false;
-	rd.DepthClipEnable = true;
-	
-	//创建光栅化状态
-	hr = m_dxDevice->CreateRasterizerState(&rd, m_dxRasterizerState.GetAddressOf());
-	//错误检查
-	COM_ERROR_IF_FAILED(hr, "Failed to create DirectX Rasterizer State.");
-
-	//设置光栅化状态
-	m_dxDeviceContext->RSSetState(m_dxRasterizerState.Get());
-
 	return true;
 }
 

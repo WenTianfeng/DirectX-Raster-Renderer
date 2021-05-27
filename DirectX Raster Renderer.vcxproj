@@ -41,7 +41,6 @@
     <ClCompile Include="Src\Cpp\UI\Built-in Components\UI_MaterialManager.cpp" />
     <ClCompile Include="Src\Cpp\UI\Built-in Components\UI_MeshRenderer.cpp" />
     <ClCompile Include="Src\Cpp\UI\Built-in Components\UI_Transform.cpp" />
-    <ClCompile Include="Src\Cpp\UI\CustomLogicScripts\UI_CameraControl.cpp" />
     <ClCompile Include="Src\Cpp\UI\Frames\Console.cpp" />
     <ClCompile Include="Src\Cpp\UI\Frames\Hierarchy.cpp" />
     <ClCompile Include="Src\Cpp\UI\ImGui\imgui.cpp" />
@@ -95,7 +94,6 @@
     <ClInclude Include="Src\Cpp\UI\Built-in Components\UI_MaterialManager.h" />
     <ClInclude Include="Src\Cpp\UI\Built-in Components\UI_MeshRenderer.h" />
     <ClInclude Include="Src\Cpp\UI\Built-in Components\UI_Transform.h" />
-    <ClInclude Include="Src\Cpp\UI\CustomLogicScripts\UI_CameraControl.h" />
     <ClInclude Include="Src\Cpp\UI\Frames\Console.h" />
     <ClInclude Include="Src\Cpp\UI\Frames\Hierarchy.h" />
     <ClInclude Include="Src\Cpp\UI\ImGui\imconfig.h" />
