@@ -163,7 +163,7 @@ bool Material::Instantiate(std::string shaderFilePath)
 				//获取常量缓冲描述
 				D3D11_SHADER_BUFFER_DESC shaderBufferDesc;
 				hr = srConstantBuffer->GetDesc(&shaderBufferDesc);
-				COM_ERROR_IF_FAILED(hr, "Failed to GetDesc of pixel shader constant buffer.");
+				COM_ERROR_IF_FAILED(hr, "Failed to GetDesc of shader constant buffer.");
 
 				//创建ShaderParameter
 				ShaderParameter* shaderParameter = new ShaderParameter(m_dxDevice, resourceName, ShaderParameter::ShaderParameterType::ConstantBuffer, slot, shaderBufferDesc.Size);
@@ -181,13 +181,20 @@ bool Material::Instantiate(std::string shaderFilePath)
 					//获取变量的描述
 					D3D11_SHADER_VARIABLE_DESC shaderVariableDesc;
 					hr = shaderVariable->GetDesc(&shaderVariableDesc);
-					COM_ERROR_IF_FAILED(hr, "Failed to GetDesc of pixel shader constant buffer variable.");
+					COM_ERROR_IF_FAILED(hr, "Failed to GetDesc of shader constant buffer variable.");
+					
+					//如果变量有默认值，则在constantBuffer设置默认值
+					if (shaderVariableDesc.DefaultValue)
+					{
+						shaderParameter->constantBuffer->SetData(shaderVariableDesc.DefaultValue, shaderVariableDesc.StartOffset, shaderVariableDesc.Size);
+					}
+
 
 					//获取变量类型描述
 					ID3D11ShaderReflectionType* shaderReflectionType = shaderVariable->GetType();
 					D3D11_SHADER_TYPE_DESC shaderTypeDesc;
 					hr = shaderReflectionType->GetDesc(&shaderTypeDesc);
-					COM_ERROR_IF_FAILED(hr, "Failed to GetDesc of pixel shader constant buffer variable type.");
+					COM_ERROR_IF_FAILED(hr, "Failed to GetDesc of shader constant buffer variable type.");
 
 					//生成变量
 					ConstantBufferVariable constantBufferVariable(shaderVariableDesc.Name,

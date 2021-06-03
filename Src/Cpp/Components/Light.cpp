@@ -1,20 +1,32 @@
 #include "Light.h"
 
-Light::Light(LightType lightType, DirectX::XMFLOAT4 lightColor, float intensity, float range):
-	m_type(lightType),
-	m_color(lightColor),
-	m_intensity(intensity),
-	m_range(range)
+Light::Light():
+	m_type(LightType::Directional),
+	m_color(DirectX::XMFLOAT4(1,1,1,1)),
+	m_intensity(1.0f),
+	m_range(1000.0f),
+	m_spotAngle(60.0f)
 {
 	this->m_componentName = "Light";
 }
 
-void Light::UpdataProperties(LightType lightType, DirectX::XMFLOAT4 lightColor, float intensity, float range)
+Light::Light(LightType lightType, DirectX::XMFLOAT4 lightColor, float intensity, float range, float spotAngle):
+	m_type(lightType),
+	m_color(lightColor),
+	m_intensity(intensity),
+	m_range(range),
+	m_spotAngle(spotAngle)
+{
+	this->m_componentName = "Light";
+}
+
+void Light::UpdateProperties(LightType lightType, DirectX::XMFLOAT4 lightColor, float intensity, float range, float spotAngle)
 {
 	this->m_type = lightType;
 	this->m_color = lightColor;
 	this->m_intensity = intensity;
 	this->m_range = range;
+	this->m_spotAngle = spotAngle;
 
 }
 
@@ -46,4 +58,9 @@ float Light::GetIntensity()
 float Light::GetRange()
 {
 	return this->m_range;
+}
+
+float Light::GetSpotAngle()
+{
+	return this->m_spotAngle;
 }

@@ -1,7 +1,7 @@
 #define DIRECTIONAL_LIGHT 0
 #define POINT_LIGHT 1
 #define SPOT_LIGHT 2
-#define NUM_LIGHTS 2
+#define NUM_LIGHTS 1
 
 //光源信息结构体
 struct Light
@@ -12,7 +12,8 @@ struct Light
     float3 Direction;   //光源方向
     float Intensity;    //光源强度
     uint Type;  //光源类型
-    float3 Padding; //显式补齐16字节
+    float SpotAngle; //聚光灯发射角度
+    float2 Padding; //显式补齐16字节
 };
 
 //光源列表结构缓冲
@@ -36,7 +37,7 @@ DirectIlluminationData ProcessDirectionalLight(Light light,float3 pixelWorldPos)
 {
     DirectIlluminationData lightData;
     
-    lightData.color = light.Color;
+    lightData.color = light.Color*light.Intensity/20;
     lightData.direction = normalize(-light.Direction);
     
     return lightData;
@@ -46,9 +47,14 @@ DirectIlluminationData ProcessDirectionalLight(Light light,float3 pixelWorldPos)
 DirectIlluminationData ProcessPointlLight(Light light, float3 pixelWorldPos)
 {
     DirectIlluminationData lightData;
-        
-    lightData.color = light.Color;
+    
     lightData.direction = normalize(light.Position - pixelWorldPos);
+    float lightDistance = distance(light.Position, pixelWorldPos);//光源和片元距离
+    
+    float distanceAtt = 1 / (1 + lightDistance * lightDistance);
+    float rangeAtt = smoothstep(light.Range, 0, lightDistance);
+    
+    lightData.color = light.Color * 10000 * distanceAtt * rangeAtt * light.Intensity / 20;
     
     return lightData;
 }
@@ -58,9 +64,15 @@ DirectIlluminationData ProcessSpotLight(Light light, float3 pixelWorldPos)
 {
     DirectIlluminationData lightData;
     
+    lightData.direction = normalize(light.Position - pixelWorldPos);
+    float lightDistance = distance(light.Position, pixelWorldPos); //光源和片元距离
+    
+    float coneAtt = pow(max(dot(-lightData.direction, normalize(light.Direction)), 0.0f), 180-light.SpotAngle);
+    float distanceAtt = 1 / (1 + lightDistance * lightDistance);
+    float rangeAtt = smoothstep(light.Range, 0, lightDistance);
         
-    lightData.color = light.Color;
-    lightData.direction = light.Direction;
+    lightData.color = light.Color * 10000 * distanceAtt * rangeAtt * coneAtt * light.Intensity / 20;
+    
     
     return lightData;
 }

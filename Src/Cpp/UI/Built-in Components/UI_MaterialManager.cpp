@@ -112,22 +112,22 @@ void UI_Material::Render()
 				{
 					case sizeof(float) :
 					{
-						ImGui::DragFloat(displayableVariables[i].variableName.c_str(), displayableVariables[i].floatVec, 0.1f, 0.0f, 0.0f, "%.2f");
+						ImGui::DragFloat(displayableVariables[i].variableName.c_str(), displayableVariables[i].floatVec, 0.1f, 0.0f, 0.0f, "%.3f");
 					}
 					break;
 					case sizeof(float) * 2:
 					{
-						ImGui::DragFloat2(displayableVariables[i].variableName.c_str(), displayableVariables[i].floatVec, 0.1f, 0.0f, 0.0f, "%.2f");
+						ImGui::DragFloat2(displayableVariables[i].variableName.c_str(), displayableVariables[i].floatVec, 0.1f, 0.0f, 0.0f, "%.3f");
 					}
 					break;
 					case sizeof(float) * 3:
 					{
-						ImGui::DragFloat3(displayableVariables[i].variableName.c_str(), displayableVariables[i].floatVec, 0.1f, 0.0f, 0.0f, "%.2f");
+						ImGui::DragFloat3(displayableVariables[i].variableName.c_str(), displayableVariables[i].floatVec, 0.1f, 0.0f, 0.0f, "%.3f");
 					}
 					break;
 					case sizeof(float) * 4:
 					{
-						ImGui::DragFloat4(displayableVariables[i].variableName.c_str(), displayableVariables[i].floatVec, 0.1f, 0.0f, 0.0f, "%.2f");
+						ImGui::DragFloat4(displayableVariables[i].variableName.c_str(), displayableVariables[i].floatVec, 0.1f, 0.0f, 0.0f, "%.3f");
 					}
 					break;
 				}
@@ -188,8 +188,6 @@ void UI_Material::Render()
 					format = ".jpg";//搜索文件扩展名
 					FileManager::GetFileNamesByFormat(filePath, files, format);//搜索文件
 
-
-
 					static int textureFileSelected = -1;
 
 					//绘制纹理文件选择框
@@ -198,7 +196,14 @@ void UI_Material::Render()
 						if (ImGui::Selectable((files[n]).c_str(), textureFileSelected == n))
 						{
 							textureFileSelected = n;
-							displayableVariables[i].textureFile = filePath+files[n];//设置预览文件名为选择的文件
+							if (files[n] == "None")
+							{
+								displayableVariables[i].textureFile = files[n];//设置预览文件名为None
+							}
+							else
+							{
+								displayableVariables[i].textureFile = filePath+files[n];//设置预览文件名为选择的文件
+							}
 						}
 					}
 

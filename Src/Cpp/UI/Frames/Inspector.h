@@ -25,7 +25,7 @@ public:
 
 public:
 	void Initialize(SceneManager* sceneManager);
-	void Render();
+	void Render(int windowWidth, int windowHeight);
 	void AddComponentToObject(Object* object, std::string componentName);
 
 private:

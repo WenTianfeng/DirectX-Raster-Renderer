@@ -38,6 +38,8 @@ bool Graphics::Initialize(HWND hwnd, int width, int height, SceneManager* sceneM
 
 bool Graphics::InitializeDirectX(HWND hwnd, int width, int height)
 {
+	m_windowWidth = width;
+	m_windowHeight = height;
 //===================创建DirectX设备和交换链==========================
 	//交换链信息描述结构体
 	DXGI_SWAP_CHAIN_DESC scd = {};
@@ -140,7 +142,7 @@ bool Graphics::InitializeDirectX(HWND hwnd, int width, int height)
 
 bool Graphics::InitializeEffect()
 {
-	this->m_lightSB.Instantiate(this->m_dxDevice.Get(), 2);
+	this->m_lightSB.Instantiate(this->m_dxDevice.Get(), 4);
 	this->m_dxDeviceContext->PSSetShaderResources(0, 1, this->m_lightSB.GetSRVAddressOf());
 
 	return true;
@@ -158,6 +160,7 @@ void Graphics::UpdateEffect(std::vector<Object*> lights)
 		this->m_lightSB.bufferData[i].Position = lights[i]->GetComponent<Light>()->GetPosition();
 		this->m_lightSB.bufferData[i].Intensity = lights[i]->GetComponent<Light>()->GetIntensity();
 		this->m_lightSB.bufferData[i].Range = lights[i]->GetComponent<Light>()->GetRange();
+		this->m_lightSB.bufferData[i].SpotAngle = lights[i]->GetComponent<Light>()->GetSpotAngle();
 	}
 	//更新结构缓冲
 	this->m_lightSB.UpdateStructuredBuffer(this->m_dxDeviceContext.Get());
@@ -184,9 +187,8 @@ void Graphics::Render()
 	{
 		object->Render();
 	}
-
 	//========UI渲染=========
-	this->m_userInterface->Render();
+	this->m_userInterface->Render(m_windowWidth,m_windowHeight);
 
 	//显示渲染后的交换链缓冲
 	HRESULT hr = m_dxSwapChain->Present(0u, 0u);
@@ -196,6 +198,8 @@ void Graphics::Render()
 
 void Graphics::OnWindowResize(int clientWidth, int clientHeight)
 {
+	m_windowWidth = clientWidth;
+	m_windowHeight = clientHeight;
 
 	if (m_dxDevice && m_dxSwapChain && m_dxDeviceContext)
 	{

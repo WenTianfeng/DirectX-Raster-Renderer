@@ -1,11 +1,12 @@
 #include"UI_Light.h"
 
 Light::LightType UI_Light::light_Type = Light::LightType::Directional;
-std::vector<std::string> UI_Light::lightTypeNames = { "Directional","Spot","Point" };
+std::vector<std::string> UI_Light::lightTypeNames = { "Directional","Point","Spot" };
 std::string UI_Light::selectedLightType = "Directional";
 float UI_Light::light_Color[4] = { 0 };
 float UI_Light::light_Intensity = 0;
 float UI_Light::light_Range = 0;
+float UI_Light::light_SpotAngle = 60.0f;
 
 
 void UI_Light::Render()
@@ -16,7 +17,7 @@ void UI_Light::Render()
 		if (ImGui::BeginCombo("Light Type", selectedLightType.c_str(), 0))
 		{
 			static int lightTypeSelected = -1;
-			lightTypeSelected = (int)light_Type;
+
 			//绘制光照类型选择框
 			for (unsigned int n = 0; n < lightTypeNames.size(); n++)
 			{
@@ -45,13 +46,20 @@ void UI_Light::Render()
 
 		//绘制光照颜色选择
 		ImGui::ColorEdit4("Light Color", light_Color, ImGuiColorEditFlags_DisplayRGB | ImGuiColorEditFlags_Float);
+		ImGui::DragFloat("Intensity", &light_Intensity, 0.1f, 0.0f, 100.0f, "%.3f");
+		if (light_Type != Light::LightType::Directional)
+		{
+			ImGui::DragFloat("Range", &light_Range, 0.8f, 0.0f, 2000.0f, "%.3f");
+		}
 
-		ImGui::DragFloat("Intensity", &light_Intensity, 0.1f, 0.0f, 100.0f, "%.2f");
-		ImGui::DragFloat("Range", &light_Range, 0.1f, 0.0f, 2000.0f, "%.2f");
+		if (light_Type == Light::LightType::Spot)
+		{
+			ImGui::DragFloat("Angle", &light_SpotAngle, 0.2f, 0.0f, 179.0f, "%.3f");
+		}
 	}
 }
 
-void UI_Light::UpdateValues(Light::LightType lightType, DirectX::XMFLOAT4 lightColor, float intensity, float range)
+void UI_Light::UpdateValues(Light::LightType lightType, DirectX::XMFLOAT4 lightColor, float intensity, float range, float spotAngle)
 {
 	light_Type = lightType;
 
@@ -62,6 +70,7 @@ void UI_Light::UpdateValues(Light::LightType lightType, DirectX::XMFLOAT4 lightC
 
 	light_Intensity = intensity;
 	light_Range = range;
+	light_SpotAngle = spotAngle;
 
 	switch (lightType)
 	{

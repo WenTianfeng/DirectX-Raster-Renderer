@@ -13,7 +13,7 @@ public:
 
 public:
 	void Initialize(SceneManager* sceneManager);
-	void Render();
+	void Render(int windowWidth, int windowHeight);
 
 private:
 	SceneManager* m_sceneManager;

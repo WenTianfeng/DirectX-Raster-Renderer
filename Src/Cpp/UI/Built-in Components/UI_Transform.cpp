@@ -10,9 +10,9 @@ void UI_Transform::Render()
 {
 	if (!ImGui::CollapsingHeader("TRANSFORM"))
 	{
-		ImGui::DragFloat3("Position", transform_Position, 0.1f, 0.0f, 0.0f, "%.2f");
-		ImGui::DragFloat3("Rotation", transform_Rotation, 0.02f, 0.0f, 0.0f, "%.2f");
-		ImGui::DragFloat3("Scale", transform_Scale, 0.1f, 0.0f, 0.0f, "%.2f");
+		ImGui::DragFloat3("Position", transform_Position, 0.1f, 0.0f, 0.0f, "%.3f");
+		ImGui::DragFloat3("Rotation", transform_Rotation, 0.02f, 0.0f, 0.0f, "%.3f");
+		ImGui::DragFloat3("Scale", transform_Scale, 0.1f, 0.0f, 0.0f, "%.3f");
 	}
 
 }

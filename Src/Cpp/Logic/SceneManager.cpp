@@ -8,7 +8,10 @@
 
 
 SceneManager::SceneManager():
-	m_mainCamera(nullptr)
+	m_mainCamera(nullptr),
+	m_dxDevice(nullptr),
+	m_dxDeviceContext(nullptr),
+	m_objectIDCounter(0)
 {
 }
 
@@ -61,34 +64,105 @@ std::vector<Object*> SceneManager::GetObjects()
 	return this->m_objects;
 }
 
-
-void SceneManager::AddNewObject(std::string objectName, std::string objectMeshFilePath)
+void SceneManager::AddObject(std::string objectName, std::string objectMeshFilePath)
 {
+
 	if (objectName == "Light")
 	{
-
+		Object* light = new Object(this, NewObjectID());
+		light->AddComponent<Attributes>(ObtainNewObjectNameWithPostfix(objectName, light->GetUID()), "Light");
+		light->AddComponent<Transform>(DirectX::XMFLOAT3(80, 80, -80), DirectX::XMFLOAT3(DirectX::XM_PI / 4, DirectX::XM_PI / 4, 0), DirectX::XMFLOAT3(1, 1, 1));
+		light->AddComponent<Light>();
+		this->m_objects.push_back(light);
+		this->m_lights.push_back(light);
 	}
 	else if (objectName == "Camera")
 	{
-		//编辑模式相机
-		Object* newCamera = new Object(this, GetNewObjectID());
-		newCamera->AddComponent<Attributes>("EditMode Camera", "Camera", false);
-		newCamera->AddComponent<Transform>();
-		newCamera->AddComponent<Camera>();
-		newCamera->AddComponent<CameraControl>();
-		this->m_objects.push_back(newCamera);//将对象加入列表中
+		Object* camera = new Object(this, NewObjectID());
+		camera->AddComponent<Attributes>(ObtainNewObjectNameWithPostfix(objectName, camera->GetUID()), "Camera");
+		camera->AddComponent<Transform>();
+		camera->AddComponent<Camera>();
+		this->m_objects.push_back(camera);//将对象加入列表中
 	}
 	else
 	{
-		Object* newObject = new Object(this, GetNewObjectID());
-		newObject->AddComponent<Attributes>(ObtainNewObjectNameWithPostfix(objectName), "Object");
-		newObject->AddComponent<Transform>();//添加Transform组件
-		newObject->AddComponent<MeshRenderer>(m_dxDevice, m_dxDeviceContext, objectMeshFilePath);//添加MeshRender组件
-		newObject->AddComponent<MaterialManager>(m_dxDevice);//添加MaterialManager组件
+		Object* model = new Object(this, NewObjectID());
+		model->AddComponent<Attributes>(ObtainNewObjectNameWithPostfix(objectName, model->GetUID()), "Object");
+		model->AddComponent<Transform>();//添加Transform组件
+		model->AddComponent<MeshRenderer>(m_dxDevice, m_dxDeviceContext, objectMeshFilePath);//添加MeshRender组件
+		model->AddComponent<MaterialManager>(m_dxDevice);//添加MaterialManager组件
 
-		this->m_objects.push_back(newObject);
+		this->m_objects.push_back(model);
 	}
 
+}
+
+bool SceneManager::DeleteObject(UINT objectID)
+{
+	int targetIndex = -1;
+
+	for (UINT i = 0; i < m_objects.size(); i++)
+	{
+		if (m_objects[i]->GetUID() == objectID)
+		{
+			targetIndex = i;
+
+			break;
+		}
+	}
+
+	if (targetIndex != -1)
+	{
+		m_objects[targetIndex]->Destroy();
+		m_objects.erase(m_objects.begin() + targetIndex);
+
+		return true;
+	}
+	else
+	{
+		return false;
+	}
+}
+
+bool SceneManager::DeleteObject(Object* object)
+{
+	int targetIndex = -1;
+
+	for (UINT i = 0; i < m_objects.size(); i++)
+	{
+		if (m_objects[i]->GetUID() == object->GetUID())
+		{
+			targetIndex = i;
+
+			break;
+		}
+	}
+
+	if (targetIndex != -1)
+	{
+		object->Destroy();
+		m_objects.erase(m_objects.begin() + targetIndex);
+		return true;
+	}
+	else
+	{
+		return false;
+	}
+
+}
+
+UINT SceneManager::NewObjectID()
+{
+	m_objectIDCounter++;
+
+	return m_objectIDCounter;
+}
+
+std::string SceneManager::ObtainNewObjectNameWithPostfix(std::string objectName,UINT objectID)
+{
+	std::string fullName = objectName + " (" + std::to_string(objectID) + ")";
+
+	return fullName;
 }
 
 bool SceneManager::InitializeScene()
@@ -98,16 +172,16 @@ bool SceneManager::InitializeScene()
 	#pragma region 生成相机
 
 	//编辑模式相机
-	Object* editModeCamera = new Object(this, GetNewObjectID());
+	Object* editModeCamera = new Object(this, NewObjectID());
 	editModeCamera->AddComponent<Attributes>("EditMode Camera", "Camera", false);
-	editModeCamera->AddComponent<Transform>(DirectX::XMFLOAT3(0, 80.0f, -120.0f), DirectX::XMFLOAT3(DirectX::XM_PI / 12, 0, 0), DirectX::XMFLOAT3(1, 1, 1));
+	editModeCamera->AddComponent<Transform>(DirectX::XMFLOAT3(0, 40.0f, -100.0f), DirectX::XMFLOAT3(DirectX::XM_PI / 12, 0, 0), DirectX::XMFLOAT3(1, 1, 1));
 	editModeCamera->AddComponent<Camera>();
 	editModeCamera->AddComponent<CameraControl>();
 	m_mainCamera = editModeCamera;
 	this->m_objects.push_back(editModeCamera);//将对象加入列表中
 
 	//渲染模式相机
-	Object* renderingModeCamera = new Object(this, GetNewObjectID());
+	Object* renderingModeCamera = new Object(this, NewObjectID());
 	renderingModeCamera->AddComponent<Attributes>("RenderingMode Camera","Camera", true);
 	renderingModeCamera->AddComponent<Transform>(DirectX::XMFLOAT3(0, 100.0f, -200.0f), DirectX::XMFLOAT3(DirectX::XM_PI / 6, 0, 0), DirectX::XMFLOAT3(1, 1, 1));
 	renderingModeCamera->AddComponent<Camera>();
@@ -117,20 +191,21 @@ bool SceneManager::InitializeScene()
 
 	#pragma region 生成光源
 
-	Object* directional_light1 = new Object(this, GetNewObjectID());
-	directional_light1->AddComponent<Attributes>("Directional Light1","Light");
+	Object* directional_light1 = new Object(this, NewObjectID());
+	directional_light1->AddComponent<Attributes>("Directional Light","Light");
 	directional_light1->AddComponent<Transform>(DirectX::XMFLOAT3(80, 80, -80), DirectX::XMFLOAT3(DirectX::XM_PI / 4, DirectX::XM_PI / 4, 0), DirectX::XMFLOAT3(1, 1, 1));
-	directional_light1->AddComponent<Light>(Light::LightType::Directional, DirectX::XMFLOAT4(1.0f, 1.0f, 1.0f, 0), 1.0f, 2000.0f);
+	directional_light1->AddComponent<Light>();
 	this->m_objects.push_back(directional_light1);
 	m_lights.push_back(directional_light1);
 
-	Object* directional_light2 = new Object(this, GetNewObjectID());
-	directional_light2->AddComponent<Attributes>("Directional Light2", "Light");
-	directional_light2->AddComponent<Transform>(DirectX::XMFLOAT3(-80, 80, -80), DirectX::XMFLOAT3(DirectX::XM_PI / 4, -DirectX::XM_PI / 4, 0), DirectX::XMFLOAT3(1, 1, 1));
-	directional_light2->AddComponent<Light>(Light::LightType::Directional, DirectX::XMFLOAT4(1.0f, 1.0f, 1.0f, 0), 1.0f, 2000.0f);
-	
-	this->m_objects.push_back(directional_light2);
-	m_lights.push_back(directional_light2);
+	//Object* directional_light2 = new Object(this, NewObjectID());
+	//directional_light2->AddComponent<Attributes>("Directional Light2", "Light");
+	//directional_light2->AddComponent<Transform>(DirectX::XMFLOAT3(-80, 80, -80), DirectX::XMFLOAT3(DirectX::XM_PI / 4, -DirectX::XM_PI / 4, 0), DirectX::XMFLOAT3(1, 1, 1));
+	//directional_light2->AddComponent<Light>(Light::LightType::Directional, DirectX::XMFLOAT4(1.0f, 1.0f, 1.0f, 0), 1.0f, 2000.0f);
+	//
+	//this->m_objects.push_back(directional_light2);
+	//m_lights.push_back(directional_light2);
+
 
 	#pragma endregion
 
@@ -159,38 +234,7 @@ bool SceneManager::InitializeScene()
 
 	#pragma endregion
 
-	#pragma region 生成场景对象
-
-	//机器人
-	Object* robot = new Object(this, GetNewObjectID());
-	robot->AddComponent<Attributes>("Robot", "Object");
-	robot->AddComponent<Transform>(DirectX::XMFLOAT3(0, 0, 0), DirectX::XMFLOAT3(0, 0, 0), DirectX::XMFLOAT3(0.5f, 0.5f, 0.5f));//添加Transform组件
-	robot->AddComponent<MeshRenderer>(m_dxDevice, m_dxDeviceContext, CustomizedMeshFiles+"Robot Kyle.fbx");//添加MeshRender组件
-	robot->AddComponent<MaterialManager>(m_dxDevice);//添加MaterialManager组件
-
-	this->m_objects.push_back(robot);
-
-	//生成地面平面
-	Object* ground = new Object(this, GetNewObjectID());
-	ground->AddComponent<Attributes>("Ground");
-	ground->AddComponent<Transform>(DirectX::XMFLOAT3(0, 0, 0), DirectX::XMFLOAT3(DirectX::XM_PI / 2, 0, 0), DirectX::XMFLOAT3(20, 10, 20));//添加Transform组件
-	ground->AddComponent<MeshRenderer>(m_dxDevice, m_dxDeviceContext, PresetMeshFiles+"Quad.fbx");//添加MeshRender组件
-	ground->AddComponent<MaterialManager>(m_dxDevice);//添加MaterialManager组件
-
-	this->m_objects.push_back(ground);
-
-	#pragma endregion
 
 	return true;
 }
 
-UINT SceneManager::GetNewObjectID()
-{
-	return m_objects.size();
-}
-
-std::string SceneManager::ObtainNewObjectNameWithPostfix(std::string objectName)
-{
-	std::string ss = "ss";
-	return ss;
-}

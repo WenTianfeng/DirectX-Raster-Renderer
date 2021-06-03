@@ -7,7 +7,7 @@ void Inspector::Initialize(SceneManager* sceneManager)
 	this->m_sceneManager = sceneManager;
 }
 
-void Inspector::Render()
+void Inspector::Render(int windowWidth, int windowHeight)
 {
 	bool changed;
 
@@ -21,15 +21,17 @@ void Inspector::Render()
 		preSelected = Hierarchy::selected;
 	}
 
+	//设置Inspector窗口样式
+	ImGuiWindowFlags inspectorWindowFlags = ImGuiWindowFlags_NoMove;//禁止移动
 
-	if (ImGui::Begin("INSPECTOR"))
+	if (ImGui::Begin("INSPECTOR",NULL, inspectorWindowFlags))
 	{
 		if (preSelected != -1)
 		{
 			//获取从Hierarchy中选中的Object对象
 			Object* object = m_sceneManager->GetObjects()[preSelected];
 
-//============如果Object拥有对应组件，则显示对应UI===========
+			//============如果Object拥有对应组件，则显示对应UI===========
 
 			#pragma region Attributes UI
 
@@ -178,13 +180,14 @@ void Inspector::Render()
 						object->GetComponent<Light>()->GetType(),
 						object->GetComponent<Light>()->GetColor(),
 						object->GetComponent<Light>()->GetIntensity(),
-						object->GetComponent<Light>()->GetRange()
+						object->GetComponent<Light>()->GetRange(),
+						object->GetComponent<Light>()->GetSpotAngle()
 					);
 				}
 				//------------------------------------------------------------------没有选中新对象，则根据输入修改参数--------------------------------------------------------------------
 				else
 				{
-					object->GetComponent<Light>()->UpdataProperties(
+					object->GetComponent<Light>()->UpdateProperties(
 						UI_Light::light_Type,
 
 						DirectX::XMFLOAT4(
@@ -194,7 +197,8 @@ void Inspector::Render()
 							UI_Light::light_Color[3]),
 
 						UI_Light::light_Intensity,
-						UI_Light::light_Range
+						UI_Light::light_Range,
+						UI_Light::light_SpotAngle
 					);
 				}
 
@@ -234,18 +238,24 @@ void Inspector::Render()
 
 			#pragma endregion 
 
-			#pragma region Modify Component Button UI
+			#pragma region Object Operation UI
 
-			//显示修改组件按钮
 			ImGui::Spacing();
 			ImGui::Separator();
 
-			ImGui::Indent(50.0f);
-			if (ImGui::Button("Modify Component"))
+			if (ImGui::Button("Add Component"))
 			{
 				ImGui::OpenPopup("my_toggle_popup");
 			}
-			ImGui::Unindent(50.0f);
+
+			ImGui::SameLine();
+			if (ImGui::Button("Delete Object"))
+			{
+				this->m_sceneManager->DeleteObject(object);
+				preSelected = -1;
+				Hierarchy::selected = -1;
+			}
+
 			if (ImGui::BeginPopup("my_toggle_popup"))
 			{
 				ImGui::MenuItem("Built-in Components", NULL, false, false);
@@ -283,6 +293,10 @@ void Inspector::Render()
 	}
 
 	ImGui::End();
+
+	//Inspector自适应窗口变化
+	ImGui::SetWindowPos("INSPECTOR", ImVec2(windowWidth-300.0f, 20));
+	ImGui::SetWindowSize("INSPECTOR", ImVec2(300, windowHeight - 20.0f));
 
 }
 

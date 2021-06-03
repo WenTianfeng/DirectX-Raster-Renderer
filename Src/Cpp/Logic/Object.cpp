@@ -1,6 +1,6 @@
 #include "Object.h"
 
-Object::Object(SceneManager* ownerManager, int UID, bool active):
+Object::Object(SceneManager* ownerManager, unsigned int UID, bool active):
 	m_ownerManager(ownerManager),
 	m_UID(UID),
 	m_active(active)
@@ -22,7 +22,7 @@ void Object::SetActivation(bool active)
 	this->m_active = active;
 }
 
-int Object::GetUID() const
+unsigned int Object::GetUID() const
 {
 	return this->m_UID;
 }

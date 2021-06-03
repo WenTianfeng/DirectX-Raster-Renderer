@@ -83,14 +83,29 @@ void TopToolbar::Render()
 
 		if (ImGui::BeginMenu("Object"))
 		{
-			if (ImGui::BeginMenu("Create Basic Object"))
+			if (ImGui::BeginMenu("Create Preset Object"))
+			{
+				std::vector<std::string> presetObjects = {"Camera","Light"};
+
+				//绘制着色器文件选择框
+				for (UINT n = 0; n < presetObjects.size(); n++)
+				{
+					if (ImGui::MenuItem(presetObjects[n].c_str()))
+					{
+						this->m_sceneManager->AddObject(presetObjects[n].c_str());
+					}
+				}
+
+				ImGui::EndMenu();
+			}
+
+			if (ImGui::BeginMenu("Create Model"))
 			{
 				std::vector<std::string> files;
 				std::string filePath = PresetMeshFiles;
 				std::string format = ".fbx";
 				FileManager::GetFileNamesByFormat(filePath, files, format);
 
-				//绘制着色器文件选择框
 				for (UINT n = 0; n < files.size(); n++)
 				{
 					if (ImGui::MenuItem(files[n].c_str()))
@@ -98,7 +113,7 @@ void TopToolbar::Render()
 						std::string fileName = files[n];
 						fileName.erase(fileName.size() - format.size());
 
-						this->m_sceneManager->AddNewObject(fileName, PresetMeshFiles + files[n]);
+						this->m_sceneManager->AddObject(fileName, PresetMeshFiles + files[n]);
 					}
 				}
 
@@ -110,14 +125,18 @@ void TopToolbar::Render()
 				std::vector<std::string> files;
 				std::string filePath = CustomizedMeshFiles;
 				std::string format = ".fbx";
-				FileManager::GetFilePathsByFormat(filePath, files, format);
+				FileManager::GetFileNamesByFormat(filePath, files, format);
 
-				//绘制着色器文件选择框
 				for (UINT n = 0; n < files.size(); n++)
 				{
 					if (ImGui::MenuItem(files[n].c_str())) 
 					{
-						//加载模型至场景	
+						//加载模型至场景
+						std::string fileName = files[n];
+						fileName.erase(fileName.size() - format.size());
+
+						this->m_sceneManager->AddObject(fileName, CustomizedMeshFiles + files[n]);
+
 					}
 				}
 

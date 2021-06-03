@@ -185,6 +185,7 @@ LRESULT RenderingEngine::EngineMsgProc(HWND hwnd, UINT msg, WPARAM wParam, LPARA
 			else
 			{
 				this->graphics->OnWindowResize(newClientWidth, newClientHeight);
+				
 			}
 		}
 	}

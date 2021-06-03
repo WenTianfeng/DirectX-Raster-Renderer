@@ -12,18 +12,18 @@ class Object
 {
 
 private:
-    int m_UID;
+    unsigned int m_UID;
     bool m_active;
     SceneManager* m_ownerManager;
 
 public:
     bool IsActive() const;
     void SetActivation(bool active);
-    int GetUID() const;
+    unsigned int GetUID() const;
     SceneManager* GetOwnerManager();
 
 public:
-	Object(SceneManager* ownerManager, int UID,bool active = true);
+	Object(SceneManager* ownerManager, unsigned int UID,bool active = true);
 	~Object();
 
 	void Update(float dt);

@@ -4,10 +4,11 @@
 
 int Hierarchy::selected = -1;
 
-void Hierarchy::Render()
-{
+void Hierarchy::Render(int windowWidth, int windowHeight)
+{    
+    ImGuiWindowFlags hierarchyWindowFlags = ImGuiWindowFlags_NoMove;
 
-	if (ImGui::Begin("HIERARCHY"))
+	if (ImGui::Begin("HIERARCHY", NULL, ImGuiWindowFlags_NoMove))
 	{
         for (UINT i = 0; i < m_sceneManager->GetObjects().size(); i++)
         {
@@ -29,7 +30,11 @@ void Hierarchy::Render()
 	}
 
     ImGui::End();
+
+    ImGui::SetWindowPos("HIERARCHY", ImVec2(0, 20));
+    ImGui::SetWindowSize("HIERARCHY", ImVec2(250, windowHeight-20.0f));
 }
+
 
 void Hierarchy::Initialize(SceneManager* sceneManager)
 {

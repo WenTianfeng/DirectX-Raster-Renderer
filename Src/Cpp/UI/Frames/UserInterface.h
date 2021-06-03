@@ -14,7 +14,7 @@ class UserInterface
 public:
 
 	bool Initialize(HWND hwnd, ID3D11Device* device, ID3D11DeviceContext* deviceContext, SceneManager* sceneManager);
-	void Render();
+	void Render(int windowWidth, int windowHeight);
 
 private:
 	void InitializeImGui(HWND hwnd, ID3D11Device* device, ID3D11DeviceContext* deviceContext);

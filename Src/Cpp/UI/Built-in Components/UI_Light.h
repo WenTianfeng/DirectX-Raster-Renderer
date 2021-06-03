@@ -14,8 +14,9 @@ public:
 	static float light_Color[4];
 	static float light_Intensity;
 	static float light_Range;
+	static float light_SpotAngle;
 	
 public:
 	static void Render();
-	static void UpdateValues(Light::LightType lightType, DirectX::XMFLOAT4 lightColor, float intensity, float range);
+	static void UpdateValues(Light::LightType lightType, DirectX::XMFLOAT4 lightColor, float intensity, float range, float spotAngle);
 };

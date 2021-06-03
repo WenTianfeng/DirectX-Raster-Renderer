@@ -11,7 +11,7 @@ bool UserInterface::Initialize(HWND hwnd, ID3D11Device* device,ID3D11DeviceConte
 	return true;
 }
 
-void UserInterface::Render()
+void UserInterface::Render(int windowWidth, int windowHeight)
 {
 
 	ImGui_ImplDX11_NewFrame();
@@ -20,8 +20,8 @@ void UserInterface::Render()
 	//=======内容绘制=======
 
 	this->m_topToolbar->Render();
-	this->m_hierarchy->Render();
-	this->m_inspector->Render();
+	this->m_hierarchy->Render(windowWidth,windowHeight);
+	this->m_inspector->Render(windowWidth, windowHeight);
 
 	//======内容绘制结束=====
 	ImGui::Render();
@@ -36,11 +36,11 @@ void UserInterface::InitializeImGui(HWND hwnd, ID3D11Device* device, ID3D11Devic
 	ImGuiIO& io = ImGui::GetIO();
 	ImGui_ImplWin32_Init(hwnd);
 	ImGui_ImplDX11_Init(device, deviceContext);
-	ImGui::StyleColorsLight();
+	ImGui::StyleColorsDark();
 
 	std::string fontPath = PresetFontFiles + "Roboto-Medium.ttf";
 	//加载字体
-	ImFont* defaultFont = io.Fonts->AddFontFromFileTTF(fontPath.c_str(), 14.0f, NULL, io.Fonts->GetGlyphRangesChineseFull());
+	ImFont* defaultFont = io.Fonts->AddFontFromFileTTF(fontPath.c_str(), 15.0f, NULL, io.Fonts->GetGlyphRangesChineseFull());
 
 	ImGuiStyle& style = ImGui::GetStyle();
 	style.WindowRounding = 0;

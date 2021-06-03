@@ -38,12 +38,31 @@ public:
 	void OnWindowResize(int clientWidth, int clientHeight);
 
 
-	//Get
+	//Get方法
 	Object* GetMainCamera();
 	std::vector<Object*> GetLights();
 	std::vector<Object*> GetObjects();
 
-	void AddNewObject(std::string objectName, std::string objectMeshFilePath = "");
+	/// <summary>
+	/// 添加实体对象
+	/// </summary>
+	/// <param name="objectName"></param>
+	/// <param name="objectMeshFilePath"></param>
+	void AddObject(std::string objectName, std::string objectMeshFilePath = "");
+
+	/// <summary>
+	/// 删除实体对象
+	/// </summary>
+	/// <param name="objectID">对象ID</param>
+	/// <returns>是否删除成功</returns>
+	bool DeleteObject(UINT objectID);
+
+	/// <summary>
+	/// 删除实体对象
+	/// </summary>
+	/// <param name="object">对象指针</param>
+	/// <returns>是否删除成功</returns>
+	bool DeleteObject(Object* object);
 
 private:
 	/// <summary>
@@ -52,20 +71,16 @@ private:
 	/// <returns>相关内容是否初始化成功</returns>
 	bool InitializeScene();
 
-	UINT GetNewObjectID();
-	std::string ObtainNewObjectNameWithPostfix(std::string objectName);
+	UINT NewObjectID();
+	std::string ObtainNewObjectNameWithPostfix(std::string objectName, UINT objectID);
 
 private:
-	ID3D11Device* m_dxDevice = nullptr;//Dx设备
-	ID3D11DeviceContext* m_dxDeviceContext = nullptr;//Dx上下文
+	ID3D11Device* m_dxDevice;//Dx设备
+	ID3D11DeviceContext* m_dxDeviceContext;//Dx上下文
 	Object* m_mainCamera;//场景主相机
 	std::vector<Object*> m_lights;//场景光源列表
 	std::vector<Object*> m_objects;//场景对象列表
 
-
-};
-
-struct PostfixFlag
-{
-	bool flags[50] = {};
+private:
+	unsigned int m_objectIDCounter;
 };

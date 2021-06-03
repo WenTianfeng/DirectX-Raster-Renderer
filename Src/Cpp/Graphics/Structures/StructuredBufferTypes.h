@@ -11,6 +11,7 @@ struct SB_PS_Light
     DirectX::XMFLOAT3 Direction;   //光源方向
     float Intensity;    //光源强度
     UINT Type;  //光源类型
-    DirectX::XMFLOAT3 Padding; //显式补齐16字节
+    float SpotAngle; //聚光灯发射角度
+    DirectX::XMFLOAT2 Padding; //显式补齐16字节
 
 };
