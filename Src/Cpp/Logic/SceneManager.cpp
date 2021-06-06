@@ -182,7 +182,7 @@ bool SceneManager::InitializeScene()
 
 	//渲染模式相机
 	Object* renderingModeCamera = new Object(this, NewObjectID());
-	renderingModeCamera->AddComponent<Attributes>("RenderingMode Camera","Camera", true);
+	renderingModeCamera->AddComponent<Attributes>("RenderingMode Camera","Camera");
 	renderingModeCamera->AddComponent<Transform>(DirectX::XMFLOAT3(0, 100.0f, -200.0f), DirectX::XMFLOAT3(DirectX::XM_PI / 6, 0, 0), DirectX::XMFLOAT3(1, 1, 1));
 	renderingModeCamera->AddComponent<Camera>();
 	this->m_objects.push_back(renderingModeCamera);//将对象加入列表中
@@ -191,46 +191,41 @@ bool SceneManager::InitializeScene()
 
 	#pragma region 生成光源
 
-	Object* directional_light1 = new Object(this, NewObjectID());
-	directional_light1->AddComponent<Attributes>("Directional Light","Light");
-	directional_light1->AddComponent<Transform>(DirectX::XMFLOAT3(80, 80, -80), DirectX::XMFLOAT3(DirectX::XM_PI / 4, DirectX::XM_PI / 4, 0), DirectX::XMFLOAT3(1, 1, 1));
-	directional_light1->AddComponent<Light>();
-	this->m_objects.push_back(directional_light1);
-	m_lights.push_back(directional_light1);
+	Object* directionalLight = new Object(this, NewObjectID());
+	directionalLight->AddComponent<Attributes>("Directional Light","Light");
+	directionalLight->AddComponent<Transform>(DirectX::XMFLOAT3(80, 80, -80), DirectX::XMFLOAT3(DirectX::XM_PI / 4, DirectX::XM_PI / 4, 0), DirectX::XMFLOAT3(1, 1, 1));
+	directionalLight->AddComponent<Light>();
+	this->m_objects.push_back(directionalLight);
+	m_lights.push_back(directionalLight);
 
-	//Object* directional_light2 = new Object(this, NewObjectID());
-	//directional_light2->AddComponent<Attributes>("Directional Light2", "Light");
-	//directional_light2->AddComponent<Transform>(DirectX::XMFLOAT3(-80, 80, -80), DirectX::XMFLOAT3(DirectX::XM_PI / 4, -DirectX::XM_PI / 4, 0), DirectX::XMFLOAT3(1, 1, 1));
-	//directional_light2->AddComponent<Light>(Light::LightType::Directional, DirectX::XMFLOAT4(1.0f, 1.0f, 1.0f, 0), 1.0f, 2000.0f);
-	//
-	//this->m_objects.push_back(directional_light2);
-	//m_lights.push_back(directional_light2);
+	Object* pointLight = new Object(this, NewObjectID());
+	pointLight->AddComponent<Attributes>("Point Light", "Light");
+	pointLight->AddComponent<Transform>(DirectX::XMFLOAT3(-80, 80, -80), DirectX::XMFLOAT3(DirectX::XM_PI / 4, -DirectX::XM_PI / 4, 0), DirectX::XMFLOAT3(1, 1, 1));
+	pointLight->AddComponent<Light>(Light::LightType::Point, DirectX::XMFLOAT4(1.0f, 1.0f, 1.0f, 0), 1.0f, 2000.0f, 60.0f);
+	
+	this->m_objects.push_back(pointLight);
+	m_lights.push_back(pointLight);
 
 
 	#pragma endregion
 
 	#pragma region 生成天空盒
 
-	//Object* skybox = new Object(GetNewObjectID());
-	//skybox->AddComponent<Attributes>("DefaultSkybox", "Skybox");
-	//skybox->AddComponent<Transform>(DirectX::XMFLOAT3(0, 0, 0), DirectX::XMFLOAT3(0, 0, 0), DirectX::XMFLOAT3(500, 500, 500));
+	Object* skybox = new Object(this,NewObjectID());
+	skybox->AddComponent<Attributes>("DefaultSkybox", "Skybox", false);
+	skybox->AddComponent<Transform>(DirectX::XMFLOAT3(0, 0, 0), DirectX::XMFLOAT3(0, 0, 0), DirectX::XMFLOAT3(500, 500, 500));
 
-	////天空盒纹理文件路径
-	//std::vector<std::wstring> skyboxTextureList = {
-	//	L"Assets\\Textures\\NightSkybox\\UrbanNightSky_Left.png", L"Assets\\Textures\\NightSkybox\\UrbanNightSky_Right.png",
-	//		L"Assets\\Textures\\NightSkybox\\UrbanNightSky_Top.png", L"Assets\\Textures\\NightSkybox\\UrbanNightSky_Bottom.png",
-	//		L"Assets\\Textures\\NightSkybox\\UrbanNightSky_Front.png", L"Assets\\Textures\\NightSkybox\\UrbanNightSky_Back.png" };
+	//天空盒纹理文件路径
+	std::vector<std::wstring> skyboxTextureList = {
+		L"Assets\\Custom\\Textures\\SkyboxTextures\\NightSkybox\\UrbanNightSky_Left.png", L"Assets\\Custom\\Textures\\SkyboxTextures\\NightSkybox\\UrbanNightSky_Right.png",
+			L"Assets\\Custom\\Textures\\SkyboxTextures\\NightSkybox\\UrbanNightSky_Top.png", L"Assets\\Custom\\Textures\\SkyboxTextures\\NightSkybox\\UrbanNightSky_Bottom.png",
+			L"Assets\\Custom\\Textures\\SkyboxTextures\\NightSkybox\\UrbanNightSky_Front.png", L"Assets\\Custom\\Textures\\SkyboxTextures\\NightSkybox\\UrbanNightSky_Back.png" };
 
-	//skybox->AddComponent<Skybox>(device, deviceContext, skyboxTextureList);
+	std::string skyboxShaderFilePath = "Assets\\Shaders\\DefaultSkybox.hlsl";
 
-	////默认天空盒着色器
-	//std::string skyboxShaderFilePaths[] = {
-	//	shaderFolderPath + "DefaultSkybox.hlsl"
-	//};
+	skybox->AddComponent<Skybox>(m_dxDevice, m_dxDeviceContext, skyboxShaderFilePath, skyboxTextureList);
 
-	//skybox->AddComponent<MaterialManager>(device, skyboxShaderFilePaths, 1);
-
-	//this->objects.push_back(skybox);
+	this->m_objects.push_back(skybox);
 
 	#pragma endregion
 

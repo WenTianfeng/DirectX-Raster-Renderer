@@ -142,7 +142,7 @@ bool Graphics::InitializeDirectX(HWND hwnd, int width, int height)
 
 bool Graphics::InitializeEffect()
 {
-	this->m_lightSB.Instantiate(this->m_dxDevice.Get(), 4);
+	this->m_lightSB.Instantiate(this->m_dxDevice.Get(), 2);
 	this->m_dxDeviceContext->PSSetShaderResources(0, 1, this->m_lightSB.GetSRVAddressOf());
 
 	return true;

@@ -1,7 +1,7 @@
 #define DIRECTIONAL_LIGHT 0
 #define POINT_LIGHT 1
 #define SPOT_LIGHT 2
-#define NUM_LIGHTS 1
+#define NUM_LIGHTS 2
 
 //光源信息结构体
 struct Light

@@ -36,7 +36,7 @@ void UserInterface::InitializeImGui(HWND hwnd, ID3D11Device* device, ID3D11Devic
 	ImGuiIO& io = ImGui::GetIO();
 	ImGui_ImplWin32_Init(hwnd);
 	ImGui_ImplDX11_Init(device, deviceContext);
-	ImGui::StyleColorsDark();
+	ImGui::StyleColorsLight();
 
 	std::string fontPath = PresetFontFiles + "Roboto-Medium.ttf";
 	//º”‘ÿ◊÷ÃÂ

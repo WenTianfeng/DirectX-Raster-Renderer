@@ -11,6 +11,8 @@
 class Material 
 {
 public:
+	Material();
+
 	/// <summary>
 	/// ¹¹Ôìº¯Êı
 	/// </summary>

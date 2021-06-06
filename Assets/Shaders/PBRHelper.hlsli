@@ -68,14 +68,14 @@ float3 UnrealPBR(float3 albedo, float roughness, float metallic, float3 worldNor
     float NdotV = max(0, dot(viewVec, worldNormal));
     float NdotH = max(0, dot(halfVec, worldNormal));
         
-        //基础反射率
+    //基础反射率
     float3 F0 = float3(0.04f, 0.04f, 0.04f);
     F0 = lerp(F0, albedo, metallic);
-        //菲涅尔项
+    //菲涅尔项
     float3 F = FresnelSchlick(HdotV, F0);
-        //法线分布项
+    //法线分布项
     float NDF = DistributionGGX(NdotH, roughness);
-        //自阴影项
+    //自阴影项
     float G = GeometrySmith(NdotV, NdotL, roughness);
                 
     float3 numerator = NDF * G * F;

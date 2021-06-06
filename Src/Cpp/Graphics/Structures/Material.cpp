@@ -1,5 +1,9 @@
 #include "Material.h"
 
+Material::Material()
+{
+}
+
 Material::Material(ID3D11Device* device):
 	m_dxDevice(device)
 {
@@ -265,7 +269,7 @@ bool Material::Instantiate(std::string shaderFilePath)
 	D3D11_RASTERIZER_DESC rd;
 	ZeroMemory(&rd, sizeof(rd));
 	rd.FillMode = D3D11_FILL_SOLID;
-	rd.CullMode = D3D11_CULL_BACK;
+	rd.CullMode = D3D11_CULL_NONE;
 	rd.FrontCounterClockwise = false;
 	rd.DepthClipEnable = true;
 

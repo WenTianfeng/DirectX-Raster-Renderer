@@ -98,7 +98,7 @@ private:
 	Microsoft::WRL::ComPtr<ID3D11RenderTargetView> m_dxRenderTargetView;//Dx渲染目标视图
 	Microsoft::WRL::ComPtr<ID3D11DepthStencilView> m_dxDepthStencilView;//深度模板视图
 	Microsoft::WRL::ComPtr<ID3D11Texture2D> m_dxDepthStencilBuffer;//深度模板缓冲
-	float m_renderTargetBackgroundColor[4] = { 0.2f, 0.2f, 0.2f, 1 };//帧缓冲默认刷新颜色
+	float m_renderTargetBackgroundColor[4] = { 0.4f, 0.4f, 0.4f, 1 };//帧缓冲默认刷新颜色
 
 	//渲染相关通用成员
 	StructuredBuffer<SB_PS_Light> m_lightSB;

@@ -1,14 +1,23 @@
 #include "Skybox.h"
 
-Skybox::Skybox(ID3D11Device* device, ID3D11DeviceContext* deviceContext, const std::vector<std::wstring>& cubeMapFileNames):
-	MeshRenderer(device,deviceContext, "Assets\\Models\\SkyboxSphere.FBX"),
-	m_cubeMapFileNames(cubeMapFileNames)
+Skybox::Skybox(ID3D11Device* device, ID3D11DeviceContext* deviceContext, const std::string skyboxShaderFilePath, const std::vector<std::wstring>& cubeMapFileNames):
+	MeshRenderer(device,deviceContext, "Assets\\Preset\\Meshes\\SkyboxSphere.FBX"),
+	m_cubeMapFileNames(cubeMapFileNames),
+	m_skyboxShaderFilePath(skyboxShaderFilePath)
 {
 	this->m_componentName = "Skybox";
 }
 
 void Skybox::Initialize()
 {
+	if (!this->LoadModel(m_meshFilePath))
+	{
+		ErrorLogger::Log("Failed to load model.");
+	}
+
+	m_skyboxMaterial = Material(m_dxDevice);
+	m_skyboxMaterial.Instantiate(m_skyboxShaderFilePath);
+
 	std::vector<ID3D11Texture2D*> srcTexVec(6, nullptr);
 	std::vector<D3D11_TEXTURE2D_DESC> texDescVec(6);
 
@@ -72,94 +81,83 @@ void Skybox::Initialize()
 
 void Skybox::Render()
 {
-	//如果Object拥有MaterialManager组件
-	if (this->owner->HasComponent<MaterialManager>())
+	//遍历拥有的所有 Mesh
+	for (UINT i = 0; i < this->m_meshes.size(); i++)
 	{
-		//获取 MaterialManager 组件
-		MaterialManager* materialManager = this->owner->GetComponent<MaterialManager>();
+		//================着色器设置================
+		m_skyboxMaterial.BindShaders(m_dxDeviceContext);
 
-		//遍历拥有的所有 Mesh
-		for (UINT i = 0; i < this->m_meshes.size(); i++)
+		//===============状态设置================
+		//设置输入布局
+		this->m_dxDeviceContext->IASetInputLayout(m_skyboxMaterial.GetInputLayout());
+
+		//设置图元类型
+		this->m_dxDeviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+
+		//设置深度-模板缓冲状态
+		this->m_dxDeviceContext->OMSetDepthStencilState(m_skyboxMaterial.GetDepthStencilState(), 0);
+
+		//设置混合状态
+		this->m_dxDeviceContext->OMSetBlendState(m_skyboxMaterial.GetBlendState(), nullptr, 0xffffffff);
+
+		//设置光栅化状态
+		this->m_dxDeviceContext->RSSetState(m_skyboxMaterial.GetRasterizerState());
+
+		this->m_dxDeviceContext->PSSetSamplers(0, 1, m_skyboxTextureCubeSampler.GetAddressOf());
+		this->m_dxDeviceContext->PSSetShaderResources(1, 1, m_skyboxTextureCubeSRV.GetAddressOf());
+
+		//===============缓冲设置================
+		//设置顶点缓冲
+		UINT offsets = 0;
+		this->m_dxDeviceContext->IASetVertexBuffers(0, 1, m_meshes[i].GetVertexBuffer().GetAddressOf(), m_meshes[i].GetVertexBuffer().StridePtr(), &offsets);
+
+		//设置索引缓冲
+		this->m_dxDeviceContext->IASetIndexBuffer(m_meshes[i].GetIndexBuffer().Get(), DXGI_FORMAT_R32_UINT, 0);
+
+
+		//=============着色器资源更新==============
+
+		for (std::map<std::string, ShaderParameter*>::value_type pair_name_shaderParameter : m_skyboxMaterial.shaderParametersMap)
 		{
+			pair_name_shaderParameter.second->Bind(m_dxDeviceContext);
 
-			//================着色器设置================
-			materialManager->materials[i].BindShaders(m_dxDeviceContext);
-
-			//===============状态设置================
-			//设置输入布局
-			this->m_dxDeviceContext->IASetInputLayout(materialManager->materials[i].GetInputLayout());
-
-			//设置图元类型
-			this->m_dxDeviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-
-			//设置深度-模板缓冲状态
-			this->m_dxDeviceContext->OMSetDepthStencilState(materialManager->materials[i].GetDepthStencilState(), 0);
-
-			//设置混合状态
-			this->m_dxDeviceContext->OMSetBlendState(materialManager->materials[i].GetBlendState(), nullptr, 0xffffffff);
-
-
-			this->m_dxDeviceContext->PSSetSamplers(0, 1, m_skyboxTextureCubeSampler.GetAddressOf());
-			this->m_dxDeviceContext->PSSetShaderResources(1, 1, m_skyboxTextureCubeSRV.GetAddressOf());
-
-			//===============缓冲设置================
-			//设置顶点缓冲
-			UINT offsets = 0;
-			this->m_dxDeviceContext->IASetVertexBuffers(0, 1, m_meshes[i].GetVertexBuffer().GetAddressOf(), m_meshes[i].GetVertexBuffer().StridePtr(), &offsets);
-
-			//设置索引缓冲
-			this->m_dxDeviceContext->IASetIndexBuffer(m_meshes[i].GetIndexBuffer().Get(), DXGI_FORMAT_R32_UINT, 0);
-
-
-			//=============着色器资源更新==============
-
-			for (std::map<std::string, ShaderParameter*>::value_type pair_name_shaderParameter : materialManager->materials[i].shaderParametersMap)
+			if (pair_name_shaderParameter.first == "CB_PresetVariables")
 			{
-				pair_name_shaderParameter.second->Bind(m_dxDeviceContext);
+				CB_PresetVariables presetVariables = {};
 
-				if (pair_name_shaderParameter.first == "CB_PresetVariables")
-				{
-					CB_PresetVariables presetVariables = {};
+				//更新世界矩阵
+				DirectX::XMMATRIX W = owner->GetComponent<Transform>()->GetLocalToWorldMatrixXM();
+				presetVariables.world = DirectX::XMMatrixTranspose(W);
 
-					//更新世界矩阵
-					DirectX::XMMATRIX W = owner->GetComponent<Transform>()->GetLocalToWorldMatrixXM();
-					presetVariables.world = DirectX::XMMatrixTranspose(W);
+				//对世界矩阵求逆转置矩阵
+				DirectX::XMMATRIX A = W;
+				A.r[3] = DirectX::g_XMIdentityR3;
+				presetVariables.worldInverseTranspose = XMMatrixTranspose(XMMatrixTranspose(XMMatrixInverse(nullptr, A)));
 
-					//对世界矩阵求逆转置矩阵
-					DirectX::XMMATRIX A = W;
-					A.r[3] = DirectX::g_XMIdentityR3;
-					presetVariables.worldInverseTranspose = XMMatrixTranspose(XMMatrixTranspose(XMMatrixInverse(nullptr, A)));
+				//更新视矩阵
+				DirectX::XMMATRIX V = owner->GetOwnerManager()->GetMainCamera()->GetComponent<Camera>()->GetViewMatrix();
+				presetVariables.view = DirectX::XMMatrixTranspose(V);
 
-					//更新视矩阵
-					DirectX::XMMATRIX V = owner->GetOwnerManager()->GetMainCamera()->GetComponent<Camera>()->GetViewMatrix();
-					presetVariables.view = DirectX::XMMatrixTranspose(V);
+				//更新投影矩阵
+				DirectX::XMMATRIX P = owner->GetOwnerManager()->GetMainCamera()->GetComponent<Camera>()->GetProjectionMatrix();
+				presetVariables.projection = DirectX::XMMatrixTranspose(P);
 
-					//更新投影矩阵
-					DirectX::XMMATRIX P = owner->GetOwnerManager()->GetMainCamera()->GetComponent<Camera>()->GetProjectionMatrix();
-					presetVariables.projection = DirectX::XMMatrixTranspose(P);
+				presetVariables.viewPos = owner->GetOwnerManager()->GetMainCamera()->GetComponent<Camera>()->GetViewPos();
+				presetVariables.padding = 0;
 
-					presetVariables.viewPos = owner->GetOwnerManager()->GetMainCamera()->GetComponent<Camera>()->GetViewPos();
-					presetVariables.padding = 0;
+				pair_name_shaderParameter.second->constantBuffer->SetStructure(&presetVariables, sizeof(CB_PresetVariables));
 
-					pair_name_shaderParameter.second->constantBuffer->SetStructure(&presetVariables, sizeof(CB_PresetVariables));
-
-				}
-
-				//更新 ShaderParameter 包含的特定类型的资源
-				pair_name_shaderParameter.second->UpdateParameterResource(this->m_dxDeviceContext);
 			}
 
-			//===============绘制================
-			this->m_dxDeviceContext->DrawIndexed(this->m_meshes[i].GetIndexBuffer().IndexCount(), 0, 0);
-
+			//更新 ShaderParameter 包含的特定类型的资源
+			pair_name_shaderParameter.second->UpdateParameterResource(this->m_dxDeviceContext);
 		}
-	}
-	else    //如果Object没有MaterialManager组件
-	{
-		ErrorLogger::Log("There is no MaterialManager Component on this object.");
-		exit(-1);
+
+		//===============绘制================
+		this->m_dxDeviceContext->DrawIndexed(this->m_meshes[i].GetIndexBuffer().IndexCount(), 0, 0);
 
 	}
+
 
 }
 

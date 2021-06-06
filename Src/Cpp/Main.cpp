@@ -12,7 +12,7 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 	try
 	{
 		//渲染引擎初始化
-		RenderingEngine::GetInstance()->Initialize(hInstance, "StemCell Engine", "WndClassName", 1600, 800);
+		RenderingEngine::GetInstance()->Initialize(hInstance, "StemCell Engine", "WndClassName", 1800, 900);
 	}
 	catch (COMException& exception)
 	{
