@@ -1,8 +1,11 @@
 #include"UI_MaterialManager.h"
 #include"..\..\Tools\FileManager.h"
 
-std::vector<UI_Material> UI_MaterialManager::ui_Materials = {};//初始化 UI_MaterialManager 的材质UI列表静态成员
 
+bool UI_Material::depthEnable = true;
+bool UI_Material::blendEnable = true;
+
+std::vector<UI_Material> UI_MaterialManager::ui_Materials = {};//初始化 UI_MaterialManager 的材质UI列表静态成员
 //-------------------------------------------UI_Material相关--------------------------------------------
 UI_Material::UI_Material():
 	ownerMaterial(nullptr)
@@ -16,12 +19,15 @@ UI_Material::UI_Material(Material* material):
 
 }
 
-void UI_Material::Initialize(const Material& material)
+void UI_Material::Initialize()
 {
+	depthEnable = ownerMaterial->depthStencilDesc.DepthEnable;
+	blendEnable = ownerMaterial->blendDesc.BlendEnable;
+
 	displayableVariables.clear();
 
 	//遍历材质的所有着色器资源
-	for (std::map<std::string, ShaderParameter*>::value_type pair_name_shaderParameter : material.shaderParametersMap)
+	for (std::map<std::string, ShaderParameter*>::value_type pair_name_shaderParameter : ownerMaterial->shaderParametersMap)
 	{
 		//根据着色器资源参数类型分别处理
 		switch (pair_name_shaderParameter.second->GetShaderParameterType())
@@ -71,6 +77,7 @@ void UI_Material::Initialize(const Material& material)
 void UI_Material::Render()
 {
 	//===============显示可选择的材质着色器============
+	#pragma region 显示所有可操作的着色器资源变量
 	//显示着色器文件选择框
 	if (ImGui::BeginCombo("Shader", shaderFilePath.c_str(), 0))
 	{
@@ -93,11 +100,13 @@ void UI_Material::Render()
 
 		ImGui::EndCombo();
 	}
+	#pragma endregion
 
 	ImGui::Separator();
-
 	//============显示所有可操作的着色器资源变量============
 	#pragma region 显示所有可操作的着色器资源变量
+
+	ImGui::Text("Shader Parameters");
 
 	for (UINT i = 0; i < displayableVariables.size(); i++)
 	{
@@ -230,6 +239,130 @@ void UI_Material::Render()
 	}
 
 	#pragma endregion
+	
+	ImGui::Separator();
+
+	//===============显示渲染管线部分状态参数===============
+	#pragma region 显示渲染管线部分状态参数
+
+	ImGui::Text("Rendering State Parameters");
+	
+	//--------------------光栅化状态参数--------------------
+	//剔除模式
+	if (ImGui::BeginCombo("Cull Mode", Material::CullModes[ownerMaterial->rasterizerDesc.CullMode-1].c_str(), 0))
+	{
+		static int cullModeSelected = -1;
+
+		for (int n = 0; n < 3; n++)
+		{
+			if (ImGui::Selectable((Material::CullModes[n]).c_str(), cullModeSelected == n))
+			{
+				cullModeSelected = n;
+
+				ownerMaterial->rasterizerDesc.CullMode = (D3D11_CULL_MODE)(n+1);
+				ownerMaterial->ReSetupRasterizerState();
+			}
+		}
+		ImGui::EndCombo();
+	}
+
+	
+	//填充模式
+	if (ImGui::BeginCombo("Fill Mode", Material::FillModes[ownerMaterial->rasterizerDesc.FillMode - 2].c_str(), 0))
+	{
+		static int fillModeSelected = -1;
+
+		for (int n = 0; n < 2; n++)
+		{
+			if (ImGui::Selectable((Material::FillModes[n]).c_str(), fillModeSelected == n))
+			{
+				fillModeSelected = n;
+
+				ownerMaterial->rasterizerDesc.FillMode = (D3D11_FILL_MODE)(n + 2);
+				ownerMaterial->ReSetupRasterizerState();
+			}
+		}
+		ImGui::EndCombo();
+	}
+
+	//--------------------深度模板状态参数--------------------
+	ImGui::Checkbox("Depth Enable", &depthEnable);
+
+	if ((int)depthEnable != ownerMaterial->depthStencilDesc.DepthEnable)
+	{
+		ownerMaterial->depthStencilDesc.DepthEnable = (int)depthEnable;
+		ownerMaterial->ReSetupDepthStencilState();
+	}
+
+	if (depthEnable)
+	{
+		//深度写入遮罩
+		if (ImGui::BeginCombo("Depth Write Mask", Material::DepthWriteMasks[ownerMaterial->depthStencilDesc.DepthWriteMask].c_str(), 0))
+		{
+			static int depthWriteMaskSelected = -1;
+
+			for (int n = 0; n < 2; n++)
+			{
+				if (ImGui::Selectable((Material::DepthWriteMasks[n]).c_str(), depthWriteMaskSelected == n))
+				{
+					depthWriteMaskSelected = n;
+
+					ownerMaterial->depthStencilDesc.DepthWriteMask = (D3D11_DEPTH_WRITE_MASK)(n);
+					ownerMaterial->ReSetupDepthStencilState();
+				}
+			}
+			ImGui::EndCombo();
+		}
+
+		//深度写入比较函数
+		if (ImGui::BeginCombo("Depth Write Func", Material::DepthFuncs[ownerMaterial->depthStencilDesc.DepthFunc - 1].c_str(), 0))
+		{
+			static int depthWriteFuncSelected = -1;
+
+			for (int n = 0; n < 8; n++)
+			{
+				if (ImGui::Selectable((Material::DepthFuncs[n]).c_str(), depthWriteFuncSelected == n))
+				{
+					depthWriteFuncSelected = n;
+
+					ownerMaterial->depthStencilDesc.DepthFunc = (D3D11_COMPARISON_FUNC)(n + 1);
+					ownerMaterial->ReSetupDepthStencilState();
+				}
+			}
+			ImGui::EndCombo();
+		}
+	}
+
+	//--------------------混合状态参数--------------------
+	ImGui::Checkbox("Blend Enable", &blendEnable);
+	if ((int)blendEnable != ownerMaterial->blendDesc.BlendEnable)
+	{
+		ownerMaterial->blendDesc.BlendEnable = (int)blendEnable;
+		ownerMaterial->ReSetupBlendState();
+	}
+
+	if (blendEnable)
+	{
+		//混合方式
+		if (ImGui::BeginCombo("Blend OP", Material::BlendOps[ownerMaterial->blendDesc.BlendOp - 1].c_str(), 0))
+		{
+			static int blendOPSelected = -1;
+
+			for (int n = 0; n < 5; n++)
+			{
+				if (ImGui::Selectable((Material::BlendOps[n]).c_str(), blendOPSelected == n))
+				{
+					blendOPSelected = n;
+
+					ownerMaterial->blendDesc.BlendOp = (D3D11_BLEND_OP)(n + 1);
+					ownerMaterial->ReSetupBlendState();
+				}
+			}
+			ImGui::EndCombo();
+		}
+	}
+
+	#pragma endregion
 
 }
 
@@ -246,6 +379,7 @@ void UI_MaterialManager::Render()
 			if (ImGui::TreeNode(materialName.c_str())) {
 
 				ui_Materials[i].Render();
+
 				ImGui::Separator();
 				ImGui::TreePop();
 			}

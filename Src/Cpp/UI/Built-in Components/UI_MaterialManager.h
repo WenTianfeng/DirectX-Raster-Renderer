@@ -15,6 +15,9 @@ public:
 	std::string shaderFilePath;
 	Material* ownerMaterial;
 
+	static bool depthEnable;
+	static bool blendEnable;
+
 	//着色器资源变量列表
 	std::vector<DisplayableVariable> displayableVariables;
 
@@ -26,7 +29,7 @@ public:
 	/// 材质UI初始化
 	/// </summary>
 	/// <param name="material">材质引用</param>
-	void Initialize(const Material& material);
+	void Initialize();
 
 	/// <summary>
 	/// 材质UI渲染

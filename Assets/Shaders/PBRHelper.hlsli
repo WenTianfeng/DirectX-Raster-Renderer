@@ -89,7 +89,7 @@ float3 UnrealPBR(float3 albedo, float roughness, float metallic, float3 worldNor
                 
     float PI = 3.14159265359;
                 
-    float3 color = (kD * albedo / PI + specular) * lightColor.rgb * NdotL;
+    float3 color = (kD * albedo / PI + specular) * (lightColor.rgb + 0.2f) * NdotL;
     
     return color;
 }

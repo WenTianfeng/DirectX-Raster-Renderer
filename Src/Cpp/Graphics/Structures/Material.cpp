@@ -1,11 +1,25 @@
 #include "Material.h"
 
-Material::Material()
+std::string Material::CullModes[3] = { "NONE","FRONT","BACK" };
+std::string Material::FillModes[2] = { "WIREFRAME","SOLID" };
+std::string Material::DepthWriteMasks[2] = { "MASK_ZERO","MASK_ALL" };
+std::string Material::DepthFuncs[8] = { "NEVER","LESS","EQUAL","LESS_EQUAL","GREATER","NOT_EQUAL","GREATER_EQUAL","ALWAYS" };
+std::string Material::BlendOps[5] = { "ADD","SUBSTRACT","REV_SUBSTRACT","MIN","MAX"};
+
+Material::Material():
+	m_dxDevice(nullptr),
+	depthStencilDesc({}),
+	blendDesc({}),
+	rasterizerDesc({})
 {
+
 }
 
 Material::Material(ID3D11Device* device):
-	m_dxDevice(device)
+	m_dxDevice(device),
+	depthStencilDesc({}),
+	blendDesc({}),
+	rasterizerDesc({})
 {
 
 }
@@ -225,58 +239,13 @@ bool Material::Instantiate(std::string shaderFilePath)
 	}
 
 	//========================创建深度-模板缓冲状态=======================
-	#pragma region 创建深度-模板缓冲状态
-	//深度模板测试状态描述
-	D3D11_DEPTH_STENCIL_DESC dsc;
-	ZeroMemory(&dsc, sizeof(dsc));
-	dsc.DepthEnable = true;
-	dsc.DepthWriteMask = D3D11_DEPTH_WRITE_MASK_ALL;
-	dsc.DepthFunc = D3D11_COMPARISON_LESS_EQUAL;
-	dsc.StencilEnable = false;
-	//……………………其余模板缓冲描述待填写……………………
-
-	hr = m_dxDevice->CreateDepthStencilState(&dsc, m_dxDepthStencilState.GetAddressOf());
-	//错误检查
-	COM_ERROR_IF_FAILED(hr, L"Failed to create DirectX DepthStencil State.");
-
-	#pragma endregion
+	SetupDepthStencilState();
 
 	//==========================创建混合状态===========================
-	#pragma region 创建混合状态
-	D3D11_BLEND_DESC bd;
-	ZeroMemory(&bd, sizeof(bd));
-
-	D3D11_RENDER_TARGET_BLEND_DESC rtbd;
-	ZeroMemory(&rtbd, sizeof(rtbd));
-
-	rtbd.BlendEnable = false;
-	rtbd.BlendOp = D3D11_BLEND_OP_ADD; //颜色混合运算方法
-	rtbd.SrcBlend = D3D11_BLEND_SRC_ALPHA; //源颜色因子
-	rtbd.DestBlend = D3D11_BLEND_INV_SRC_ALPHA; //缓冲区颜色因子
-	rtbd.SrcBlendAlpha = D3D11_BLEND_ONE; //源透明度因子
-	rtbd.DestBlendAlpha = D3D11_BLEND_ZERO; //缓冲区透明度因子
-	rtbd.BlendOpAlpha = D3D11_BLEND_OP_ADD; //透明度混合运算方法
-	rtbd.RenderTargetWriteMask = D3D11_COLOR_WRITE_ENABLE_ALL; //颜色遮罩
-
-	bd.RenderTarget[0] = rtbd;
-
-	hr = m_dxDevice->CreateBlendState(&bd, this->m_dxBlendState.GetAddressOf());
-	//错误检查
-	COM_ERROR_IF_FAILED(hr, L"Failed to create DirectX Blend State.");
-
+	SetupBlendState();
 
 	//===================创建光栅化状态=======================
-	D3D11_RASTERIZER_DESC rd;
-	ZeroMemory(&rd, sizeof(rd));
-	rd.FillMode = D3D11_FILL_SOLID;
-	rd.CullMode = D3D11_CULL_NONE;
-	rd.FrontCounterClockwise = false;
-	rd.DepthClipEnable = true;
-
-	//创建光栅化状态
-	hr = m_dxDevice->CreateRasterizerState(&rd, m_dxRasterizerState.GetAddressOf());
-	//错误检查
-	COM_ERROR_IF_FAILED(hr, "Failed to create DirectX Rasterizer State.");
+	SetupRasterizerState();
 
 	#pragma endregion 
 
@@ -321,6 +290,94 @@ void Material::BindShaders(ID3D11DeviceContext* deviceContext)
 		value.second->Bind(deviceContext);
 	}
 
+}
+
+
+void Material::SetupDepthStencilState()
+{
+	//深度模板测试状态描述
+
+	ZeroMemory(&depthStencilDesc, sizeof(depthStencilDesc));
+	depthStencilDesc.DepthEnable = true;
+	depthStencilDesc.DepthWriteMask = D3D11_DEPTH_WRITE_MASK_ALL;
+	depthStencilDesc.DepthFunc = D3D11_COMPARISON_LESS_EQUAL;
+
+	depthStencilDesc.StencilEnable = false;
+
+	HRESULT hr = m_dxDevice->CreateDepthStencilState(&depthStencilDesc, m_dxDepthStencilState.GetAddressOf());
+	//错误检查
+	COM_ERROR_IF_FAILED(hr, L"Failed to create DirectX DepthStencil State.");
+	
+}
+void Material::ReSetupDepthStencilState()
+{
+	m_dxDepthStencilState.Reset();
+
+	HRESULT hr = m_dxDevice->CreateDepthStencilState(&depthStencilDesc, m_dxDepthStencilState.GetAddressOf());
+	//错误检查
+	COM_ERROR_IF_FAILED(hr, L"Failed to create DirectX DepthStencil State.");
+}
+
+
+void Material::SetupBlendState()
+{
+	D3D11_BLEND_DESC bd;
+	ZeroMemory(&bd, sizeof(bd));
+
+	ZeroMemory(&blendDesc, sizeof(blendDesc));
+
+	blendDesc.BlendEnable = false;
+	blendDesc.BlendOp = D3D11_BLEND_OP_ADD; //颜色混合运算方法
+	blendDesc.SrcBlend = D3D11_BLEND_SRC_ALPHA; //源颜色因子
+	blendDesc.DestBlend = D3D11_BLEND_INV_SRC_ALPHA; //缓冲区颜色因子
+	blendDesc.SrcBlendAlpha = D3D11_BLEND_ONE; //源透明度因子
+	blendDesc.DestBlendAlpha = D3D11_BLEND_ZERO; //缓冲区透明度因子
+	blendDesc.BlendOpAlpha = D3D11_BLEND_OP_ADD; //透明度混合运算方法
+	blendDesc.RenderTargetWriteMask = D3D11_COLOR_WRITE_ENABLE_ALL; //颜色遮罩
+
+	bd.RenderTarget[0] = blendDesc;
+
+	HRESULT hr = m_dxDevice->CreateBlendState(&bd, this->m_dxBlendState.GetAddressOf());
+	//错误检查
+	COM_ERROR_IF_FAILED(hr, L"Failed to create DirectX Blend State.");
+	
+}
+void Material::ReSetupBlendState()
+{
+	D3D11_BLEND_DESC bd;
+	ZeroMemory(&bd, sizeof(bd));
+
+	bd.RenderTarget[0] = blendDesc;
+
+	HRESULT hr = m_dxDevice->CreateBlendState(&bd, this->m_dxBlendState.GetAddressOf());
+	//错误检查
+	COM_ERROR_IF_FAILED(hr, L"Failed to create DirectX Blend State.");
+}
+
+void Material::SetupRasterizerState()
+{
+	//===================创建光栅化状态=======================
+	ZeroMemory(&rasterizerDesc, sizeof(rasterizerDesc));
+	rasterizerDesc.FillMode = D3D11_FILL_SOLID;
+	rasterizerDesc.CullMode = D3D11_CULL_NONE;
+	rasterizerDesc.FrontCounterClockwise = false;
+	rasterizerDesc.DepthClipEnable = true;
+
+
+	//创建光栅化状态
+	HRESULT hr = m_dxDevice->CreateRasterizerState(&rasterizerDesc, m_dxRasterizerState.GetAddressOf());
+	//错误检查
+	COM_ERROR_IF_FAILED(hr, "Failed to create DirectX Rasterizer State.");
+}
+
+void Material::ReSetupRasterizerState()
+{
+	m_dxRasterizerState.Reset();
+
+	//创建光栅化状态
+	HRESULT hr = m_dxDevice->CreateRasterizerState(&rasterizerDesc, m_dxRasterizerState.GetAddressOf());
+	//错误检查
+	COM_ERROR_IF_FAILED(hr, "Failed to create DirectX Rasterizer State.");
 }
 
 

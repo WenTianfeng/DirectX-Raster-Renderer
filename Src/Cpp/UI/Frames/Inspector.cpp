@@ -134,7 +134,7 @@ void Inspector::Render(int windowWidth, int windowHeight)
 						UI_Material ui_Material(&object->GetComponent<MaterialManager>()->materials[i]);
 
 						//根据材质内容对其UI进行初始化
-						ui_Material.Initialize(object->GetComponent<MaterialManager>()->materials[i]);
+						ui_Material.Initialize();
 
 						//将 UI_Material 加入到 UI_MaterialManager 的 UI_Material 列表
 						UI_MaterialManager::ui_Materials.push_back(ui_Material);
@@ -156,7 +156,7 @@ void Inspector::Render(int windowWidth, int windowHeight)
 						if (UI_MaterialManager::ui_Materials[i].shaderFilePath != UI_MaterialManager::ui_Materials[i].ownerMaterial->GetShaderFilePath())
 						{
 							UI_MaterialManager::ui_Materials[i].ownerMaterial->Instantiate(UI_MaterialManager::ui_Materials[i].shaderFilePath);
-							UI_MaterialManager::ui_Materials[i].Initialize(*UI_MaterialManager::ui_Materials[i].ownerMaterial);
+							UI_MaterialManager::ui_Materials[i].Initialize();
 						}
 					}
 				}
@@ -295,8 +295,8 @@ void Inspector::Render(int windowWidth, int windowHeight)
 	ImGui::End();
 
 	//Inspector自适应窗口变化
-	ImGui::SetWindowPos("INSPECTOR", ImVec2(windowWidth-300.0f, 20));
-	ImGui::SetWindowSize("INSPECTOR", ImVec2(300, windowHeight - 20.0f));
+	ImGui::SetWindowPos("INSPECTOR", ImVec2(windowWidth-400.0f, 20));
+	ImGui::SetWindowSize("INSPECTOR", ImVec2(400, windowHeight - 20.0f));
 
 }
 

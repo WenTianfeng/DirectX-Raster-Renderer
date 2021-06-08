@@ -8,8 +8,18 @@
 #include"ConstantBufferTypes.h"
 
 
+
 class Material 
 {
+public:
+	static std::string CullModes[3];
+	static std::string FillModes[2];
+
+	static std::string DepthWriteMasks[2];
+	static std::string DepthFuncs[8];
+
+	static std::string BlendOps[5];
+
 public:
 	Material();
 
@@ -70,9 +80,21 @@ public:
 	/// <param name="deviceContext">DirectX上下文</param>
 	void BindShaders(ID3D11DeviceContext* deviceContext);
 
+	void SetupDepthStencilState();
+	void ReSetupDepthStencilState();
+
+	void SetupBlendState();
+	void ReSetupBlendState();
+
+	void SetupRasterizerState();
+	void ReSetupRasterizerState();
+
 
 public:
 	std::map<std::string, ShaderParameter*> shaderParametersMap;	//<着色器参数名-参数>map
+	D3D11_DEPTH_STENCIL_DESC depthStencilDesc;
+	D3D11_RENDER_TARGET_BLEND_DESC blendDesc;;
+	D3D11_RASTERIZER_DESC rasterizerDesc;
 
 private:
 	ID3D11Device* m_dxDevice;//DirectX 设备
@@ -83,4 +105,5 @@ private:
 	Microsoft::WRL::ComPtr<ID3D11DepthStencilState> m_dxDepthStencilState;//深度模板状态
 	Microsoft::WRL::ComPtr<ID3D11BlendState> m_dxBlendState;//混合状态
 	Microsoft::WRL::ComPtr<ID3D11RasterizerState> m_dxRasterizerState;//光栅化状态
+
 };
